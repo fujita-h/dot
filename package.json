@@ -9,14 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.16.0",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.5.2",
+    "clsx": "^2.0.0",
     "next": "14.0.0",
     "next-auth": "^5.0.0-beta.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.6",
     "@types/node": "^20.8.9",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
