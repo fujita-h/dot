@@ -2,6 +2,7 @@ import prisma from '@/prisma/instance';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import NextAuth from 'next-auth';
 import AzureAD from 'next-auth/providers/azure-ad';
+import { NextResponse } from 'next/server';
 
 const cuid = initCuid({ length: 24 });
 
@@ -16,7 +17,17 @@ export const {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 10, // 10 minutes
+  },
   callbacks: {
+    async authorized({ request, auth }) {
+      if (auth) {
+        return true;
+      }
+      return NextResponse.rewrite(new URL('/signin', request.url));
+    },
     async signIn({ user, account, profile }) {
       const { oid }: { oid: string } = profile as any;
       const claim = profile as any;
@@ -53,6 +64,7 @@ export const {
                   id: cuid(),
                   name: name,
                   handle: handle,
+                  about: '',
                 },
               },
               data: claim,
@@ -89,17 +101,17 @@ export const {
       return baseUrl;
     },
     async jwt({ token, user, account, profile }) {
+      // Avoid to include picture in token cookie, remove it from token.
       delete token.picture;
+      // add custom fields of profile to token
       if (profile) {
-        const p = profile;
-        token.oid = p.oid;
-        token.roles = p.roles;
+        token.oid = (profile.oid as string) || undefined;
+        token.roles = (profile.roles as string[]) || undefined;
       }
       return token;
     },
     async session({ session, token, user }) {
-      delete token.name;
-      delete token.email;
+      // include token in session
       return {
         ...session,
         token,
