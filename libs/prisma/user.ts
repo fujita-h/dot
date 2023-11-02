@@ -2,8 +2,8 @@
 
 import prisma from '@/prisma/instance';
 
-export async function getUser(userId: string) {
-  return await prisma.user
+export function getUser(userId: string) {
+  return prisma.user
     .findUnique({
       where: { id: userId },
     })
@@ -13,8 +13,8 @@ export async function getUser(userId: string) {
     });
 }
 
-export async function checkUserExists(userId: string) {
-  return await prisma.user
+export function checkUserExists(userId: string) {
+  return prisma.user
     .findUnique({
       select: { id: true },
       where: { id: userId },
@@ -26,8 +26,8 @@ export async function checkUserExists(userId: string) {
     });
 }
 
-export async function getUserProfile(userId: string) {
-  return await prisma.user
+export function getUserProfile(userId: string) {
+  return prisma.user
     .findUnique({
       select: {
         id: true,
@@ -43,8 +43,8 @@ export async function getUserProfile(userId: string) {
     });
 }
 
-export async function getUserProfileAndSettings(userId: string) {
-  return await prisma.user
+export function getUserProfileAndSettings(userId: string) {
+  return prisma.user
     .findUnique({
       select: {
         id: true,
