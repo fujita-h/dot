@@ -3,6 +3,7 @@ import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createRectSvg } from '@/libs/image/rect';
 import { getUserId } from '@/libs/prisma/user';
 import { getUserIdFromSession } from '@/libs/auth/session';
+import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
 export async function GET(request: Request, { params }: { params: { userId: string } }) {
   if (!params.userId) {
@@ -54,20 +55,4 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     }
     return new Response(null, { status: 500 });
   }
-}
-
-function nodeToWebStream(nodeStream: NodeJS.ReadableStream) {
-  return new ReadableStream({
-    async start(controller) {
-      nodeStream.on('data', (chunk) => {
-        controller.enqueue(chunk);
-      });
-      nodeStream.on('end', () => {
-        controller.close();
-      });
-      nodeStream.on('error', (err) => {
-        controller.error(err);
-      });
-    },
-  });
 }
