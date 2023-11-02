@@ -4,7 +4,7 @@ import prisma from '@/prisma/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/libs/auth';
-import { getUserIdFromOid } from '@/libs/prisma/user-claim';
+import { getUserIdFromSession } from '@/libs/auth/session';
 import { checkHandle } from '@/libs/utils/check-handle';
 
 export interface ActionState {
@@ -16,10 +16,11 @@ export interface ActionState {
 
 export async function updateUserAction(state: ActionState, formData: FormData): Promise<ActionState> {
   const session = await auth();
-  const sessionUserId = await getUserIdFromOid(session?.token?.oid);
-  if (!sessionUserId) {
-    return { status: 'error', target: null, message: 'User not found', lastModified: Date.now() };
+  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session);
+  if (status !== 200 || !sessionUserId) {
+    return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
+
   try {
     checkHandle(formData.get('handle') as string);
   } catch (e) {

@@ -1,24 +1,26 @@
-import { auth } from '@/libs/auth';
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { getUserIdFromOid } from '@/libs/prisma/user-claim';
+import { Error404, Error500 } from '@/components/error';
+import { auth } from '@/libs/auth';
 import { getUserProfileAndSettings } from '@/libs/prisma/user';
+import { getUserIdFromSession } from '@/libs/auth/session';
 import { Form } from './form';
 
 export default async function Page() {
   const session = await auth();
-  const sessionUserId = await getUserIdFromOid(session?.token?.oid);
-  if (!sessionUserId) {
+  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session);
+  if (status === 401) {
     return <SignInForm />;
   }
-  const userSettings = await getUserProfileAndSettings(sessionUserId);
-  if (!userSettings) {
-    // need to create error page
-    return <>Error</>;
+  if (status === 500) {
+    return <Error500 />;
+  }
+  if (status === 404 || !sessionUserId) {
+    return <Error404 />;
   }
 
+  const userSettings = await getUserProfileAndSettings(sessionUserId).catch(() => null);
   if (!userSettings) {
-    // need to create error page
-    return <>Error</>;
+    return <Error404 />;
   }
 
   return (

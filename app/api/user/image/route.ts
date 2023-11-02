@@ -1,19 +1,12 @@
 import { auth } from '@/libs/auth';
-import { getUserIdFromOid } from '@/libs/prisma/user-claim';
+import { getUserIdFromSession } from '@/libs/auth/session';
 import { redirect } from 'next/navigation';
 
 export async function GET(request: Request) {
   const session = await auth();
-  const oid = session?.token?.oid;
-  if (!oid) {
-    return new Response(null, { status: 401 });
-  }
-
-  const sessionUserId = await getUserIdFromOid(oid).catch((e) => {
-    return new Response(null, { status: 500 });
-  });
-  if (!sessionUserId) {
-    return new Response(null, { status: 401 });
+  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session);
+  if (status !== 200) {
+    return new Response(null, { status: status });
   }
 
   const { searchParams } = new URL(request.url);
