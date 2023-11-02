@@ -13,13 +13,12 @@ export function getUser(userId: string) {
     });
 }
 
-export function checkUserExists(userId: string) {
+export function getUserId(userId: string) {
   return prisma.user
     .findUnique({
       select: { id: true },
       where: { id: userId },
     })
-    .then((user) => !!user)
     .catch((e) => {
       console.error(e);
       throw new Error('Error occurred while fetching user');

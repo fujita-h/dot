@@ -1,7 +1,7 @@
 import { auth } from '@/libs/auth';
 import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createDefaultUserIconSvg } from '@/libs/image/icon';
-import { checkUserExists } from '@/libs/prisma/user';
+import { getUserId } from '@/libs/prisma/user';
 import { getUserIdFromSession } from '@/libs/auth/session';
 
 export async function GET(request: Request, { params }: { params: { userId: string } }) {
@@ -15,9 +15,12 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   }
 
   if (params.userId !== sessionUserId) {
-    const check = await checkUserExists(params.userId).catch((e) => {
-      return new Response(null, { status: 500 });
-    });
+    const check = await getUserId(params.userId)
+      .then((user) => user?.id)
+      .then((id) => !!id)
+      .catch((e) => {
+        return new Response(null, { status: 500 });
+      });
     if (!check) {
       return new Response(null, { status: 404 });
     }
