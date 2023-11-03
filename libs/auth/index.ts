@@ -1,3 +1,4 @@
+import { getUserClaimByOid } from '@/libs/prisma/user-claim';
 import prisma from '@/prisma/instance';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import NextAuth from 'next-auth';
@@ -103,10 +104,12 @@ export const {
     async jwt({ token, user, account, profile }) {
       // Avoid to include picture in token cookie, remove it from token.
       delete token.picture;
-      // add custom fields of profile to token
+      // Profile is undefined unless the user explicitly sign-in.
       if (profile) {
+        // add custom fields of profile to token
         token.oid = (profile.oid as string) || undefined;
         token.roles = (profile.roles as string[]) || undefined;
+        token.userId = token.oid ? await getUserClaimByOid(token.oid).then((claim) => claim?.userId) : undefined;
       }
       return token;
     },
