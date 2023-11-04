@@ -1,0 +1,16 @@
+.thinScrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thinScrollbar::-webkit-scrollbar-thumb {
+  border-right: 1px solid transparent;
+  background-clip: padding-box;
+  background-color: rgb(190,190,190);
+  border-radius: 5px;
+}
+.thinScrollbar::-webkit-scrollbar-track  {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  background-color: transparent;
+  border-radius: 5px;
+}
