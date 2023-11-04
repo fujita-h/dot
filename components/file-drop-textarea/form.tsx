@@ -43,8 +43,6 @@ export function FileDropTextarea({ defaultValue }: { defaultValue?: string }) {
   const onDrop = async (acceptedFiles: File[]) => startTransition(() => handleUploadFiles(acceptedFiles));
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  console.log('isPending', isPending);
-
   return (
     <div
       className="relative w-full h-full"
