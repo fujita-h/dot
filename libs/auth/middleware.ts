@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import AzureAD from 'next-auth/providers/azure-ad';
-import { authorizedCallback, signInCallback, redirectCallback, jwtCallback, sessionCallback } from './callbacks';
+import { authorizedCallback } from './callbacks/authorized';
+import { sessionCallback } from './callbacks/session';
 
 export const {
   handlers: { GET, POST },
@@ -19,9 +20,6 @@ export const {
   },
   callbacks: {
     authorized: authorizedCallback,
-    signIn: signInCallback,
-    redirect: redirectCallback,
-    jwt: jwtCallback,
     session: sessionCallback,
   },
 });

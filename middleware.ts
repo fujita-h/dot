@@ -1,4 +1,4 @@
-export { auth as default } from '@/libs/auth';
+export { auth as default } from '@/libs/auth/middleware';
 
 export const config = {
   matcher: [

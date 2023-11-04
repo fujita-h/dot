@@ -2,7 +2,7 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { auth } from '@/libs/auth';
 import { getUserProfileAndSettings } from '@/libs/prisma/user';
-import { getUserIdFromSession } from '@/libs/auth/session';
+import { getUserIdFromSession } from '@/libs/auth/utils';
 import { Form } from './form';
 
 export default async function Page() {
