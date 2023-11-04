@@ -57,7 +57,7 @@ export function FileDropTextarea({ defaultValue }: { defaultValue?: string }) {
         ref={textareaRef}
         className={clsx(
           styles.thinScrollbar,
-          'resize-none block w-full h-full rounded-md border-0 py-1.5 scroll-p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+          'resize-none block w-full h-full rounded-md border-0 py-1.5 scroll-p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 cursor-auto placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
         )}
         placeholder="Write something..."
         name="body"
