@@ -1,4 +1,4 @@
-import { BlobServiceClient, Metadata } from '@azure/storage-blob';
+import { BlobServiceClient, Metadata, Tags } from '@azure/storage-blob';
 
 export class BlobClient {
   private blobServiceClient: BlobServiceClient;
@@ -22,7 +22,8 @@ export class BlobClient {
     blobName: string,
     contentType: string,
     body: string | Buffer,
-    metadata?: Metadata
+    metadata?: Metadata,
+    tags?: Tags
   ) {
     const containerClient = this.blobServiceClient.getContainerClient(containerName);
     await containerClient.createIfNotExists();
@@ -30,6 +31,7 @@ export class BlobClient {
     return blockBlobClient.upload(body, body.length, {
       blobHTTPHeaders: { blobContentType: contentType },
       metadata,
+      tags,
     });
   }
 
