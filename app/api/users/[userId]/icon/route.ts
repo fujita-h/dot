@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   } catch (error: any) {
     if (error.statusCode === 404) {
       const defaultUserIcon = createDefaultUserIconSvg(0, 360, 0, 100, 30, 80);
-      await blobClient.upload('user', `${params.userId}/icon`, 'image/svg+xml', defaultUserIcon);
+      await blobClient.upload('users', `${params.userId}/icon`, 'image/svg+xml', defaultUserIcon);
       return new Response(defaultUserIcon, {
         headers: [
           ['Content-Type', 'image/svg+xml'],

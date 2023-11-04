@@ -42,11 +42,11 @@ export async function updateUserAction(state: ActionState, formData: FormData): 
     });
     const image = formData.get('image') as File;
     if (image.size > 0 && image.type.startsWith('image/')) {
-      await blob.upload('user', `${sessionUserId}/image`, image.type, Buffer.from(await image.arrayBuffer()));
+      await blob.upload('users', `${sessionUserId}/image`, image.type, Buffer.from(await image.arrayBuffer()));
     }
     const icon = formData.get('icon') as File;
     if (icon.size > 0 && icon.type.startsWith('image/')) {
-      await blob.upload('user', `${sessionUserId}/icon`, icon.type, Buffer.from(await icon.arrayBuffer()));
+      await blob.upload('users', `${sessionUserId}/icon`, icon.type, Buffer.from(await icon.arrayBuffer()));
     }
     revalidatePath('/settings/general');
     return { status: 'success', target: null, message: '更新が完了しました', lastModified: Date.now() };

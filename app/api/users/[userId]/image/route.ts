@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   } catch (error: any) {
     if (error.statusCode === 404) {
       const defaultUserIcon = createRectSvg(90, 270, 0, 100, 85, 95);
-      await blobClient.upload('user', `${params.userId}/image`, 'image/svg+xml', defaultUserIcon);
+      await blobClient.upload('users', `${params.userId}/image`, 'image/svg+xml', defaultUserIcon);
       return new Response(defaultUserIcon, {
         headers: [
           ['Content-Type', 'image/svg+xml'],
