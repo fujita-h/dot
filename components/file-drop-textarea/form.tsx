@@ -6,10 +6,10 @@ import { useDropzone } from 'react-dropzone';
 import { uploadFiles } from './actions';
 import styles from './styles.module.css';
 
-export function FileDropTextarea({ defaultValue }: { defaultValue?: string }) {
+export function FileDropTextarea({ value, onChange }: { value?: string; onChange?: (value: string) => void }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [selectionPosition, setSelectionPosition] = useState(0);
-  const [body, setBody] = useState(defaultValue || '');
+  const [body, setBody] = useState(value || '');
   const [isPending, startTransition] = useTransition();
   const [uploadCounter, setUploadCounter] = useState({ count: 0, nextTextareaIndex: 0 });
 
@@ -41,7 +41,7 @@ export function FileDropTextarea({ defaultValue }: { defaultValue?: string }) {
 
   // Dropzone handler
   const onDrop = async (acceptedFiles: File[]) => startTransition(() => handleUploadFiles(acceptedFiles));
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noKeyboard: true });
 
   return (
     <div
@@ -71,6 +71,7 @@ export function FileDropTextarea({ defaultValue }: { defaultValue?: string }) {
         onChange={(e) => {
           setBody(e.target.value);
           setSelectionPosition(e.currentTarget.selectionStart);
+          onChange?.(e.target.value);
         }}
         onPaste={(e) => {
           startTransition(async () => {
