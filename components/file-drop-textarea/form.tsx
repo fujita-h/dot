@@ -4,9 +4,18 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { uploadFiles } from './actions';
-import styles from './styles.module.css';
 
-export function FileDropTextarea({ value, onChange }: { value?: string; onChange?: (value: string) => void }) {
+export function FileDropTextarea({
+  value,
+  className,
+  placeholder,
+  onChange,
+}: {
+  value?: string;
+  className?: string;
+  placeholder?: string;
+  onChange?: (value: string) => void;
+}) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [selectionPosition, setSelectionPosition] = useState(0);
   const [body, setBody] = useState(value || '');
@@ -56,10 +65,12 @@ export function FileDropTextarea({ value, onChange }: { value?: string; onChange
       <textarea
         ref={textareaRef}
         className={clsx(
-          styles.thinScrollbar,
-          'resize-none block w-full h-full rounded-md border-0 py-1.5 scroll-p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 cursor-auto placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+          className,
+          'thin-scrollbar',
+          'resize-none block w-full h-full rounded-md border-0 py-1.5 scroll-p-2 shadow-sm ring-1 ring-inset ring-gray-300 cursor-auto ',
+          'placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400'
         )}
-        placeholder="Write something..."
+        placeholder={placeholder}
         name="body"
         value={body}
         onKeyUp={(e) => {
