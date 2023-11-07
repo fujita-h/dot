@@ -145,7 +145,7 @@ model Draft {
   groupId        String?  @map("group_id")
   relatedNoteId  String?  @map("related_note_id")
   title          String?
-  bodyBlobName   String   @map("body_blob_name")
+  bodyBlobName   String?  @map("body_blob_name")
   canPostComment Boolean  @default(true) @map("can_post_comment")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
