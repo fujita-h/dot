@@ -19,6 +19,7 @@ model User {
   updatedAt       DateTime       @updatedAt @map("updated_at")
   Claim           UserClaim?
   JoiendGroups    Membership[]
+  Drafts          Draft[]
   Notes           Note[]
   Comments        Comment[]
   Stocks          Stock[]
@@ -107,6 +108,7 @@ model Group {
   updatedAt     DateTime      @updatedAt @map("updated_at")
   Members       Membership[]
   Notes         Note[]
+  Drafts        Draft[]
   FollowedUsers FollowGroup[]
 
   @@map("group")
@@ -137,24 +139,38 @@ enum MembershipRole {
   ADMIN
 }
 
+model Draft {
+  id             String   @id @default(cuid())
+  userId         String   @map("user_id")
+  groupId        String?  @map("group_id")
+  relatedNoteId  String?  @map("related_note_id")
+  title          String?
+  bodyBlobName   String   @map("body_blob_name")
+  canPostComment Boolean  @default(true) @map("can_post_comment")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group          Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  RelatedNote    Note?    @relation(fields: [relatedNoteId], references: [id], onDelete: Cascade)
+
+  @@map("draft")
+}
+
 model Note {
   id             String     @id @default(cuid())
   userId         String     @map("user_id")
   groupId        String?    @map("group_id")
   title          String?
   bodyBlobName   String?    @map("body_blob_name")
-  draftBlobName  String?    @map("draft_blob_name")
-  isReleased     Boolean    @default(false) @map("is_released")
   canPostComment Boolean    @default(true) @map("can_post_comment")
   releasedAt     DateTime?  @map("released_at")
-  editedAt       DateTime?  @map("edited_at")
-  draftedAt      DateTime?  @map("drafted_at")
   createdAt      DateTime   @default(now()) @map("created_at")
   updatedAt      DateTime   @updatedAt @map("updated_at")
   isUserPinned   Boolean    @default(false) @map("is_user_pinned")
   isGroupPinned  Boolean    @default(false) @map("is_group_pinned")
   User           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   Group          Group?     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  Drafts         Draft[]
   Comments       Comment[]
   Stocks         Stock[]
   Topics         TopicMap[]
