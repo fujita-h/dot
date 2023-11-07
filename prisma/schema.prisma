@@ -140,18 +140,19 @@ enum MembershipRole {
 }
 
 model Draft {
-  id             String   @id @default(cuid())
-  userId         String   @map("user_id")
-  groupId        String?  @map("group_id")
-  relatedNoteId  String?  @map("related_note_id")
+  id             String          @id @default(cuid())
+  userId         String          @map("user_id")
+  groupId        String?         @map("group_id")
+  relatedNoteId  String?         @map("related_note_id")
   title          String?
-  bodyBlobName   String?  @map("body_blob_name")
-  canPostComment Boolean  @default(true) @map("can_post_comment")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Group          Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  RelatedNote    Note?    @relation(fields: [relatedNoteId], references: [id], onDelete: Cascade)
+  bodyBlobName   String?         @map("body_blob_name")
+  canPostComment Boolean         @default(true) @map("can_post_comment")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  User           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group          Group?          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  RelatedNote    Note?           @relation(fields: [relatedNoteId], references: [id], onDelete: Cascade)
+  Topics         DraftTopicMap[]
 
   @@map("draft")
 }
@@ -194,13 +195,14 @@ model Comment {
 }
 
 model Topic {
-  id            String        @id @default(cuid())
-  handle        String        @unique
+  id            String          @id @default(cuid())
+  handle        String          @unique
   name          String
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
   Notes         TopicMap[]
   FollowedUsers FollowTopic[]
+  Drafts        DraftTopicMap[]
 
   @@map("topic")
 }
@@ -216,6 +218,19 @@ model TopicMap {
 
   @@id([noteId, topicId])
   @@map("topic_map")
+}
+
+model DraftTopicMap {
+  draftId   String   @map("note_id")
+  topicId   String   @map("topic_id")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Draft     Draft    @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  Topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([draftId, topicId])
+  @@map("draft_topic_map")
 }
 
 model Stock {
