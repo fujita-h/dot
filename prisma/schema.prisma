@@ -30,6 +30,7 @@ model User {
   Followingopics  FollowTopic[]
   UserSetting     UserSetting?
   Notifications   Notification[]
+  StockLabels     StockLabel[]
 
   @@map("user")
 }
@@ -254,6 +255,7 @@ model StockLabel {
   default   Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Stocks    Stock[]
 
   @@map("stock_label")
