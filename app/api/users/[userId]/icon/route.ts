@@ -1,7 +1,6 @@
 import { auth } from '@/libs/auth';
 import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createDefaultUserIconSvg } from '@/libs/image/icon';
-import { getUserId } from '@/libs/prisma/user';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 
 export async function GET(request: Request, { params }: { params: { userId: string } }) {
@@ -9,7 +8,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     return new Response(null, { status: 404 });
   }
   const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session, true);
+  const { status } = await getUserIdFromSession(session, true);
   if (status !== 200) {
     return new Response(null, { status: status });
   }
@@ -19,7 +18,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   const cache_control = no_cache ? 'no-store' : 'max-age=600';
 
   try {
-    const blobResponse = await blobClient.download('user', `${params.userId}/icon`);
+    const blobResponse = await blobClient.download('users', `${params.userId}/icon`);
     if (blobResponse.readableStreamBody && blobResponse.contentType) {
       return new Response(nodeToWebStream(blobResponse.readableStreamBody), {
         headers: [
