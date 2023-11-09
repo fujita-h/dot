@@ -1,4 +1,4 @@
-import prisma from '@/prisma/instance';
+import prisma from '@/libs/prisma/instance';
 import { AdapterUser } from '@auth/core/adapters';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { Account, Profile, User } from 'next-auth';

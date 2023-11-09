@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/prisma/instance';
+import prisma from '@/libs/prisma/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { auth } from '@/libs/auth';

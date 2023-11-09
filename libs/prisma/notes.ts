@@ -1,6 +1,6 @@
 'server-only';
 
-import prisma from '@/prisma/instance';
+import prisma from '@/libs/prisma/instance';
 
 export function getNote(noteId: string) {
   return prisma.note

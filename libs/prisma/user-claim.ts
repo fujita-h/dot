@@ -1,6 +1,6 @@
 'server-only';
 
-import prisma from '@/prisma/instance';
+import prisma from '@/libs/prisma/instance';
 
 export function getUserClaimByOid(oid: string) {
   return prisma.userClaim

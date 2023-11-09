@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/prisma/instance';
+import prisma from '@/libs/prisma/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/libs/auth';
