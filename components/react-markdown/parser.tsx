@@ -1,10 +1,9 @@
-import React from 'react';
+import { CONTENT_ANCHOR_CLASS_NAME, CONTENT_ANCHOR_PREFIX } from '@/libs/constants';
+import { Schema } from 'hast-util-sanitize';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-import { Schema } from 'hast-util-sanitize';
-import { CONTENT_ANCHOR_CLASS_NAME, CONTENT_ANCHOR_PREFIX } from '@/libs/constants';
+import remarkGfm from 'remark-gfm';
 
 /**
  * Parser of react-markdown.
