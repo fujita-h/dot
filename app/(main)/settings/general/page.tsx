@@ -7,18 +7,12 @@ import { Form } from './form';
 
 export default async function Page() {
   const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session);
-  if (status === 401) {
-    return <SignInForm />;
-  }
-  if (status === 500) {
-    return <Error500 />;
-  }
-  if (status === 404 || !sessionUserId) {
-    return <Error404 />;
-  }
+  const { status, userId, error } = await getUserIdFromSession(session, true);
+  if (status === 401) return <SignInForm />;
+  if (status === 500) return <Error500 />;
+  if (status === 404 || !userId) return <Error404 />;
 
-  const userSettings = await getUserProfileAndSettings(sessionUserId).catch(() => null);
+  const userSettings = await getUserProfileAndSettings(userId).catch(() => null);
   if (!userSettings) {
     return <Error404 />;
   }
