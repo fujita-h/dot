@@ -179,6 +179,7 @@ async function processPublish(
               create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
             },
             bodyBlobName: blobName,
+            releasedAt: new Date(),
           },
         }),
         prisma.draft.delete({ where: { id: draftId } }),
