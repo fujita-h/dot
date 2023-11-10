@@ -133,7 +133,7 @@ export function Form({
   useEffect(() => {
     if (actionState.status === 'success') {
       if (actionState.redirect) {
-        router.push(actionState.redirect);
+        router.replace(actionState.redirect);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
