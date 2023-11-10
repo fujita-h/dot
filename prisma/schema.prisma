@@ -252,12 +252,13 @@ model StockLabel {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   name      String
-  default   Boolean  @default(false)
+  default   Boolean?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Stocks    Stock[]
 
+  @@unique([userId, default])
   @@map("stock_label")
 }
 
