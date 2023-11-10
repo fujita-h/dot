@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUserAction, ActionState } from './actions';
+import { updateUserAction, ActionState } from './action';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { CameraIcon } from '@heroicons/react/24/outline';
