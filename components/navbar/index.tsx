@@ -120,12 +120,20 @@ export function Navbar({ userName, email }: { userName: string; email: string })
                       </Transition>
                     </Menu>
                     <div className="ml-2">
-                      <Link
+                      {/**
+                       * We use <a> tag instead of <Link> component to avoid "Router Cache" mechanism.
+                       * ref: https://nextjs.org/docs/app/building-your-application/caching
+                       *
+                       * "/draft/new" page MUST be rendered every time, but "Router Cache" mechanism caches the page for 30 seconds.
+                       * To avoid this, we use <a> tag. Because <a> tag navigation cause full page reload.
+                       *
+                       */}
+                      <a
                         href="/drafts/new"
                         className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
                         投稿する
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>
