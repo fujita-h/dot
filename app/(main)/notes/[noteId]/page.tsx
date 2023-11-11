@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 
   return (
     <div>
-      {note.Group ? (
+      {note.Group && (
         <div className="py-4 bg-white border-t border-gray-200">
           <div className="max-w-screen-2xl mx-auto">
             <div className="px-4 lg:px-8">
@@ -42,8 +42,6 @@ export default async function Page({ params }: { params: { noteId: string } }) {
             </div>
           </div>
         </div>
-      ) : (
-        <></>
       )}
       <div className="bg-slate-100 print:bg-white border-t border-gray-200">
         <div className="max-w-screen-2xl mx-auto">
