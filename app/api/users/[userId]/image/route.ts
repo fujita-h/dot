@@ -20,7 +20,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   const cache_control = no_cache ? 'no-store' : 'max-age=600';
 
   try {
-    const blobResponse = await blobClient.download('user', `${params.userId}/image`);
+    const blobResponse = await blobClient.download('users', `${params.userId}/image`);
     if (blobResponse.readableStreamBody && blobResponse.contentType) {
       return new Response(nodeToWebStream(blobResponse.readableStreamBody), {
         headers: [
