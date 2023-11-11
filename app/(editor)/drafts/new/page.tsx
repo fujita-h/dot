@@ -3,7 +3,7 @@ import { Error404, Error500 } from '@/components/error';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { createDraft } from '@/libs/prisma/draft';
-import { redirect } from 'next/navigation';
+import { RedirectType, redirect } from 'next/navigation';
 
 export default async function Page() {
   const session = await auth();
@@ -16,5 +16,5 @@ export default async function Page() {
   if (!draft) {
     return <Error500 />;
   }
-  redirect(`/drafts/${draft.id}/edit`);
+  redirect(`/drafts/${draft.id}/edit`, RedirectType.replace);
 }
