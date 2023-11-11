@@ -87,11 +87,14 @@ export function getDraft(userId: string, draftId: string) {
     });
 }
 
-export function getDraftWithTopics(userId: string, draftId: string) {
+export function getDraftWithGroupTopics(userId: string, draftId: string) {
   return prisma.draft
     .findUnique({
       where: { id: draftId, userId: userId },
-      include: { Topics: { include: { Topic: true } } },
+      include: {
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
     })
     .catch((e) => {
       console.error(e);

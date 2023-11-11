@@ -1,7 +1,7 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { getUserIdFromSession } from '@/libs/auth/utils';
-import { getDraftWithTopics } from '@/libs/prisma/draft';
+import { getDraftWithGroupTopics } from '@/libs/prisma/draft';
 import { getTopics } from '@/libs/prisma/topic';
 import { auth } from '@/libs/auth';
 import { Form } from './form';
@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { draftId: string } }) 
   if (!params.draftId) return <Error404 />;
 
   const [draft, topicOptions] = await Promise.all([
-    getDraftWithTopics(userId, params.draftId).catch((e) => null),
+    getDraftWithGroupTopics(userId, params.draftId).catch((e) => null),
     getTopics().catch((e) => []),
   ]);
 
