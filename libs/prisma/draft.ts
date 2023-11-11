@@ -76,6 +76,31 @@ export async function createDraft(
     });
 }
 
+export function getDraftsWithGroupTopic(userId: string, skip: number = 0, take?: number) {
+  return prisma.draft
+    .findMany({
+      where: { userId: userId },
+      orderBy: { updatedAt: 'desc' },
+      skip: skip,
+      take: take,
+      include: {
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching drafts');
+    });
+}
+
+export function getDraftsCount(userId: string) {
+  return prisma.draft.count({ where: { userId: userId } }).catch((e) => {
+    console.error(e);
+    throw new Error('Error occurred while fetching drafts');
+  });
+}
+
 export function getDraft(userId: string, draftId: string) {
   return prisma.draft
     .findUnique({

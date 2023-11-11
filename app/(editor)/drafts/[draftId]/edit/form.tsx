@@ -19,16 +19,17 @@ const initialActionState: ActionState = {
 
 const publishingOptions = [
   {
-    title: '公開する',
-    description: 'This job posting can be viewed by anyone who has the link.',
-    value: 'publish',
-    current: true,
-  },
-  {
     title: '下書きに保存',
-    description: 'This job posting will no longer be publicly accessible.',
+    description: '編集を中断して下書きに保存します。',
     value: 'draft',
     current: false,
+  },
+  {
+    title: '公開する',
+    description:
+      '編集を完了して公開します。グループを指定している場合は、グループの種類に応じて閲覧可能なアカウントが制限されます。',
+    value: 'publish',
+    current: true,
   },
 ];
 
