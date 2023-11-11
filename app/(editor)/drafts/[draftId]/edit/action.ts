@@ -101,7 +101,7 @@ async function processDraft(
     return { status: 'error', message: 'draft update failed', redirect: null, lastModified: Date.now() };
   }
 
-  return { status: 'success', message: null, redirect: '/drafts', lastModified: Date.now() };
+  return { status: 'success', message: null, redirect: `/drafts?id=${draft.id}`, lastModified: Date.now() };
 }
 
 async function processPublish(
