@@ -48,19 +48,13 @@ model UserClaim {
 }
 
 model UserSetting {
-  id             String         @id @default(cuid())
-  userId         String         @unique @map("user_id")
-  styleNotesView StyleNotesView @default(LIST) @map("style_notes_view")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @updatedAt @map("updated_at")
-  User           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_setting")
-}
-
-enum StyleNotesView {
-  LIST
-  GRID
 }
 
 model FollowUser {
@@ -117,7 +111,6 @@ model Group {
 
 enum GroupType {
   PRIVATE
-  RESTRICTED
   PUBLIC
 }
 
@@ -128,7 +121,7 @@ model Membership {
   updatedAt DateTime       @updatedAt @map("updated_at")
   User      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Group     Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  role      MembershipRole @default(MEMBER)
+  role      MembershipRole @default(CONTRIBUTOR)
 
   @@id([userId, groupId])
   @@index([role])
@@ -136,7 +129,8 @@ model Membership {
 }
 
 enum MembershipRole {
-  MEMBER
+  READER
+  CONTRIBUTOR
   ADMIN
 }
 

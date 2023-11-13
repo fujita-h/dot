@@ -36,11 +36,7 @@ export function getUserProfileAndSettings(userId: string) {
         handle: true,
         name: true,
         about: true,
-        UserSetting: {
-          select: {
-            styleNotesView: true,
-          },
-        },
+        UserSetting: true,
       },
       where: { id: userId },
     })
