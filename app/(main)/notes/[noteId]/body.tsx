@@ -1,3 +1,5 @@
+'server-only';
+
 import { Parser } from '@/components/react-markdown/parser';
 import blob from '@/libs/azure/storeage-blob/instance';
 
