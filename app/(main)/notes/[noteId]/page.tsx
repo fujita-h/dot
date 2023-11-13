@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
   if (status === 500) return <Error500 />;
   if (status === 404 || !userId) return <Error404 />;
 
-  const note = await getNoteWithUserGroupTopics(params.noteId).catch((e) => null);
+  const note = await getNoteWithUserGroupTopics(params.noteId, userId).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
 
   const releasedAt = note.releasedAt

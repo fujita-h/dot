@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
   const user = await getUserWithClaims(userId);
   if (!user) return <Error404 />;
 
-  const note = await getNoteWithUserGroupTopics(params.noteId).catch((e) => null);
+  const note = await getNoteWithUserGroupTopics(params.noteId, user.id).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
 
   const body = await blob
