@@ -76,13 +76,13 @@ export async function createDraft(
     });
 }
 
-export function getDraftsWithGroupTopic(userId: string, skip: number = 0, take?: number) {
+export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: number) {
   return prisma.draft
     .findMany({
       where: { userId: userId },
       orderBy: { updatedAt: 'desc' },
-      skip: skip,
       take: take,
+      skip: skip,
       include: {
         Group: true,
         Topics: { include: { Topic: true } },
