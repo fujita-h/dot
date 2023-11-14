@@ -9,21 +9,8 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
         id: noteId,
         OR: [
           { Group: null },
-          {
-            Group: {
-              type: 'PUBLIC',
-            },
-          },
-          {
-            Group: {
-              type: 'PRIVATE',
-              Members: {
-                some: {
-                  userId: requestUserId,
-                },
-              },
-            },
-          },
+          { Group: { type: 'PUBLIC' } },
+          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
       include: {
