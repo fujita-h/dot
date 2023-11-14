@@ -14,6 +14,28 @@ export function getUserId(userId: string) {
     });
 }
 
+export function getUser(userId: string) {
+  return prisma.user
+    .findUnique({
+      where: { id: userId },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching user');
+    });
+}
+
+export function getUserFromHandle(handle: string) {
+  return prisma.user
+    .findUnique({
+      where: { handle },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching user');
+    });
+}
+
 export function getUserWithClaims(userId: string) {
   return prisma.user
     .findUnique({
