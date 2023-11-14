@@ -34,6 +34,7 @@ export function Form({
       stockDefault(noteId)
         .then((res) => {
           setStockedLabels(res.stockedLabels);
+          setLabels(res.labels);
           setCount(res.count);
         })
         .catch((e) => {
