@@ -130,7 +130,7 @@ export function Navbar({ userName, email }: { userName: string; email: string })
                        */}
                       <a
                         href="/drafts/new"
-                        className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium font-noto-sans-jp text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
                         投稿する
                       </a>
