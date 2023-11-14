@@ -2,7 +2,6 @@ import { Parser } from '@/components/react-markdown/parser';
 import { TopicBadge } from '@/components/topic/badge';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { getDraftWithGroupTopics } from '@/libs/prisma/draft';
-import Link from 'next/link';
 import { OtherMenuButton } from './form';
 
 export async function Preview({ userId, id, page }: { userId: string; id?: string; page: number }) {
@@ -35,11 +34,11 @@ export async function Preview({ userId, id, page }: { userId: string; id?: strin
           </div>
           <div>
             <div className="flex gap-3">
-              <Link href={`/drafts/${draft.id}/edit`}>
+              <a href={`/drafts/${draft.id}/edit`}>
                 <div className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   編集する
                 </div>
-              </Link>
+              </a>
               <div className="inline-flex items-center rounded-md bg-white text-sm font-semibold text-indigo-800 shadow-sm ring-1 ring-gray-300 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <OtherMenuButton id={draft.id} page={page} />
               </div>
