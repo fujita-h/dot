@@ -10,7 +10,7 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
   const [drafts, count] = await Promise.all([
-    getDraftsWithGroupTopic(userId, skip, ITEMS_PER_PAGE),
+    getDraftsWithGroupTopic(userId, ITEMS_PER_PAGE, skip),
     getDraftsCount(userId),
   ]);
 
