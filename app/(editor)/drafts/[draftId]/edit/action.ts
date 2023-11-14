@@ -38,6 +38,25 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
   if (!draftId) {
     return { status: 'error', message: 'invalid draft id', redirect: null, lastModified: Date.now() };
   }
+
+  // check group
+  if (groupId) {
+    const group = await prisma.group
+      .findUnique({
+        where: {
+          id: groupId,
+          OR: [
+            { type: 'PUBLIC' },
+            { type: 'PRIVATE', Members: { some: { userId: user.id, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          ],
+        },
+      })
+      .catch((err) => null);
+    if (!group) {
+      return { status: 'error', message: 'invalid group id', redirect: null, lastModified: Date.now() };
+    }
+  }
+
   switch (submit) {
     case 'draft':
       return processDraft(user, draftId, groupId, relatedNoteId, title, topics, body);
