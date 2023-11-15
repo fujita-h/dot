@@ -8,6 +8,7 @@ import { SITE_NAME } from '@/libs/constants';
 import { getNotesWithUserGroupTopics } from '@/libs/prisma/note';
 import { getUserFromHandle } from '@/libs/prisma/user';
 import { Metadata } from 'next';
+
 type Props = {
   params: { handle: string };
   searchParams: { [key: string]: string | string[] | undefined };
