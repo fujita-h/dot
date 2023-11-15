@@ -67,20 +67,24 @@ export default async function Page({ params }: Props) {
             <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">フォロー中のトピック</div>
           </div>
         </div>
-        <div className="md:flex-1 bg-white rounded-md p-2">
-          <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定された記事</div>
-          </div>
-          <div className="my-3">
-            <SimpleTab
-              tabs={[
-                { name: '投稿した記事', href: '#', current: true },
-                { name: 'コメントした記事', href: './comments', current: false },
-              ]}
-            />
-          </div>
-          <div>
-            <StackList notes={notes} />
+        <div className="md:flex-1">
+          <div className="flex flex-col gap-3">
+            <div className="bg-white rounded-md p-2">
+              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
+            </div>
+            <div className="bg-white rounded-md p-2">
+              <div className="my-3">
+                <SimpleTab
+                  tabs={[
+                    { name: '投稿したノート', href: '#', current: true },
+                    { name: 'コメントしたノート', href: './comments', current: false },
+                  ]}
+                />
+              </div>
+              <div>
+                <StackList notes={notes} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
