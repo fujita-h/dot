@@ -58,7 +58,7 @@ export default async function Page({ params }: Props) {
               'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]'
             )}
           >
-            <img src={'/api/user/icon'} className="w-full h-full p-1 lg:p-2 rounded-full" alt="user-icon" />
+            <img src={`/api/users/${user.id}/icon`} className="w-full h-full p-1 lg:p-2 rounded-full" alt="user-icon" />
           </div>
         </div>
         <div
