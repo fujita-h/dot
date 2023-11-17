@@ -52,13 +52,13 @@ export default async function Page({ params }: Props) {
           />
           <div
             className={clsx(
-              'absolute bg-white rounded-full',
+              'absolute bg-white rounded-full p-1 lg:p-2',
               'top-[60%] sm:top-[50%] left-[5%]',
               'w-[80px] sm:w-[100px] md:w-[120px] lg:w-[140px] xl:w-[160px]',
               'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]'
             )}
           >
-            <img src={`/api/users/${user.id}/icon`} className="w-full h-full p-1 lg:p-2 rounded-full" alt="user-icon" />
+            <img src={`/api/users/${user.id}/icon`} className="w-full h-full rounded-full" alt="user-icon" />
           </div>
         </div>
         <div
