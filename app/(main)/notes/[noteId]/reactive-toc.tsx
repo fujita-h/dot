@@ -7,6 +7,6 @@ const DynamicReactiveToC = dynamic(
   { ssr: false }
 );
 
-export async function ReactiveToC({ body }: { body: string }) {
+export function ReactiveToC({ body }: { body: string }) {
   return <DynamicReactiveToC>{body}</DynamicReactiveToC>;
 }
