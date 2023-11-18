@@ -55,7 +55,7 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
               <div className="flex gap-1 p-2">
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex justify-between">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 truncate">
                       {draft.Group && (
                         <img
                           src={`/api/groups/${draft.Group.id}/icon`}
