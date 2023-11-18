@@ -1,7 +1,8 @@
-import { getDraftsWithGroupTopic, getDraftsCount } from '@/libs/prisma/draft';
-import Link from 'next/link';
-import clsx from 'clsx';
+import { SimplePagination } from '@/components/paginations/simple';
+import { getDraftsCount, getDraftsWithGroupTopic } from '@/libs/prisma/draft';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
+import clsx from 'clsx';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 10;
@@ -26,10 +27,15 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
     return <div>下書きがありません</div>;
   }
 
+  const searchParams = new URLSearchParams();
+  if (id) {
+    searchParams.set('id', id);
+  }
+
   return (
     <div>
       <div className="mb-3 px-1">
-        <Pagination id={id} page={page} lastPage={lastPage} />
+        <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
       </div>
       <ul role="list" className="grid grid-cols-1 gap-1">
         {drafts.map((draft) => {
@@ -79,47 +85,7 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
         })}
       </ul>
       <div className="mt-3 px-1">
-        <Pagination id={id} page={page} lastPage={lastPage} />
-      </div>
-    </div>
-  );
-}
-
-function Pagination({ id, page, lastPage }: { id?: string; page: number; lastPage: number }) {
-  const prevParams = new URLSearchParams();
-  prevParams.set('page', (page - 1).toString());
-  if (id) prevParams.set('id', id);
-  const prevHref = `/drafts?${prevParams.toString()}`;
-
-  const nextParams = new URLSearchParams();
-  nextParams.set('page', (page + 1).toString());
-  if (id) nextParams.set('id', id);
-  const nextHref = `/drafts?${nextParams.toString()}`;
-
-  return (
-    <div className="flex justify-between">
-      <div className="flex-1">
-        {page > 1 && (
-          <Link href={prevHref}>
-            <span className="text-sm font-noto-sans-jp font-semibold text-gray-500 hover:text-gray-700 hover:underline">
-              前へ
-            </span>
-          </Link>
-        )}
-      </div>
-      <div className="flex-1 text-center">
-        <span className="text-xs font-semibold text-gray-500">
-          {page} / {lastPage}
-        </span>
-      </div>
-      <div className="flex-1 text-right">
-        {page < lastPage && (
-          <Link href={nextHref}>
-            <span className="text-sm font-noto-sans-jp font-semibold text-gray-500 hover:text-gray-700 hover:underline">
-              次へ
-            </span>
-          </Link>
-        )}
+        <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
       </div>
     </div>
   );
