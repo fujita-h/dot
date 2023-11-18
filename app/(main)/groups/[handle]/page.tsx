@@ -64,7 +64,7 @@ export default async function Page({ params, searchParams }: Props) {
     getNotesCountByGroupId(group.id).catch((e) => 0),
   ]);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
-  if (page > lastPage) {
+  if (page > lastPage && lastPage > 0) {
     const params = new URLSearchParams();
     params.set('page', lastPage.toString());
     redirect(`?${params.toString()}`);
