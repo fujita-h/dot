@@ -5,14 +5,21 @@ import { getUserIdFromSession } from '@/libs/auth/utils';
 import { createDraft } from '@/libs/prisma/draft';
 import { RedirectType, redirect } from 'next/navigation';
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
   const { status, userId } = await getUserIdFromSession(session, true);
   if (status === 401) return <SignInForm />;
   if (status === 500) return <Error500 />;
   if (status === 404 || !userId) return <Error404 />;
 
-  const draft = await createDraft(userId).catch((e) => null);
+  const { group } = searchParams;
+  const groupId = Array.isArray(group) ? group[0] : group;
+
+  const draft = await createDraft(userId, { groupId }).catch((e) => null);
   if (!draft) {
     return <Error500 />;
   }

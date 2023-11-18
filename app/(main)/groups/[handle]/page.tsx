@@ -7,6 +7,7 @@ import { getGroupFromHandle, getGroupFromHandleWithMembers } from '@/libs/prisma
 import clsx from 'clsx';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { OtherMenuButton } from './form';
 
 type Props = {
   params: { handle: string };
@@ -107,12 +108,27 @@ function Header({ group }: { group: { id: string; name: string } }) {
       </div>
       <div
         className={clsx(
-          'mt-1 lg:mt-2',
+          'mt-1 lg:mt-2 mr-2',
           'ml-[calc(5%_+_80px_+_8px)] sm:ml-[calc(5%_+_100px_+_8px)] md:ml-[calc(5%_+_120px_+_10px)] lg:ml-[calc(5%_+_140px_+_12px)] xl:ml-[calc(5%_+_160px_+_12px)]',
           'min-h-[60px] md:min-h-[70px] lg:min-h-[80px] xl:min-h-[90px]'
         )}
       >
-        <div className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold truncate">{group.name}</div>
+        <div className="flex justify-between gap-2">
+          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">{group.name}</div>
+          <div className="hidden lg:flex lg:flex-none lg:gap-2">
+            <div>
+              <a
+                href={`/drafts/new?group=${group.id}`}
+                className="inline-flex items-center rounded-md bg-indigo-600 px-2 py-2 text-sm font-medium font-noto-sans-jp text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                このグループに投稿する
+              </a>
+            </div>
+            <div className="inline-flex items-center rounded-md bg-white text-sm font-semibold text-indigo-800 shadow-sm ring-1 ring-inset h-9 ring-gray-300 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <OtherMenuButton id={group.id} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
