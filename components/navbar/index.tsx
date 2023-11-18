@@ -1,18 +1,22 @@
 'use client';
 
+import { SITE_NAME } from '@/libs/constants';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { MagnifyingGlassIcon, UserIcon } from '@heroicons/react/20/solid';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
-import { TextLogo } from '../text-logo';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const navigation: any[] = [];
+const navigation = [
+  { name: 'ホーム', href: '/', current: false, matchPath: /^\/$/ },
+  { name: 'タイムライン', href: '/timeline', current: false, matchPath: /^\/timeline/ },
+  { name: 'グループ', href: '/groups', current: false, matchPath: /^\/groups/ },
+];
 const userNavigation = [
   { name: 'プロフィール', href: '/profile' },
   { name: 'ストック', href: '/stocks' },
@@ -21,6 +25,10 @@ const userNavigation = [
 ];
 
 export function Navbar({ userName, email }: { userName: string; email: string }) {
+  const pathname = usePathname();
+  navigation.forEach((item) => {
+    item.current = item.matchPath.test(pathname);
+  });
   return (
     <div className="bg-white">
       <div className="max-w-screen-2xl mx-auto">
@@ -29,23 +37,23 @@ export function Navbar({ userName, email }: { userName: string; email: string })
             <>
               <div className="mx-auto px-2 sm:px-4 lg:px-8">
                 <div className="flex h-16 justify-between">
-                  <div className="flex px-2 lg:px-0">
+                  <div className="flex lg:flex-col  px-2 lg:px-0">
                     <div className="flex flex-shrink-0 items-center">
                       <Link href="/">
-                        <div className="flex items-center gap-2">
-                          <div className="pt-3">
-                            <TextLogo />
+                        <div className="flex items-center">
+                          <div className="pt-1">
+                            <span className="text-2xl text-gray-700 font-semibold">{SITE_NAME}</span>
                           </div>
                         </div>
                       </Link>
                     </div>
-                    <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
+                    <div className="hidden lg:flex lg:space-x-4">
                       {navigation.map((item) => (
                         <Link
                           key={item.name}
                           href={item.href}
                           className={clsx(
-                            'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium',
+                            'inline-flex items-end border-b-2 px-1 pt-1 text-sm font-noto-sans-jp font-semibold',
                             item.current
                               ? 'border-indigo-500 text-gray-900'
                               : 'border-transparent text-gray-500 hover:text-gray-700'
