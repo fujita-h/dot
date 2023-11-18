@@ -49,3 +49,33 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
       throw new Error('Error occurred while fetching notes');
     });
 }
+
+export function getNotesWithUserGroupTopicsByGroupId(groupId: string, take?: number, skip?: number) {
+  return prisma.note
+    .findMany({
+      where: { Group: { id: groupId } },
+      orderBy: { releasedAt: 'desc' },
+      take,
+      skip,
+      include: {
+        User: true,
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
+export function getNotesCountByGroupId(groupId: string) {
+  return prisma.note
+    .count({
+      where: { Group: { id: groupId } },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}

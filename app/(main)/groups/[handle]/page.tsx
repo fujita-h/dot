@@ -1,13 +1,19 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
+import { StackList } from '@/components/notes/stack-list';
+import { SimplePagination } from '@/components/paginations/simple';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getGroupFromHandle, getGroupFromHandleWithMembers } from '@/libs/prisma/group';
+import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { OtherMenuButton } from './form';
+
+const ITEMS_PER_PAGE = 10;
 
 type Props = {
   params: { handle: string };
@@ -26,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${group.name} - ${SITE_NAME}` };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   const session = await auth();
   const { status, userId: sessionUserId } = await getUserIdFromSession(session, true);
   if (status === 401) return <SignInForm />;
@@ -47,6 +53,21 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
     );
+  }
+
+  const _page = Number(searchParams.page);
+  const page = _page === undefined || _page === null || Number.isNaN(_page) || _page < 1 ? 1 : Math.floor(_page);
+  const skip = (page - 1) * ITEMS_PER_PAGE;
+
+  const [notes, count] = await Promise.all([
+    getNotesWithUserGroupTopicsByGroupId(group.id, ITEMS_PER_PAGE, skip).catch((e) => []),
+    getNotesCountByGroupId(group.id).catch((e) => 0),
+  ]);
+  const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
+  if (page > lastPage) {
+    const params = new URLSearchParams();
+    params.set('page', lastPage.toString());
+    redirect(`?${params.toString()}`);
   }
 
   return (
@@ -78,6 +99,10 @@ export default async function Page({ params }: Props) {
             </div>
             <div className="bg-white rounded-md p-2">
               <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">ノート</div>
+              <StackList notes={notes} />
+              <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
+                <SimplePagination page={page} lastPage={lastPage} />
+              </div>
             </div>
           </div>
         </div>
