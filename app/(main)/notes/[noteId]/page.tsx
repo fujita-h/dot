@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
             <div className="px-4 lg:px-8">
               <Link href={`/groups/${note.Group.handle}`}>
                 <div className="flex items-center">
-                  <img src={`/groups/${note.Group.id}/photo`} className="w-10 h-10 rounded-md" alt="group icon" />
+                  <img src={`/api/groups/${note.Group.id}/icon`} className="w-10 h-10 rounded-md" alt="group icon" />
                   <div className="ml-3 text-xl font-bold text-gray-900 hover:text-gray-500 hover:underline">
                     {note.Group.name}
                   </div>
@@ -88,11 +88,11 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                     {note.Group ? (
                       <div className="py-2">
                         <div className="inline-block py-1 px-2 rounded-md bg-white ring-1 ring-gray-200">
-                          <div className="mx-2 flex space-x-2 items-center">
-                            <div>
+                          <div className="mx-1 flex space-x-2 items-center">
+                            <div className="flex-none">
                               <img
                                 src={`/api/groups/${note.Group.id}/icon`}
-                                className="w-5 h-5 rounded-md"
+                                className="w-8 h-8 rounded-md"
                                 alt="group icon"
                               />
                             </div>
