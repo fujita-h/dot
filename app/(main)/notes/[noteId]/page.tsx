@@ -10,6 +10,7 @@ import { Body } from './body';
 import { OtherMenuButton } from './form';
 import { ToC } from './toc';
 import { TopicBadge } from '@/components/topic/badge';
+import styles from './styles.module.css';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
   const session = await auth();
@@ -130,7 +131,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               </div>
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
-                  <div>
+                  <div className={styles.note}>
                     <Body bodyBlobName={note.bodyBlobName} />
                   </div>
                 </div>
