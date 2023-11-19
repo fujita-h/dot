@@ -2,112 +2,50 @@
 
 import { EditorForm } from '@/components/editor/form';
 import { Item as TopicItem } from '@/components/editor/topic-input';
-import { action, ActionState } from './action';
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useState, Fragment } from 'react';
-import { Listbox, Transition } from '@headlessui/react';
-import { useRouter } from 'next/navigation';
-import { CheckIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import { SITE_NAME } from '@/libs/constants';
+import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Fragment, useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import { ActionState, action } from './action';
 
 const initialActionState: ActionState = {
+  submit: null,
   status: null,
   message: null,
   redirect: null,
   lastModified: 0,
 };
 
-const publishingOptions = [
-  {
-    title: '下書きに保存',
-    description: '編集を中断して下書きに保存します。',
-    value: 'draft',
-    current: false,
-  },
-  {
-    title: '公開する',
-    description:
-      '編集を完了して公開します。グループを指定している場合は、グループの種類に応じて閲覧可能なアカウントが制限されます。',
-    value: 'publish',
-    current: true,
-  },
-];
-
-function SubmitButton() {
+function PublishButton({ action }: { action: (payload: FormData) => void }) {
   const { pending } = useFormStatus();
-  const [selected, setSelected] = useState(publishingOptions[0]);
-
   return (
-    <Listbox disabled={pending} value={selected} onChange={setSelected}>
-      {({ open }) => (
-        <>
-          <Listbox.Label className="sr-only">Change published status</Listbox.Label>
-          <div className="relative">
-            <input type="hidden" name="submit" value={selected.value} />
-            <div className="inline-flex divide-x divide-indigo-700 rounded-md shadow-sm">
-              <button
-                type="submit"
-                disabled={pending}
-                aria-disabled={pending}
-                className="inline-flex items-center gap-x-1.5 rounded-l-md bg-indigo-600 px-3 py-2 text-white shadow-sm disabled:cursor-wait disabled:bg-indigo-600/70"
-              >
-                <CheckIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                <p className="text-sm font-semibold">{selected.title}</p>
-              </button>
-              <button
-                type="button"
-                disabled={pending}
-                className="rounded-l-none rounded-r-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:cursor-wait disabled:bg-indigo-600/70"
-              >
-                <Listbox.Button as="div" className="inline-flex items-center p-2 disabled:cursor-wait">
-                  <span className="sr-only">Change published status</span>
-                  <ChevronUpIcon className="h-5 w-5 text-white" aria-hidden="true" />
-                </Listbox.Button>
-              </button>
-            </div>
+    <button
+      type="submit"
+      formAction={action}
+      disabled={pending}
+      aria-disabled={pending}
+      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
+    >
+      公開する
+    </button>
+  );
+}
 
-            <Transition
-              show={open}
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="absolute bottom-11 right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {publishingOptions.map((option) => (
-                  <Listbox.Option
-                    key={option.title}
-                    className={({ active }) =>
-                      clsx(
-                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                        'cursor-default select-none p-4 text-sm'
-                      )
-                    }
-                    value={option}
-                  >
-                    {({ selected, active }) => (
-                      <div className="flex flex-col">
-                        <div className="flex justify-between">
-                          <p className={selected ? 'font-semibold' : 'font-normal'}>{option.title}</p>
-                          {selected ? (
-                            <span className={active ? 'text-white' : 'text-indigo-600'}>
-                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                          ) : null}
-                        </div>
-                        <p className={clsx(active ? 'text-indigo-200' : 'text-gray-500', 'mt-2')}>
-                          {option.description}
-                        </p>
-                      </div>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Transition>
-          </div>
-        </>
-      )}
-    </Listbox>
+function DraftButton({ action }: { action: (payload: FormData) => void }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      formAction={action}
+      disabled={pending}
+      aria-disabled={pending}
+      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
+    >
+      下書きに保存
+    </button>
   );
 }
 
@@ -128,31 +66,112 @@ export function Form({
   topics: TopicItem[];
   topicOptions: TopicItem[];
 }) {
-  const [actionState, formAction] = useFormState(action, initialActionState);
   const router = useRouter();
+  const [publishActionState, formPublishAction] = useFormState(action, { ...initialActionState, submit: 'publish' });
+  const [draftActionState, formDraftAction] = useFormState(action, { ...initialActionState, submit: 'draft' });
 
   useEffect(() => {
-    if (actionState.status === 'success') {
-      if (actionState.redirect) {
-        router.replace(actionState.redirect);
+    if (publishActionState.status === 'success') {
+      if (publishActionState.redirect) {
+        router.replace(publishActionState.redirect);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionState.lastModified]);
+  }, [publishActionState.lastModified]);
+
+  useEffect(() => {
+    if (draftActionState.status === 'success') {
+      if (draftActionState.redirect) {
+        router.replace(draftActionState.redirect);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftActionState.lastModified]);
 
   return (
-    <div className="h-full p-2">
-      <form className="h-full" action={formAction}>
+    <form className="h-full">
+      <NavBar formDraftAction={formDraftAction} formPublishAction={formPublishAction} />
+      <div className="h-[calc(100%_-_56px)] p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
-        <div className="h-[calc(100%_-_44px)]">
+        <div className="h-full">
           <EditorForm title={title} body={body} topics={topics} topicOptions={topicOptions} />
         </div>
-        <div className="relative flex mt-2 justify-end">
-          <SubmitButton />
+      </div>
+    </form>
+  );
+}
+
+const userNavigation = [
+  { name: 'プロフィール', href: '/profile' },
+  { name: 'ストック', href: '/stocks' },
+  { name: '下書き', href: '/drafts' },
+  { name: '設定', href: '/settings' },
+];
+
+function NavBar({
+  formDraftAction,
+  formPublishAction,
+}: {
+  formDraftAction: (payload: FormData) => void;
+  formPublishAction: (payload: FormData) => void;
+}) {
+  return (
+    <div className="bg-white">
+      <div className="mx-auto px-8">
+        <div className="flex h-14 justify-between">
+          <div className="flex flex-shrink-0 items-center">
+            <Link href="/">
+              <div className="flex items-center">
+                <div className="pt-1">
+                  <span className="text-2xl text-gray-700 font-semibold">{SITE_NAME}</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+          <div className="flex items-center gap-2">
+            <DraftButton action={formDraftAction} />
+            <PublishButton action={formPublishAction} />
+            {/* Profile dropdown */}
+            <Menu as="div" className="ml-1 relative flex-shrink-0">
+              <div>
+                <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <span className="sr-only">Open user menu</span>
+                  <img src="/api/user/icon" width={32} height={32} className="rounded-full" alt="user-icon" />
+                </Menu.Button>
+              </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                  {userNavigation.map((item) => (
+                    <Menu.Item key={item.name}>
+                      {({ active }) => (
+                        <Link
+                          href={item.href}
+                          className={clsx(
+                            active ? 'bg-gray-100' : '',
+                            'block px-4 py-2 text-sm font-semibold text-gray-600'
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

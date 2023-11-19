@@ -10,6 +10,7 @@ import { getUserWithClaims } from '@/libs/prisma/user';
 const cuid = initCuid({ length: 24 });
 
 export interface ActionState {
+  submit: string | null;
   status: string | null;
   message: string | null;
   redirect: string | null;
@@ -20,23 +21,23 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
   const session = await auth();
   const { userId } = await getUserIdFromSession(session);
   if (!userId) {
-    return { status: 'error', message: 'not authorized', redirect: null, lastModified: Date.now() };
+    return { submit: null, status: 'error', message: 'not authorized', redirect: null, lastModified: Date.now() };
   }
   const user = await getUserWithClaims(userId);
   if (!user) {
-    return { status: 'error', message: 'user not found', redirect: null, lastModified: Date.now() };
+    return { submit: null, status: 'error', message: 'user not found', redirect: null, lastModified: Date.now() };
   }
 
+  const submit = state.submit;
   const draftId = formData.get('draftId') as string;
   const groupId = (formData.get('groupId') as string) || undefined;
   const relatedNoteId = (formData.get('relatedNoteId') as string) || undefined;
   const title = formData.get('title') as string;
   const topics = formData.getAll('topics') as string[];
   const body = formData.get('body') as string;
-  const submit = formData.get('submit') as string;
 
   if (!draftId) {
-    return { status: 'error', message: 'invalid draft id', redirect: null, lastModified: Date.now() };
+    return { submit: null, status: 'error', message: 'invalid draft id', redirect: null, lastModified: Date.now() };
   }
 
   // check group
@@ -53,7 +54,7 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
       })
       .catch((err) => null);
     if (!group) {
-      return { status: 'error', message: 'invalid group id', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'invalid group id', redirect: null, lastModified: Date.now() };
     }
   }
 
@@ -63,7 +64,7 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
     case 'publish':
       return processPublish(user, draftId, groupId, relatedNoteId, title, topics, body);
     default:
-      return { status: 'error', message: 'invalid submit', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'invalid submit', redirect: null, lastModified: Date.now() };
   }
 }
 
@@ -96,7 +97,7 @@ async function processDraft(
     .catch((err) => 500);
 
   if (blobUploadResult !== 201) {
-    return { status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
+    return { submit: null, status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
   }
 
   const draft = await prisma.draft
@@ -117,10 +118,16 @@ async function processDraft(
 
   if (!draft) {
     await blob.delete('drafts', blobName).catch((err) => null);
-    return { status: 'error', message: 'draft update failed', redirect: null, lastModified: Date.now() };
+    return { submit: null, status: 'error', message: 'draft update failed', redirect: null, lastModified: Date.now() };
   }
 
-  return { status: 'success', message: null, redirect: `/drafts?id=${draft.id}`, lastModified: Date.now() };
+  return {
+    submit: null,
+    status: 'success',
+    message: null,
+    redirect: `/drafts?id=${draft.id}`,
+    lastModified: Date.now(),
+  };
 }
 
 async function processPublish(
@@ -151,7 +158,7 @@ async function processPublish(
       .then((res) => res._response.status)
       .catch((err) => 500);
     if (blobUploadResult !== 201) {
-      return { status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
     }
 
     const [note, draft] = await prisma.$transaction([
@@ -172,9 +179,9 @@ async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      return { status: 'error', message: 'note update failed', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'note update failed', redirect: null, lastModified: Date.now() };
     }
-    return { status: 'success', message: null, redirect: `/notes/${note.id}`, lastModified: Date.now() };
+    return { submit: null, status: 'success', message: null, redirect: `/notes/${note.id}`, lastModified: Date.now() };
   } else {
     // create note
     const noteId = cuid();
@@ -184,7 +191,7 @@ async function processPublish(
       .then((res) => res._response.status)
       .catch((err) => 500);
     if (blobUploadResult !== 201) {
-      return { status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'blob upload failed', redirect: null, lastModified: Date.now() };
     }
     const [note, draft] = await prisma
       .$transaction([
@@ -207,8 +214,8 @@ async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      return { status: 'error', message: 'note create failed', redirect: null, lastModified: Date.now() };
+      return { submit: null, status: 'error', message: 'note create failed', redirect: null, lastModified: Date.now() };
     }
-    return { status: 'success', message: null, redirect: `/notes/${note.id}`, lastModified: Date.now() };
+    return { submit: null, status: 'success', message: null, redirect: `/notes/${note.id}`, lastModified: Date.now() };
   }
 }
