@@ -63,7 +63,7 @@ export function getGroupFromHandle(handle: string) {
   });
 }
 
-export function getGroupFromHandleWithMembers(handle: string) {
+export function getGroupWithMembersFromHandle(handle: string) {
   return prisma.group
     .findUnique({
       where: { handle },

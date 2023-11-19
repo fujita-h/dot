@@ -5,7 +5,7 @@ import { SimplePagination } from '@/components/paginations/simple';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
-import { getGroupFromHandle, getGroupFromHandleWithMembers } from '@/libs/prisma/group';
+import { getGroupFromHandle, getGroupWithMembersFromHandle } from '@/libs/prisma/group';
 import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
 import clsx from 'clsx';
 import { Metadata } from 'next';
@@ -39,7 +39,7 @@ export default async function Page({ params, searchParams }: Props) {
   if (status === 500) return <Error500 />;
   if (status === 404 || !sessionUserId) return <Error404 />;
 
-  const group = await getGroupFromHandleWithMembers(params.handle).catch((e) => null);
+  const group = await getGroupWithMembersFromHandle(params.handle).catch((e) => null);
   if (!group) return <Error404 />;
 
   if (group.type === 'PRIVATE' && !group.Members.find((member) => member.userId === sessionUserId)) {
