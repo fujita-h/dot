@@ -6,9 +6,10 @@ import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getNotesWithUserGroupTopics } from '@/libs/prisma/note';
-import { getUserFromHandle } from '@/libs/prisma/user';
+import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
 import clsx from 'clsx';
 import { Metadata } from 'next';
+import { FollowToggleButton } from './form';
 
 type Props = {
   params: { handle: string };
@@ -34,8 +35,10 @@ export default async function Page({ params }: Props) {
   if (status === 500) return <Error500 />;
   if (status === 404 || !sessionUserId) return <Error404 />;
 
-  const user = await getUserFromHandle(params.handle).catch((e) => null);
+  const user = await getUserWithFollowedFromHandle(params.handle).catch((e) => null);
   if (!user) return <Error404 />;
+
+  const isFollowing = user.FollowedUsers.find((follow) => follow.fromUserId === sessionUserId) ? true : false;
 
   const notes = await getNotesWithUserGroupTopics(user.id);
 
@@ -63,13 +66,22 @@ export default async function Page({ params }: Props) {
         </div>
         <div
           className={clsx(
-            'mt-1 lg:mt-2',
+            'mt-1 lg:mt-2 mr-2',
             'ml-[calc(5%_+_80px_+_5px)] sm:ml-[calc(5%_+_100px_+_5px)] md:ml-[calc(5%_+_120px_+_5px)] lg:ml-[calc(5%_+_140px_+_5px)] xl:ml-[calc(5%_+_160px_+_5px)]',
             'min-h-[60px] md:min-h-[70px] lg:min-h-[80px] xl:min-h-[90px]'
           )}
         >
-          <div className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold truncate">{user.name}</div>
-          <div className="text-xs md:text-sm lg:text-base text-gray-500 truncate">@{user.handle}</div>
+          <div className="flex justify-between gap-2">
+            <div>
+              <div className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold truncate">{user.name}</div>
+              <div className="text-xs md:text-sm lg:text-base text-gray-500 truncate">@{user.handle}</div>
+            </div>
+            <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
+              <div>
+                <FollowToggleButton id={user.id} isFollowing={isFollowing} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="md:flex md:gap-1">

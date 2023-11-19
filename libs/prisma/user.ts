@@ -36,6 +36,20 @@ export function getUserFromHandle(handle: string) {
     });
 }
 
+export function getUserWithFollowedFromHandle(handle: string) {
+  return prisma.user
+    .findUnique({
+      where: { handle },
+      include: {
+        FollowedUsers: true,
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching user');
+    });
+}
+
 export function getUserWithClaims(userId: string) {
   return prisma.user
     .findUnique({
