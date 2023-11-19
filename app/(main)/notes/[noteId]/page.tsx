@@ -2,15 +2,15 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
+import { TopicBadge } from '@/components/topic/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import Link from 'next/link';
 import { Body } from './body';
 import { OtherMenuButton } from './form';
-import { ToC } from './toc';
-import { TopicBadge } from '@/components/topic/badge';
 import styles from './styles.module.css';
+import { ToC } from './toc';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
   const session = await auth();
