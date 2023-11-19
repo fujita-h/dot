@@ -29,6 +29,7 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
   return prisma.note
     .findMany({
       where: {
+        userId: requestUserId,
         OR: [
           { Group: null },
           { Group: { type: 'PUBLIC' } },
