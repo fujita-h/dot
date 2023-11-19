@@ -9,6 +9,35 @@ export function getGroups() {
   });
 }
 
+export function getJoinedGroups(userId: string) {
+  return prisma.group
+    .findMany({
+      where: { Members: { some: { userId } } },
+      orderBy: { handle: 'asc' },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching groups');
+    });
+}
+
+export function getPostableGroups(userId: string) {
+  return prisma.group
+    .findMany({
+      where: {
+        OR: [
+          { type: 'PUBLIC' },
+          { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+        ],
+      },
+      orderBy: { handle: 'asc' },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching groups');
+    });
+}
+
 export function getGroupsWithRecentNotesCountHEAVY(days: number, take?: number, skip?: number) {
   return prisma.group
     .findMany({
