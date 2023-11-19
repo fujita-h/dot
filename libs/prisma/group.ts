@@ -80,7 +80,7 @@ export function getGroupFromHandle(handle: string) {
   });
 }
 
-export function getGroupWithMembersFromHandle(handle: string) {
+export function getGroupWithMembersFollowedFromHandle(handle: string) {
   return prisma.group
     .findUnique({
       where: { handle },
@@ -89,6 +89,7 @@ export function getGroupWithMembersFromHandle(handle: string) {
           include: { User: true },
           orderBy: { role: 'desc' },
         },
+        FollowedUsers: true,
       },
     })
     .catch((e) => {

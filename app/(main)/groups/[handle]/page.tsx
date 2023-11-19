@@ -5,13 +5,13 @@ import { SimplePagination } from '@/components/paginations/simple';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
-import { getGroupFromHandle, getGroupWithMembersFromHandle } from '@/libs/prisma/group';
+import { getGroupFromHandle, getGroupWithMembersFollowedFromHandle } from '@/libs/prisma/group';
 import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { OtherMenuButton } from './form';
+import { FollowToggleButton, OtherMenuButton } from './form';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -39,13 +39,15 @@ export default async function Page({ params, searchParams }: Props) {
   if (status === 500) return <Error500 />;
   if (status === 404 || !sessionUserId) return <Error404 />;
 
-  const group = await getGroupWithMembersFromHandle(params.handle).catch((e) => null);
+  const group = await getGroupWithMembersFollowedFromHandle(params.handle).catch((e) => null);
   if (!group) return <Error404 />;
+
+  const isFollowing = group.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
 
   if (group.type === 'PRIVATE' && !group.Members.find((member) => member.userId === sessionUserId)) {
     return (
       <div className="space-y-4">
-        <Header group={group} />
+        <Header group={group} isFollowing={false} />
         <div className="md:flex md:gap-1">
           <div className="mt-4 flex-1 items-center">
             <div>あなたにはこのグループを参照する権限がありません</div>
@@ -72,7 +74,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   return (
     <div className="space-y-4">
-      <Header group={group} />
+      <Header group={group} isFollowing={isFollowing} />
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
@@ -111,7 +113,7 @@ export default async function Page({ params, searchParams }: Props) {
   );
 }
 
-function Header({ group }: { group: { id: string; name: string } }) {
+function Header({ group, isFollowing }: { group: { id: string; name: string }; isFollowing: boolean }) {
   return (
     <div className="bg-white rounded-md">
       <div className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}>
@@ -140,14 +142,9 @@ function Header({ group }: { group: { id: string; name: string } }) {
       >
         <div className="flex justify-between gap-2">
           <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">{group.name}</div>
-          <div className="hidden lg:flex lg:flex-none lg:gap-2">
+          <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
             <div>
-              <a
-                href={`/drafts/new?group=${group.id}`}
-                className="inline-flex items-center rounded-md bg-indigo-600 px-2 py-2 text-sm font-medium font-noto-sans-jp text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                このグループに投稿する
-              </a>
+              <FollowToggleButton id={group.id} isFollowing={isFollowing} />
             </div>
             <div className="inline-flex items-center rounded-md bg-white text-sm font-semibold text-indigo-800 shadow-sm ring-1 ring-inset h-9 ring-gray-300 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <OtherMenuButton id={group.id} />
