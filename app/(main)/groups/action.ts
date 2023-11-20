@@ -34,7 +34,6 @@ export async function createGroupAction(state: ActionState, formData: FormData):
     };
   }
 
-  console.log(formData);
   const [group, prismaError] = await prisma.group
     .create({
       data: {
