@@ -79,15 +79,19 @@ async function processDraft(
 ): Promise<ActionState> {
   const metadata = {
     userId: user.id,
-    groupId: groupId || '',
-    userName: user.name || '',
-    oid: user.Claim?.oid || '',
+    groupId: groupId || 'n/a',
+    userName: encodeURI(user.name) || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
   };
+
+  // Each blob can have up to 10 blob index tags.
+  // Tag values must be alphanumeric and valid special characters (space, plus, minus, period, colon, equals, underscore, forward slash).
+  // Tag keys must be between one and 128 characters.
+  // Tag values must be between zero and 256 characters.
   const tags = {
     userId: user.id,
-    groupId: groupId || '',
-    userName: user.name || '',
-    oid: user.Claim?.oid || '',
+    groupId: groupId || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
   };
 
   const blobName = `${draftId}/${cuid()}`;
@@ -141,13 +145,19 @@ async function processPublish(
 ) {
   const metadata = {
     userId: user.id,
-    userName: user.name,
-    oid: user.Claim?.oid || '',
+    groupId: groupId || 'n/a',
+    userName: encodeURI(user.name) || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
   };
+
+  // Each blob can have up to 10 blob index tags.
+  // Tag values must be alphanumeric and valid special characters (space, plus, minus, period, colon, equals, underscore, forward slash).
+  // Tag keys must be between one and 128 characters.
+  // Tag values must be between zero and 256 characters.
   const tags = {
     userId: user.id,
-    userName: user.name,
-    oid: user.Claim?.oid || '',
+    groupId: groupId || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
   };
 
   if (relatedNoteId) {
