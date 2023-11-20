@@ -80,3 +80,34 @@ export function getNotesCountByGroupId(groupId: string) {
       throw new Error('Error occurred while fetching notes');
     });
 }
+
+export function getTimelineNotesWithUserGroupTopics(userId: string, take?: number, skip?: number) {
+  return prisma.note.findMany({
+    where: {
+      AND: [
+        {
+          OR: [
+            { Group: null },
+            { Group: { type: 'PUBLIC' } },
+            { Group: { type: 'PRIVATE', Members: { some: { userId } } } },
+          ],
+        },
+        {
+          OR: [
+            { User: { FollowingUsers: { some: { fromUserId: userId } } } },
+            { Group: { FollowedUsers: { some: { userId } } } },
+            { Topics: { some: { Topic: { FollowedUsers: { some: { userId } } } } } },
+          ],
+        },
+      ],
+    },
+    orderBy: { releasedAt: 'desc' },
+    include: {
+      User: true,
+      Group: true,
+      Topics: { include: { Topic: true } },
+    },
+    take,
+    skip,
+  });
+}
