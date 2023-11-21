@@ -76,6 +76,7 @@ export function Form({
         router.replace(publishActionState.redirect);
       }
     }
+    publishActionState.submit = 'publish';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishActionState.lastModified]);
 
@@ -85,6 +86,7 @@ export function Form({
         router.replace(draftActionState.redirect);
       }
     }
+    publishActionState.submit = 'draft';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftActionState.lastModified]);
 
