@@ -1,5 +1,6 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
+import mdStyles from '@/components/notes/styles.module.css';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
 import { TopicBadge } from '@/components/topic/badge';
@@ -9,7 +10,6 @@ import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import Link from 'next/link';
 import { Body } from './body';
 import { OtherMenuButton } from './form';
-import styles from './styles.module.css';
 import { ToC } from './toc';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
@@ -131,7 +131,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               </div>
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
-                  <div className={styles.note}>
+                  <div className={mdStyles.note}>
                     <Body bodyBlobName={note.bodyBlobName} />
                   </div>
                 </div>
