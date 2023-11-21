@@ -97,21 +97,6 @@ export function EditorForm({
           </Parser>
         </div>
       </div>
-      {/* <div className="flex justify-end">
-        <SubmitButton
-            defaultType={defaultSubmitButton}
-            onChange={(type: any) => {
-              //
-            }}
-            onSubmit={(type: any) => {
-              if (type === 'publish') {
-                handleSubmit('PUBLISHED');
-              } else {
-                handleSubmit('DRAFT');
-              }
-            }}
-          />
-      </div> */}
     </div>
   );
 }
