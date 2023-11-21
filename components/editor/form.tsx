@@ -84,7 +84,19 @@ export function EditorForm({
         )}
       >
         <div className="w-full h-full" hidden={editorMode === 'preview'}>
-          <FileDropTextarea className="text-sm leading-6 text-gray-900" value={markdown} onChange={setMarkdown} />
+          {/**
+           * Which is best?
+           * value={markdown} or value={body}
+           *
+           * value={markdown} benefits:
+           *   Keep the state of FileDropTextarea and MarkdownEditor in sync.
+           *
+           * value={body} benefits:
+           *   FileDropTextarea keeps its own state. So, it is not necessary to use {markdown} state.
+           *   Re-rendering is not fired, so good for performance.
+           *
+           */}
+          <FileDropTextarea className="text-sm leading-6 text-gray-900" value={body} onChange={setMarkdown} />
         </div>
         <div
           className={clsx(
