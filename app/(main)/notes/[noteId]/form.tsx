@@ -3,7 +3,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { DocumentDuplicateIcon, EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { Fragment } from 'react';
 
 export function OtherMenuButton({ note, className }: { note: any; className?: string }) {
@@ -28,7 +27,7 @@ export function OtherMenuButton({ note, className }: { note: any; className?: st
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <Link
+                <a
                   href={`/notes/${note.id}/edit`}
                   className={clsx(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -40,7 +39,7 @@ export function OtherMenuButton({ note, className }: { note: any; className?: st
                     aria-hidden="true"
                   />
                   Edit
-                </Link>
+                </a>
               )}
             </Menu.Item>
             <Menu.Item>
