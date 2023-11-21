@@ -25,6 +25,7 @@ export function FileDropTextarea({
   useEffect(() => {
     textareaRef.current?.focus();
     textareaRef.current?.setSelectionRange(uploadCounter.nextTextareaIndex, uploadCounter.nextTextareaIndex);
+    onChange?.(textareaRef.current?.value || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadCounter.count]);
 
