@@ -1,6 +1,7 @@
 'use client';
 
 import { FileDropTextarea } from '@/components/file-drop-textarea/form';
+import mdStyles from '@/components/notes/styles.module.css';
 import { Parser } from '@/components/react-markdown/parser';
 import { DocumentTextIcon, PencilSquareIcon, ViewColumnsIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
@@ -91,7 +92,7 @@ export function EditorForm({
             'thin-scrollbar w-full rounded-md border-0 px-4 py-2 ring-1 ring-inset ring-gray-300 bg-white break-words overflow-y-scroll'
           )}
         >
-          <Parser addHeaderAnchor={false} className="">
+          <Parser addHeaderAnchor={false} className={mdStyles.note}>
             {markdown}
           </Parser>
         </div>
