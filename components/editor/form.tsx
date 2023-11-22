@@ -13,11 +13,13 @@ export function EditorForm({
   body,
   topics,
   topicOptions,
+  onChange,
 }: {
   title: string;
   body: string;
   topics: TopicItem[];
   topicOptions: TopicItem[];
+  onChange?: (key: string) => void;
 }) {
   const [markdown, setMarkdown] = useState(body);
   const [editorMode, setEditorMode] = useState<'edit' | 'preview' | 'both'>('both');
@@ -31,12 +33,21 @@ export function EditorForm({
             className="block w-full h-full rounded-md border-0 py-1.5 text-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:leading-6"
             placeholder="Title"
             defaultValue={title}
+            onChange={() => {
+              onChange?.('title');
+            }}
           />
         </div>
       </div>
       <div className="flex gap-2 mb-2">
         <div className="flex-1 h-[44px]">
-          <TopicInput selected={topics} options={topicOptions} onChange={() => {}} />
+          <TopicInput
+            selected={topics}
+            options={topicOptions}
+            onChange={() => {
+              onChange?.('topics');
+            }}
+          />
         </div>
         <div className="bg-white h-[44px] ring-gray-300 shadown-sm border-0 ring-1 ring-inset rounded-md p-1 px-2 mr-0.5 flex gap-2 items-center">
           <PencilSquareIcon
@@ -96,7 +107,14 @@ export function EditorForm({
            *   Re-rendering is not fired, so good for performance.
            *
            */}
-          <FileDropTextarea className="text-sm leading-6 text-gray-900" value={body} onChange={setMarkdown} />
+          <FileDropTextarea
+            className="text-sm leading-6 text-gray-900"
+            value={body}
+            onChange={(value) => {
+              setMarkdown(value);
+              onChange?.('body');
+            }}
+          />
         </div>
         <div
           className={clsx(
