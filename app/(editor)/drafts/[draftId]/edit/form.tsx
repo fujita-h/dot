@@ -86,7 +86,7 @@ export function Form({
         router.replace(draftActionState.redirect);
       }
     }
-    publishActionState.submit = 'draft';
+    draftActionState.submit = 'draft';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftActionState.lastModified]);
 
