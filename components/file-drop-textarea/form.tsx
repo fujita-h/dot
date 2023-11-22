@@ -23,6 +23,7 @@ export function FileDropTextarea({
   const [uploadCounter, setUploadCounter] = useState({ count: 0, nextTextareaIndex: 0 });
 
   useEffect(() => {
+    if (uploadCounter.count === 0) return;
     textareaRef.current?.focus();
     textareaRef.current?.setSelectionRange(uploadCounter.nextTextareaIndex, uploadCounter.nextTextareaIndex);
     onChange?.(textareaRef.current?.value || '');
