@@ -7,7 +7,7 @@ import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, action } from './action';
 
@@ -49,6 +49,22 @@ function DraftButton({ action }: { action: (payload: FormData) => void }) {
   );
 }
 
+function AutoSavingMessage({ show }: { show: boolean }) {
+  return (
+    <Transition
+      show={show}
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-100"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
+    >
+      <span className="px-1 text-sm font-medium text-indigo-500 animate-pulse">Auto-Saving...</span>
+    </Transition>
+  );
+}
+
 export function Form({
   draftId,
   groupId,
@@ -69,6 +85,9 @@ export function Form({
   const router = useRouter();
   const [publishActionState, formPublishAction] = useFormState(action, { ...initialActionState, submit: 'publish' });
   const [draftActionState, formDraftAction] = useFormState(action, { ...initialActionState, submit: 'draft' });
+  const [autoSaveActionState, formAutoSaveAction] = useFormState(action, { ...initialActionState, submit: 'autosave' });
+  const autoSaveButtonRef = useRef<HTMLButtonElement>(null);
+  const [showAutoSavingMessage, setShowAutoSavingMessage] = useState(false);
 
   useEffect(() => {
     if (publishActionState.status === 'success') {
@@ -90,15 +109,48 @@ export function Form({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftActionState.lastModified]);
 
+  useEffect(() => {
+    if (autoSaveActionState.status === 'success') {
+      if (autoSaveActionState.redirect) {
+        setShowAutoSavingMessage(true);
+      }
+    }
+    autoSaveActionState.submit = 'autosave';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSaveActionState.lastModified]);
+
+  useEffect(() => {
+    if (!showAutoSavingMessage) return;
+    const timer = setTimeout(() => {
+      setShowAutoSavingMessage(false);
+    }, 2800);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [showAutoSavingMessage]);
+
   return (
     <form className="h-full">
-      <NavBar formDraftAction={formDraftAction} formPublishAction={formPublishAction} />
+      <NavBar
+        formDraftAction={formDraftAction}
+        formPublishAction={formPublishAction}
+        showAutoSavingMessage={showAutoSavingMessage}
+      />
+      <button type="submit" hidden={true} ref={autoSaveButtonRef} formAction={formAutoSaveAction}></button>
       <div className="h-[calc(100%_-_56px)] p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
         <div className="h-full">
-          <EditorForm title={title} body={body} topics={topics} topicOptions={topicOptions} />
+          <EditorForm
+            title={title}
+            body={body}
+            topics={topics}
+            topicOptions={topicOptions}
+            onChange={(x) => {
+              autoSaveButtonRef.current?.click();
+            }}
+          />
         </div>
       </div>
     </form>
@@ -115,9 +167,11 @@ const userNavigation = [
 function NavBar({
   formDraftAction,
   formPublishAction,
+  showAutoSavingMessage,
 }: {
   formDraftAction: (payload: FormData) => void;
   formPublishAction: (payload: FormData) => void;
+  showAutoSavingMessage: boolean;
 }) {
   return (
     <div className="bg-white">
@@ -133,6 +187,7 @@ function NavBar({
             </Link>
           </div>
           <div className="flex items-center gap-2">
+            <AutoSavingMessage show={showAutoSavingMessage} />
             <DraftButton action={formDraftAction} />
             <PublishButton action={formPublishAction} />
             {/* Profile dropdown */}

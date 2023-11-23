@@ -59,6 +59,8 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
   }
 
   switch (submit) {
+    case 'autosave':
+      return processAutoSave(user, draftId, groupId, relatedNoteId, title, topics, body);
     case 'draft':
       return processDraft(user, draftId, groupId, relatedNoteId, title, topics, body);
     case 'publish':
@@ -66,6 +68,98 @@ export async function action(state: ActionState, formData: FormData): Promise<Ac
     default:
       return { submit: null, status: 'error', message: 'invalid submit', redirect: null, lastModified: Date.now() };
   }
+}
+
+async function processAutoSave(
+  user: { id: string; name: string; Claim: { oid: string | null } | null },
+  draftId: string,
+  groupId: string | undefined,
+  relatedNoteId: string | undefined,
+  title: string,
+  topics: string[],
+  body: string
+): Promise<ActionState> {
+  const metadata = {
+    userId: user.id,
+    groupId: groupId || 'n/a',
+    userName: encodeURI(user.name) || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
+  };
+
+  // Each blob can have up to 10 blob index tags.
+  // Tag values must be alphanumeric and valid special characters (space, plus, minus, period, colon, equals, underscore, forward slash).
+  // Tag keys must be between one and 128 characters.
+  // Tag values must be between zero and 256 characters.
+  const tags = {
+    userId: user.id,
+    groupId: groupId || 'n/a',
+    oid: user.Claim?.oid || 'n/a',
+  };
+
+  const blobName = await prisma.draft
+    .findUnique({ where: { id: draftId, userId: user.id } })
+    .then((draft) => draft?.bodyBlobName)
+    .catch((err) => null);
+
+  if (!blobName) {
+    return {
+      submit: 'autosave',
+      status: 'error',
+      message: 'draft blob not found',
+      redirect: null,
+      lastModified: Date.now(),
+    };
+  }
+
+  const blobUploadResult = await blob
+    .upload('drafts', blobName, 'text/markdown', body, metadata, tags)
+    .then((res) => res._response.status)
+    .catch((err) => 500);
+
+  if (blobUploadResult !== 201) {
+    return {
+      submit: 'autosave',
+      status: 'error',
+      message: 'blob upload failed',
+      redirect: null,
+      lastModified: Date.now(),
+    };
+  }
+
+  const draft = await prisma.draft
+    .update({
+      where: { id: draftId, userId: user.id },
+      data: {
+        title: title,
+        groupId: groupId,
+        relatedNoteId: relatedNoteId,
+        Topics: {
+          deleteMany: { draftId: draftId },
+          create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
+        },
+        bodyBlobName: blobName,
+      },
+    })
+    .catch((err) => null);
+
+  if (!draft) {
+    await blob.delete('drafts', blobName).catch((err) => null);
+    return {
+      submit: 'autosave',
+      status: 'error',
+      message: 'draft update failed',
+      redirect: null,
+      lastModified: Date.now(),
+    };
+  }
+
+  return {
+    submit: 'autosave',
+    status: 'success',
+    message: null,
+    redirect: `/drafts?id=${draft.id}`,
+    lastModified: Date.now(),
+  };
 }
 
 async function processDraft(

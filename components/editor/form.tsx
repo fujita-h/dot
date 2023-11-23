@@ -5,7 +5,7 @@ import mdStyles from '@/components/notes/styles.module.css';
 import { Parser } from '@/components/react-markdown/parser';
 import { DocumentTextIcon, PencilSquareIcon, ViewColumnsIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TopicInput, Item as TopicItem } from './topic-input';
 
 export function EditorForm({
@@ -23,6 +23,21 @@ export function EditorForm({
 }) {
   const [markdown, setMarkdown] = useState(body);
   const [editorMode, setEditorMode] = useState<'edit' | 'preview' | 'both'>('both');
+  const [autoSaveTimestamp, setAutoSaveTimestamp] = useState(0);
+
+  useEffect(() => {
+    if (autoSaveTimestamp === 0) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      onChange?.('x');
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSaveTimestamp]);
+
   return (
     <div className="h-full">
       <div className="flex gap-2 mb-2">
@@ -34,7 +49,7 @@ export function EditorForm({
             placeholder="Title"
             defaultValue={title}
             onChange={() => {
-              onChange?.('title');
+              setAutoSaveTimestamp(Date.now());
             }}
           />
         </div>
@@ -45,7 +60,7 @@ export function EditorForm({
             selected={topics}
             options={topicOptions}
             onChange={() => {
-              onChange?.('topics');
+              setAutoSaveTimestamp(Date.now());
             }}
           />
         </div>
@@ -112,7 +127,7 @@ export function EditorForm({
             value={body}
             onChange={(value) => {
               setMarkdown(value);
-              onChange?.('body');
+              setAutoSaveTimestamp(Date.now());
             }}
           />
         </div>
