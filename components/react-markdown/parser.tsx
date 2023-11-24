@@ -38,6 +38,11 @@ export function Parser({
       {props.children}
     </h2>
   );
+  const A = ({ node, ...props }: any) => (
+    <a {...props} target="_blank" rel="noopener noreferrer">
+      {props.children}
+    </a>
+  );
 
   return (
     <ReactMarkdown
@@ -45,7 +50,7 @@ export function Parser({
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, [rehypeSanitize, mySchema]]}
       unwrapDisallowed={false}
-      components={addHeaderAnchor ? { h1: H1, h2: H2 } : undefined}
+      components={addHeaderAnchor ? { h1: H1, h2: H2, a: A } : undefined}
     >
       {children}
     </ReactMarkdown>
