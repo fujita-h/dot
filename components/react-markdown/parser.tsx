@@ -21,12 +21,20 @@ export function Parser({
   const mySchema: Schema = { ...defaultSchema };
 
   const H1 = ({ node, ...props }: any) => (
-    <h1 id={`${CONTENT_ANCHOR_PREFIX}-${node.position?.start.line.toString()}`} className={CONTENT_ANCHOR_CLASS_NAME}>
+    <h1
+      {...props}
+      id={`${CONTENT_ANCHOR_PREFIX}-${node.position?.start.line.toString()}`}
+      className={CONTENT_ANCHOR_CLASS_NAME}
+    >
       {props.children}
     </h1>
   );
   const H2 = ({ node, ...props }: any) => (
-    <h2 id={`${CONTENT_ANCHOR_PREFIX}-${node.position?.start.line.toString()}`} className={CONTENT_ANCHOR_CLASS_NAME}>
+    <h2
+      {...props}
+      id={`${CONTENT_ANCHOR_PREFIX}-${node.position?.start.line.toString()}`}
+      className={CONTENT_ANCHOR_CLASS_NAME}
+    >
       {props.children}
     </h2>
   );
