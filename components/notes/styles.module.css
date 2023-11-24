@@ -45,7 +45,7 @@
   margin-bottom: 1.0rem;
 }
 .note a {
-  color: rgb(79, 70, 229);
+  color: #4f46e5;
   text-decoration: none;
 }
 .note a:hover {
@@ -156,7 +156,7 @@
   margin-bottom: 0.8rem;
 }
 .comment a {
-  color: rgb(79, 70, 229);
+  color: #4f46e5;
   text-decoration: none;
 }
 .comment a:hover {
