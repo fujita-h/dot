@@ -7,8 +7,8 @@
   line-height: 1.5;
   font-weight: bold;
   border-bottom: 2px solid #eee;
-  margin-top: 1.8rem;
-  margin-bottom: 1.6rem;
+  margin-top: 2.0rem;
+  margin-bottom: 1.8rem;
 }
 .note h1:first-child {
   margin-top: 0rem;
@@ -18,8 +18,8 @@
   line-height: 1.5;
   font-weight: bold;
   border-bottom: 2px solid #eee;
-  margin-top: 1.6rem;
-  margin-bottom: 1.4rem;
+  margin-top: 1.8rem;
+  margin-bottom: 1.6rem;
 }
 .note h2:first-child {
   margin-top: 0rem;
@@ -28,19 +28,28 @@
   font-size: 1.4rem;
   line-height: 1.4;
   font-weight: bold;
-  margin-top: 1.4rem;
-  margin-bottom: 1.2rem;
+  margin-top: 1.6rem;
+  margin-bottom: 1.4rem;
 }
 .note h4, .note h5 {
   font-size: 1.2rem;
   line-height: 1.3;
   font-weight: bold;
-  margin-top: 1.2rem;
-  margin-bottom: 1.0rem;
+  margin-top: 1.4rem;
+  margin-bottom: 1.2rem;
 }
 .note p {
   font-size: 1.0rem;
-  line-height: 2.0;
+  line-height: 1.8;
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+}
+.note a {
+  color: rgb(79, 70, 229);
+  text-decoration: none;
+}
+.note a:hover {
+  text-decoration: underline;
 }
 .note table {
   font-size: 1.0rem;
@@ -62,10 +71,15 @@
   border: 1px solid #ddd;
 }
 .note ul {
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+  padding-left: 1.5rem;
   list-style-type: disc;
 }
 .note ul ul {
   list-style-type: circle;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .note ol {
   list-style-type: number;
@@ -74,7 +88,7 @@
 .note li {
   font-size: 1.0rem;
   line-height: 2.0;
-  margin-left: 1.5rem;
+  margin: 0rem;
 }
 .note blockquote {
   font-size: 1.0rem;
@@ -96,8 +110,9 @@
   border-radius: 4px;
 }
 .note img {
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
+  box-shadow: 0 0 0 1px #ddd;
+  max-width: 100%;
+  background-color: #fff;
 }
 
 .comment {
@@ -136,6 +151,16 @@
 }
 .comment p {
   font-size: 0.9rem;
+  line-height: 1.7;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.comment a {
+  color: rgb(79, 70, 229);
+  text-decoration: none;
+}
+.comment a:hover {
+  text-decoration: underline;
 }
 .comment table {
   font-size: 1.0rem;
@@ -157,10 +182,15 @@
   border: 1px solid #ddd;
 }
 .comment ul {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-left: 1.2rem;
   list-style-type: disc;
 }
 .comment ul ul {
   list-style-type: circle;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .comment ol {
   list-style-type: number;
@@ -169,7 +199,7 @@
 .comment li {
   font-size: 1.0rem;
   line-height: 1.6;
-  margin-left: 1.5rem;
+  margin: 0rem;
 }
 .comment blockquote {
   font-size: 0.9rem;
@@ -191,6 +221,7 @@
   border-radius: 4px;
 }
 .comment img {
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
+  box-shadow: 0 0 0 1px #ddd;
+  max-width: 100%;
+  background-color: #fff;
 }
