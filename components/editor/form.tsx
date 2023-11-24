@@ -47,6 +47,7 @@ export function EditorForm({
             name="title"
             className="block w-full h-full rounded-md border-0 py-1.5 text-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:leading-6"
             placeholder="Title"
+            autoComplete="off"
             defaultValue={title}
             onChange={() => {
               setAutoSaveTimestamp(Date.now());
@@ -125,6 +126,7 @@ export function EditorForm({
           <FileDropTextarea
             className="text-sm leading-6 text-gray-900"
             value={body}
+            placeholder="Write markdown here..."
             onChange={(value) => {
               setMarkdown(value);
               setAutoSaveTimestamp(Date.now());
