@@ -10,6 +10,7 @@
 | `AZURE_AD_TENANT_ID`              | Tenant ID of Enrta ID                                                       | Yes      |                                      |
 | `AZURE_STORAGE_CONNECTION_STRING` | Connection string for Azure Blob Storage for the specific container         | Yes      | DefaultEndpointsProtocol=...         |
 | `DATABASE_URL`                    | See https://www.prisma.io/docs/reference/database-reference/connection-urls | Yes      | mysql://user:pass@host:port/database |
+| `REDIS_URL`                       | Redis URL, see https://github.com/redis/ioredis                             | Yes      | reids://user:pass@host:port/db       |
 | `NEXTAUTH_SECRET`                 | See https://next-auth.js.org/configuration/options                          | Yes      |                                      |
 | `NEXTAUTH_URL`                    | See https://next-auth.js.org/configuration/options                          | Yes      | https://example.com                  |
 | `NEXTAUTH_URL_INTERNAL`           | See https://next-auth.js.org/configuration/options                          | No       | http://localhost:3000                |

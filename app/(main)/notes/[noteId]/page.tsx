@@ -7,6 +7,7 @@ import { TopicBadge } from '@/components/topic/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
+import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
 import { Body } from './body';
 import { OtherMenuButton } from './form';
@@ -21,6 +22,8 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 
   const note = await getNoteWithUserGroupTopics(params.noteId, userId).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
+
+  await incrementAccess(note.id, note.groupId).catch((e) => null);
 
   const releasedAt = note.releasedAt
     ? new Date(note.releasedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' })
