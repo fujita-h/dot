@@ -30,7 +30,7 @@ export function EditorForm({
       return;
     }
     const timer = setTimeout(() => {
-      onChange?.('x');
+      onChange?.('x-auto-save');
     }, 5000);
     return () => {
       clearTimeout(timer);
