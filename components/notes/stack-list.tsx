@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-type Note = {
+export type Note = {
   id: string;
   title: string | null;
   releasedAt: Date;

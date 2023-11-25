@@ -2,6 +2,7 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import { TrendingNotes } from '@/components/notes/trending';
 
 export default async function Page() {
   const session = await auth();
@@ -15,7 +16,17 @@ export default async function Page() {
       <div className="max-w-screen-2xl mx-auto">
         <div className="p-2 md:p-4">
           <main>
-            <div>Home</div>
+            <div className="md:flex md:gap-1">
+              <div className="flex-none w-80 p-2">left menu</div>
+              <div className="flex-1">
+                <div className="flex flex-col gap-3">
+                  <div className="bg-white rounded-md p-2">
+                    <TrendingNotes userId={userId} />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-none w-80 p-2">left menu</div>
+            </div>
           </main>
         </div>
       </div>

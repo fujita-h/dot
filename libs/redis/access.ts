@@ -6,7 +6,7 @@ export function incrementAccess(noteId: string, groupId?: string | null) {
   const date = new Date().toISOString().split('T')[0];
   const key = `notes/access/${date}`;
   const member = groupId ? `${groupId}/${noteId}` : `/${noteId}`;
-  const expire = 60 * 60 * 24 * 28; // 28 days
+  const expire = 60 * 60 * 24 * 30; // 30 days
   return redis
     .multi()
     .zincrby(key, 1, member)
