@@ -44,6 +44,7 @@ export const signInCallback = async ({
         data: {
           id: cuid(),
           oid: oid,
+          email: profile?.email || '',
           User: {
             create: {
               id: cuid(),
@@ -64,6 +65,7 @@ export const signInCallback = async ({
       .update({
         where: { oid },
         data: {
+          email: profile?.email || '',
           data: claim,
         },
       })
