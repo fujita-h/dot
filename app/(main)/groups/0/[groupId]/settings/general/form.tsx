@@ -28,14 +28,14 @@ function SubmitButton() {
   );
 }
 
-interface Props {
+interface Group {
   id: string;
   handle: string;
   name: string;
   about: string;
 }
 
-export function Form({ props }: { props: Props }) {
+export function Form({ group }: { group: Group }) {
   const [actionState, formAction] = useFormState(UpdateGroupAction, initialActionState);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -66,13 +66,13 @@ export function Form({ props }: { props: Props }) {
       setIconPreview(null);
     }
     if (handleInputRef.current) {
-      handleInputRef.current.value = props.handle;
+      handleInputRef.current.value = group.handle;
     }
     if (nameInputRef.current) {
-      nameInputRef.current.value = props.name;
+      nameInputRef.current.value = group.name;
     }
     if (aboutInputRef.current) {
-      aboutInputRef.current.value = props.about;
+      aboutInputRef.current.value = group.about;
     }
   };
 
@@ -112,7 +112,7 @@ export function Form({ props }: { props: Props }) {
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="id" value={props.id} />
+      <input type="hidden" name="id" value={group.id} />
       <ToastContainer />
       <div className="px-4 py-6 sm:p-8">
         <div className="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -125,7 +125,7 @@ export function Form({ props }: { props: Props }) {
             <div className="mt-2 relative mb-[40px]">
               <div className="relative w-full pt-[15%]">
                 <img
-                  src={imagePreview ?? `/api/groups/${props.id}/image?no-cache=0`}
+                  src={imagePreview ?? `/api/groups/${group.id}/image?no-cache=0`}
                   className="absolute top-0 w-full h-full object-cover"
                   alt="user image"
                 />
@@ -156,7 +156,7 @@ export function Form({ props }: { props: Props }) {
 
               <div className="absolute top-[50%] left-[5%] w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] bg-white rounded-md p-1 pb-0">
                 <img
-                  src={iconPreview ?? `/api/groups/${props.id}/icon?no-cache=0`}
+                  src={iconPreview ?? `/api/groups/${group.id}/icon?no-cache=0`}
                   className="rounded-md"
                   alt="user-icon"
                 />
@@ -198,7 +198,7 @@ export function Form({ props }: { props: Props }) {
                   id="name"
                   ref={handleInputRef}
                   name="handle"
-                  defaultValue={props.handle}
+                  defaultValue={group.handle}
                   className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   autoComplete="off"
                 />
@@ -220,7 +220,7 @@ export function Form({ props }: { props: Props }) {
                   id="name"
                   name="name"
                   ref={nameInputRef}
-                  defaultValue={props.name}
+                  defaultValue={group.name}
                   className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   autoComplete="off"
                 />
@@ -237,7 +237,7 @@ export function Form({ props }: { props: Props }) {
                 id="about"
                 name="about"
                 ref={aboutInputRef}
-                defaultValue={props.about}
+                defaultValue={group.about}
                 rows={3}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 autoComplete="off"
