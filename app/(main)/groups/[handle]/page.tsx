@@ -79,13 +79,13 @@ export default async function Page({ params, searchParams }: Props) {
         <div className="md:w-80 p-2">
           <div>
             <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">メンバー</div>
-            <div className="mt-2 ml-3 flex">
+            <div className="mt-2 ml-3 flex gap-1">
               {group.Members.map((member) => (
                 <div key={member.userId} className="flex items-center">
                   <Link href={`/users/${member.User.handle}`}>
                     <img
                       src={`/api/users/${member.userId}/icon`}
-                      className="w-8 h-8 rounded-full object-cover"
+                      className="w-9 h-9 rounded-full object-cover"
                       alt="user-icon"
                     />
                   </Link>
