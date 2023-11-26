@@ -81,3 +81,16 @@ export function getUserProfileAndSettings(userId: string) {
       throw new Error('Error occurred while fetching user');
     });
 }
+
+export function getUsersWithEmail(take?: number, skip?: number) {
+  return prisma.user
+    .findMany({
+      include: { Claim: { select: { email: true } } },
+      take,
+      skip,
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching users');
+    });
+}
