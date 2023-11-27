@@ -212,6 +212,9 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                 ))}
                               </div>
                             </RadioGroup>
+                            <p className="mt-1 ml-2 text-xs font-noto-sans-jp text-gray-500">
+                              この設定は後から変えることが出来ません。
+                            </p>
                           </div>
                         </div>
                       </div>
