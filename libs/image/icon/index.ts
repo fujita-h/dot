@@ -10,6 +10,11 @@ const BaseGroupIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
 </svg>`;
 
+const BaseTopicIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path fill-rule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clip-rule="evenodd" />
+</svg>
+`;
+
 export function createDefaultUserIconSvg(
   minHue: number,
   maxHue: number,
@@ -36,4 +41,8 @@ export function createDefaultGroupIconSvg(
     'currentColor',
     getRandomHslColor(minHue, maxHue, minSaturation, maxSaturation, minLightness, maxLightness)
   );
+}
+
+export function createDefaultTopicIconSvg() {
+  return BaseTopicIconSvg.replace('currentColor', '#d1d5db');
 }

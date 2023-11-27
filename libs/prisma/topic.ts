@@ -19,3 +19,26 @@ export function getTopics() {
       throw new Error('Error occurred while fetching topics');
     });
 }
+
+export function getTopic(id: string) {
+  return prisma.topic
+    .findUnique({
+      where: { id },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching topic');
+    });
+}
+
+export function getTopicWithFollowedByHandle(handle: string) {
+  return prisma.topic
+    .findUnique({
+      where: { handle },
+      include: { FollowedUsers: true },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching topic');
+    });
+}
