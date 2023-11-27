@@ -66,5 +66,5 @@ export async function createGroupAction(state: ActionState, formData: FormData):
       lastModified: Date.now(),
     };
   }
-  redirect(`/groups/${group?.handle}`);
+  redirect(`/groups/0/${group?.id}/settings`);
 }
