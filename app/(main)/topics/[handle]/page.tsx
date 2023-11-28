@@ -1,9 +1,11 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
+import { StackList } from '@/components/notes/stack-list';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getGroupFromHandle } from '@/libs/prisma/group';
+import { getNotesWithUserGroupTopicsByTopicId } from '@/libs/prisma/note';
 import { getTopicWithFollowedByHandle } from '@/libs/prisma/topic';
 import { Metadata } from 'next';
 import { FollowToggleButton, OtherMenuButton } from './form';
@@ -36,6 +38,7 @@ export default async function Page({ params, searchParams }: Props) {
   if (!topic) return <Error404 />;
 
   const isFollowing = topic.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
+  const notes = await getNotesWithUserGroupTopicsByTopicId(topic.id, sessionUserId).catch((e) => []);
 
   return (
     <div className="md:flex md:gap-1">
@@ -58,10 +61,9 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex-1">
         <div className="flex flex-col gap-3">
           <div className="bg-white rounded-md p-2">
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
-          </div>
-          <div className="bg-white rounded-md p-2">
-            <div>Topic notes here</div>
+            <div>
+              <StackList notes={notes} />
+            </div>
           </div>
         </div>
       </div>

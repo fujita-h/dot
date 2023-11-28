@@ -70,6 +70,37 @@ export function getNotesWithUserGroupTopicsByGroupId(groupId: string, take?: num
     });
 }
 
+export function getNotesWithUserGroupTopicsByTopicId(
+  topicId: string,
+  requestUserId: string,
+  take?: number,
+  skip?: number
+) {
+  return prisma.note
+    .findMany({
+      where: {
+        Topics: { some: { topicId } },
+        OR: [
+          { Group: null },
+          { Group: { type: 'PUBLIC' } },
+          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+        ],
+      },
+      orderBy: { releasedAt: 'desc' },
+      take,
+      skip,
+      include: {
+        User: true,
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
 export function getNotesCountByGroupId(groupId: string) {
   return prisma.note
     .count({
