@@ -31,6 +31,17 @@ export function getTopic(id: string) {
     });
 }
 
+export function getTopicByHandle(handle: string) {
+  return prisma.topic
+    .findUnique({
+      where: { handle },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching topic');
+    });
+}
+
 export function getTopicWithFollowedByHandle(handle: string) {
   return prisma.topic
     .findUnique({

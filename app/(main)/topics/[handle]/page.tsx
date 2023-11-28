@@ -4,9 +4,8 @@ import { StackList } from '@/components/notes/stack-list';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
-import { getGroupFromHandle } from '@/libs/prisma/group';
 import { getNotesWithUserGroupTopicsByTopicId } from '@/libs/prisma/note';
-import { getTopicWithFollowedByHandle } from '@/libs/prisma/topic';
+import { getTopicByHandle, getTopicWithFollowedByHandle } from '@/libs/prisma/topic';
 import { Metadata } from 'next';
 import { FollowToggleButton, OtherMenuButton } from './form';
 
@@ -22,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (status === 500) return { title: `Server Error - ${SITE_NAME}` };
   if (status === 404 || !sessionUserId) return { title: `Not Found - ${SITE_NAME}` };
 
-  const group = await getGroupFromHandle(params.handle).catch((e) => null);
+  const group = await getTopicByHandle(params.handle).catch((e) => null);
   if (!group) return { title: `Not Found - ${SITE_NAME}` };
   return { title: `${group.name} - ${SITE_NAME}` };
 }
