@@ -99,7 +99,7 @@ function SortableItem({ item, onDelete }: { item: Item; onDelete: (value: Item) 
             {...attributes}
             {...listeners}
           />
-          <img src={`/topics/${item.id}/photo`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+          <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
           <div className="flex-1">{item.handle}</div>
         </div>
         <div
@@ -162,7 +162,7 @@ function TopicsComboBox({ options, onChange }: { options: Item[]; onChange: (val
                 {({ active, selected }) => (
                   <>
                     <div className="flex items-center">
-                      <img src={`/topics/${item.id}/photo`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+                      <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
                       <span className={clsx('ml-3 truncate', selected && 'font-semibold')}>{item.name}</span>
                     </div>
 
