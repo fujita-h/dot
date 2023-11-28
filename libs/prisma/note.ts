@@ -51,10 +51,22 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
     });
 }
 
-export function getNotesWithUserGroupTopicsByGroupId(groupId: string, take?: number, skip?: number) {
+export function getNotesWithUserGroupTopicsByGroupId(
+  groupId: string,
+  requestUserId: string,
+  take?: number,
+  skip?: number
+) {
   return prisma.note
     .findMany({
-      where: { Group: { id: groupId } },
+      where: {
+        Group: { id: groupId },
+        OR: [
+          { Group: null },
+          { Group: { type: 'PUBLIC' } },
+          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+        ],
+      },
       orderBy: { releasedAt: 'desc' },
       take,
       skip,
@@ -101,10 +113,17 @@ export function getNotesWithUserGroupTopicsByTopicId(
     });
 }
 
-export function getNotesCountByGroupId(groupId: string) {
+export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
   return prisma.note
     .count({
-      where: { Group: { id: groupId } },
+      where: {
+        Group: { id: groupId },
+        OR: [
+          { Group: null },
+          { Group: { type: 'PUBLIC' } },
+          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+        ],
+      },
     })
     .catch((e) => {
       console.error(e);

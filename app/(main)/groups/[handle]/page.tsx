@@ -62,8 +62,8 @@ export default async function Page({ params, searchParams }: Props) {
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
   const [notes, count] = await Promise.all([
-    getNotesWithUserGroupTopicsByGroupId(group.id, ITEMS_PER_PAGE, skip).catch((e) => []),
-    getNotesCountByGroupId(group.id).catch((e) => 0),
+    getNotesWithUserGroupTopicsByGroupId(group.id, sessionUserId, ITEMS_PER_PAGE, skip).catch((e) => []),
+    getNotesCountByGroupId(group.id, sessionUserId).catch((e) => 0),
   ]);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage && lastPage > 0) {
