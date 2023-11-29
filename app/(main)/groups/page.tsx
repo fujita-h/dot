@@ -13,7 +13,7 @@ export default async function Page() {
   if (status === 500) return <Error500 />;
   if (status === 404 || !userId) return <Error404 />;
 
-  const groups = await getGroupsWithRecentNotesCountHEAVY(7);
+  const groups = await getGroupsWithRecentNotesCountHEAVY(28);
 
   return (
     <div>
@@ -27,8 +27,9 @@ export default async function Page() {
         </div>
       </div>
       <div className="mt-6 flex">
-        <div className="w-80 min-w-[320px]">left menu</div>
+        <div className="w-80 min-w-[320px]"></div>
         <div className="flex-1">
+          <p className="text-base font-noto-sans-jp">最近投稿のあったグループ</p>
           <CardList groups={groups} />
         </div>
       </div>
