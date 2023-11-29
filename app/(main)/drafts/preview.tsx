@@ -1,5 +1,5 @@
 import { Parser } from '@/components/react-markdown/parser';
-import { TopicBadge } from '@/components/topic/badge';
+import { TopicBadge } from '@/components/topics/badge';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { getDraftWithGroupTopics } from '@/libs/prisma/draft';
 import { OtherMenuButton } from './form';

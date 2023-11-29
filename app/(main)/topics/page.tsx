@@ -1,6 +1,6 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
-import { TopicBadge } from '@/components/topic/badge';
+import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getTopics } from '@/libs/prisma/topic';

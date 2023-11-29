@@ -3,7 +3,7 @@ import { Error404, Error500 } from '@/components/error';
 import mdStyles from '@/components/notes/styles.module.css';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
-import { TopicBadge } from '@/components/topic/badge';
+import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
