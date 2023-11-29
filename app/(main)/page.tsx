@@ -4,6 +4,7 @@ import { TrendingNotes } from '@/components/notes/trending';
 import { FollowingTopics } from '@/components/topics/following';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import { Suspense } from 'react';
 
 export default async function Page() {
   const session = await auth();
@@ -22,7 +23,9 @@ export default async function Page() {
                 <div className="mx-2">
                   <h3 className="text-sm font-noto-sans-jp font-semibold">フォロー中のトピック</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
-                    <FollowingTopics userId={userId} />
+                    <Suspense fallback={<div>loading...</div>}>
+                      <FollowingTopics userId={userId} />
+                    </Suspense>
                   </div>
                 </div>
               </div>
