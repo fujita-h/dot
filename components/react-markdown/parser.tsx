@@ -9,15 +9,7 @@ import remarkGfm from 'remark-gfm';
  * Parser of react-markdown.
  * This component can use both client and server side.
  */
-export function Parser({
-  children,
-  className,
-  addHeaderAnchor = false,
-}: {
-  children: string;
-  className?: string;
-  addHeaderAnchor?: boolean;
-}) {
+export function Parser({ children, className }: { children: string; className?: string }) {
   const mySchema: Schema = { ...defaultSchema };
 
   const H1 = ({ node, ...props }: any) => (
@@ -50,7 +42,7 @@ export function Parser({
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, [rehypeSanitize, mySchema]]}
       unwrapDisallowed={false}
-      components={addHeaderAnchor ? { h1: H1, h2: H2, a: A } : undefined}
+      components={{ h1: H1, h2: H2, a: A }}
     >
       {children}
     </ReactMarkdown>

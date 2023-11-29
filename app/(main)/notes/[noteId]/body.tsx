@@ -9,5 +9,5 @@ export async function Body({ bodyBlobName }: { bodyBlobName: string }) {
     .then((res) => res.toString('utf-8'))
     .catch((e) => '');
 
-  return <Parser addHeaderAnchor={true}>{body}</Parser>;
+  return <Parser>{body}</Parser>;
 }

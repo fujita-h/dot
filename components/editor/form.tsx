@@ -139,9 +139,7 @@ export function EditorForm({
             'thin-scrollbar w-full rounded-md border-0 px-4 py-2 ring-1 ring-inset ring-gray-300 bg-white break-words overflow-y-scroll'
           )}
         >
-          <Parser addHeaderAnchor={false} className={mdStyles.note}>
-            {markdown}
-          </Parser>
+          <Parser className={mdStyles.note}>{markdown}</Parser>
         </div>
       </div>
     </div>
