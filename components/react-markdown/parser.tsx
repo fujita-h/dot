@@ -35,6 +35,11 @@ export function Parser({ children, className }: { children: string; className?: 
       {props.children}
     </a>
   );
+  const Img = ({ node, ...props }: any) => (
+    <a href={props.src} target="_blank" rel="noopener noreferrer">
+      <img {...props} alt={props.alt} />
+    </a>
+  );
 
   return (
     <ReactMarkdown
@@ -42,7 +47,7 @@ export function Parser({ children, className }: { children: string; className?: 
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, [rehypeSanitize, mySchema]]}
       unwrapDisallowed={false}
-      components={{ h1: H1, h2: H2, a: A }}
+      components={{ h1: H1, h2: H2, a: A, img: Img }}
     >
       {children}
     </ReactMarkdown>
