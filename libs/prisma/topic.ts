@@ -53,3 +53,20 @@ export function getTopicWithFollowedByHandle(handle: string) {
       throw new Error('Error occurred while fetching topic');
     });
 }
+
+export function getFollowingTopicsByUserId(userId: string) {
+  return prisma.topic
+    .findMany({
+      where: {
+        FollowedUsers: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching topics');
+    });
+}
