@@ -25,7 +25,10 @@ export default async function Page() {
                   </div>
                 </div>
               </div>
-              <div className="flex-none w-80 p-2">left menu</div>
+              {/**
+               * TODO: If you want to add a right menu, please uncomment the following code.
+               * <div className="flex-none w-80 p-2">Right menu here.</div>
+               */}
             </div>
           </main>
         </div>
