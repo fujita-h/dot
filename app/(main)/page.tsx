@@ -1,8 +1,8 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
+import { TrendingNotes } from '@/components/notes/trending';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
-import { TrendingNotes } from '@/components/notes/trending';
 import { getFollowingTopicsByUserId } from '@/libs/prisma/topic';
 import Link from 'next/link';
 
