@@ -55,6 +55,7 @@ export function getPostableGroups(userId: string) {
 export function getGroupsWithRecentNotesCountHEAVY(days: number, take?: number, skip?: number) {
   return prisma.group
     .findMany({
+      where: { Notes: { some: { releasedAt: { gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } } } },
       include: {
         _count: {
           select: { Notes: { where: { releasedAt: { gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } } } },
