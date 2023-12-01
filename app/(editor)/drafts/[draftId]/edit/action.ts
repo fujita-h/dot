@@ -1,11 +1,12 @@
 'use server';
 
-import prisma from '@/libs/prisma/instance';
-import blob from '@/libs/azure/storeage-blob/instance';
-import { init as initCuid } from '@paralleldrive/cuid2';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import blob from '@/libs/azure/storeage-blob/instance';
+import es from '@/libs/elasticsearch/instance';
+import prisma from '@/libs/prisma/instance';
 import { getUserWithClaims } from '@/libs/prisma/user';
+import { init as initCuid } from '@paralleldrive/cuid2';
 
 const cuid = initCuid({ length: 24 });
 
@@ -283,8 +284,8 @@ async function processPublish(
       };
     }
 
-    const [note, draft] = await prisma.$transaction([
-      prisma.note.update({
+    const note = await prisma.$transaction(async (tx) => {
+      const note = await tx.note.update({
         where: { id: relatedNoteId, userId: user.id, Drafts: { some: { id: draftId } } },
         data: {
           title: title,
@@ -295,9 +296,16 @@ async function processPublish(
           },
           bodyBlobName: blobName,
         },
-      }),
-      prisma.draft.delete({ where: { id: draftId } }),
-    ]);
+        include: {
+          User: { select: { handle: true, name: true } },
+          Group: { select: { handle: true, name: true, type: true } },
+          Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
+        },
+      });
+      tx.draft.delete({ where: { id: draftId } });
+      es.create('notes', note.id, { ...note, body });
+      return note;
+    });
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
@@ -333,24 +341,29 @@ async function processPublish(
         lastModified: Date.now(),
       };
     }
-    const [note, draft] = await prisma
-      .$transaction([
-        prisma.note.create({
-          data: {
-            id: noteId,
-            userId: user.id,
-            title: title,
-            groupId: groupId,
-            Topics: {
-              create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
-            },
-            bodyBlobName: blobName,
-            releasedAt: new Date(),
+    const note = await prisma.$transaction(async (tx) => {
+      const note = await tx.note.create({
+        data: {
+          id: noteId,
+          userId: user.id,
+          title: title,
+          groupId: groupId,
+          Topics: {
+            create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
           },
-        }),
-        prisma.draft.delete({ where: { id: draftId } }),
-      ])
-      .catch((err) => [null, null]);
+          bodyBlobName: blobName,
+          releasedAt: new Date(),
+        },
+        include: {
+          User: { select: { handle: true, name: true } },
+          Group: { select: { handle: true, name: true, type: true } },
+          Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
+        },
+      });
+      await tx.draft.delete({ where: { id: draftId } });
+      es.create('notes', note.id, { ...note, body });
+      return note;
+    });
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);

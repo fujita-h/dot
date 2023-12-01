@@ -1,0 +1,40 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword",
+      "null_value": "NULL"
+    },
+    "userId": {
+      "type": "keyword",
+      "null_value": "NULL"
+    },
+    "groupId": {
+      "type": "keyword",
+      "null_value": "NULL"
+    },
+    "title": {
+      "type": "text",
+      "search_analyzer": "ja_kuromoji_search_analyzer",
+      "analyzer": "ja_kuromoji_index_analyzer",
+      "fields": {
+        "ngram": {
+          "type": "text",
+          "search_analyzer": "ja_ngram_search_analyzer",
+          "analyzer": "ja_ngram_index_analyzer"
+        }
+      }
+    },
+    "body": {
+      "type": "text",
+      "search_analyzer": "ja_kuromoji_search_analyzer",
+      "analyzer": "ja_kuromoji_index_analyzer",
+      "fields": {
+        "ngram": {
+          "type": "text",
+          "search_analyzer": "ja_ngram_search_analyzer",
+          "analyzer": "ja_ngram_index_analyzer"
+        }
+      }
+    }
+  }
+}
