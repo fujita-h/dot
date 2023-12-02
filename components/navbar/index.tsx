@@ -149,7 +149,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-60 origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-auto min-w-[240px] max-w-[420px] origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
                           <div className="py-1">
                             <Menu.Item>
                               {({ active }) => (
@@ -191,7 +191,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     href={`/drafts/new?group=${group.id}`}
                                     className={clsx(
                                       active ? 'bg-gray-100' : '',
-                                      'flex items-center gap-2 px-4 py-2 text-sm font-noto-sans-jp  font-semibold text-gray-600'
+                                      'flex items-center gap-2 px-4 py-2 text-sm font-noto-sans-jp font-semibold text-gray-600'
                                     )}
                                   >
                                     <img
@@ -199,7 +199,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                       className="w-5 h-5 rounded-sm border border-gray-100"
                                       alt="group-icon"
                                     />
-                                    <div>{group.name}</div>
+                                    <div className="truncate">{group.name}</div>
                                   </a>
                                 )}
                               </Menu.Item>
