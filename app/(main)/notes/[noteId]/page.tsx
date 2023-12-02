@@ -135,7 +135,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
                   <div className={mdStyles.note}>
-                    <Body bodyBlobName={note.bodyBlobName} />
+                    <Body containerName="notes" bodyBlobName={note.bodyBlobName} />
                   </div>
                 </div>
                 <div className="rounded-md ring-1 ring-gray-200 my-8 p-4 bg-white">
