@@ -1,16 +1,17 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
-import mdStyles from '@/components/notes/styles.module.css';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
+import mdStyles from '@/components/notes/styles.module.css';
 import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getCommentsByNoteId } from '@/libs/prisma/comment';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
 import { Body } from './body';
-import { OtherMenuButton } from './form';
+import { CommentForm, OtherMenuButton } from './form';
 import { ToC } from './toc';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
@@ -138,14 +139,60 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                     <Body containerName="notes" bodyBlobName={note.bodyBlobName} />
                   </div>
                 </div>
-                <div className="rounded-md ring-1 ring-gray-200 my-8 p-4 bg-white">
-                  {/* <Comments noteId={note.id} /> */}
+                <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
+                  <div className="text-lg font-bold text-gray-900 border-b px-4 pt-2 pb-1">コメント</div>
+                  <div className="p-4">
+                    <CommentList noteId={note.id} />
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
+                    <div className="p-4">
+                      <CommentForm noteId={note.id} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+async function CommentList({ noteId }: { noteId: string }) {
+  const session = await auth();
+  const { status, userId, error } = await getUserIdFromSession(session, true);
+  if (status !== 200) return <></>;
+
+  const comments = await getCommentsByNoteId(noteId).catch((e) => []);
+
+  return (
+    <div className="divide-y divide-gray-200">
+      {comments.map((c) => (
+        <div key={c.id} className="px-2 py-4">
+          <div className="flex justify-between items-center">
+            <div className="mx-1 flex space-x-3 items-center">
+              <div>
+                <img src={`/api/users/${c.User.id}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
+              </div>
+              <div>
+                <div className="text-sm text-gray-700">
+                  @{c.User.handle} ({c.User.name})
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">{new Date(c.createdAt).toLocaleString('ja-JP')}</div>
+            </div>
+          </div>
+          <div className="mt-4 px-4">
+            <div className="text-sm text-gray-700">
+              {c.bodyBlobName ? <Body containerName="comments" bodyBlobName={c.bodyBlobName} /> : <></>}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
