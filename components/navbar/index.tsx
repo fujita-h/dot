@@ -6,7 +6,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 
 const navigation = [
@@ -23,6 +23,7 @@ const userNavigation = [
 
 export function Navbar({ userName, groups }: { userName: string; groups: { id: string; name: string }[] }) {
   const pathname = usePathname();
+  const router = useRouter();
   navigation.forEach((item) => {
     item.current = item.matchPath.test(pathname);
   });
@@ -57,13 +58,33 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                     </Disclosure.Button>
                   </div>
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:gap-1">
-                    <Link
-                      href="/search"
-                      className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <span className="sr-only">Search</span>
-                      <MagnifyingGlassIcon className="h-7 w-7" aria-hidden="true" />
-                    </Link>
+                    <div className="w-full max-w-lg lg:max-w-xs">
+                      <label htmlFor="search" className="sr-only">
+                        Search
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                        <form
+                          action={(e) => {
+                            const query = e.get('search');
+                            if (query) {
+                              router.push(`/search?q=${query}`);
+                            }
+                          }}
+                        >
+                          <input
+                            id="search"
+                            name="search"
+                            className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="Search"
+                            type="search"
+                            autoComplete="off"
+                          />
+                        </form>
+                      </div>
+                    </div>
                     <button
                       type="button"
                       className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
