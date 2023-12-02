@@ -54,7 +54,7 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
             >
               <div className="flex gap-1 p-2">
                 <div className="flex-1 min-w-0 space-y-2">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-1">
                     <div className="flex items-center space-x-2 truncate">
                       {draft.Group && (
                         <img
@@ -63,9 +63,9 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
                           alt="group-icon"
                         />
                       )}
-                      <div className="text-sm truncate">{draft.Group?.name || 'グループなし'}</div>
+                      <div className="text-sm w-full truncate">{draft.Group?.name || 'グループなし'}</div>
                     </div>
-                    <div className="text-sm">{draft.relatedNoteId && '投稿済み'}</div>
+                    <div className="flex-none text-sm">{draft.relatedNoteId && '投稿済み'}</div>
                   </div>
                   <div>
                     <div className="text-sm font-semibold leading-6 text-gray-900">
