@@ -23,10 +23,7 @@ export default async function Page({
     .then((groupIds) => [...groupIds, 'NULL'])
     .catch((e) => []);
 
-  const q = (searchParams.q as string) || undefined;
-  if (!q) {
-    return <></>;
-  }
+  const q = (searchParams.q as string) || '';
 
   const esResults = await es.search('notes', {
     _source: ['title', 'releasedAt', 'userId', 'groupId', 'User.handle', 'User.name', 'Group.handle', 'Group.name'],
@@ -72,9 +69,11 @@ export default async function Page({
       <div className="my-3">
         <SearchForm q={q} />
       </div>
-      <div className="bg-white rounded-md p-2">
-        <StackList notes={notes} />
-      </div>
+      {q && (
+        <div className="bg-white rounded-md p-2">
+          <StackList notes={notes} />
+        </div>
+      )}
     </div>
   );
 }
