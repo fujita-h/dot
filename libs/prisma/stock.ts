@@ -2,7 +2,7 @@
 
 import prisma from '@/libs/prisma/instance';
 
-export function getStockedLabels(userId: string, noteId: string) {
+export function getStockedNoteLabels(userId: string, noteId: string) {
   return prisma.stock
     .findMany({
       where: { userId, noteId },

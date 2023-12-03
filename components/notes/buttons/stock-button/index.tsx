@@ -1,4 +1,4 @@
-import { getLabels, getStockedLabels, getStockedUsersCount } from '@/libs/prisma/stock';
+import { getLabels, getStockedNoteLabels, getStockedUsersCount } from '@/libs/prisma/stock';
 import { Form } from './form';
 
 export async function StockButton({
@@ -15,7 +15,7 @@ export async function StockButton({
   popoverDirection?: 'left' | 'right';
 }) {
   const [stockedLabels, labels, count] = await Promise.all([
-    getStockedLabels(userId, noteId).catch((e) => []),
+    getStockedNoteLabels(userId, noteId).catch((e) => []),
     getLabels(userId).catch((e) => []),
     getStockedUsersCount(noteId).catch((e) => 0),
   ]);
