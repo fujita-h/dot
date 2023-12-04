@@ -52,6 +52,24 @@ export function getPostableGroups(userId: string) {
     });
 }
 
+export function checkPostableGroup(userId: string, groupId: string): Promise<boolean> {
+  return prisma.group
+    .count({
+      where: {
+        id: groupId,
+        OR: [
+          { type: 'PUBLIC' },
+          { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+        ],
+      },
+    })
+    .then((count) => count > 0)
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching groups');
+    });
+}
+
 export function getGroupsWithRecentNotesCountHEAVY(days: number, take?: number, skip?: number) {
   return prisma.group
     .findMany({

@@ -4,82 +4,32 @@ import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
+import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
 import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
 
 const cuid = initCuid({ length: 24 });
 
-export interface ActionState {
-  submit: string | null;
-  status: string | null;
-  message: string | null;
-  redirect: string | null;
-  lastModified: number;
-}
-
-export async function action(state: ActionState, formData: FormData): Promise<ActionState> {
-  const submit = state.submit;
-  const session = await auth();
-  const { userId } = await getUserIdFromSession(session);
-  if (!userId) {
-    return { submit: submit, status: 'error', message: 'not authorized', redirect: null, lastModified: Date.now() };
-  }
-  const user = await getUserWithClaims(userId);
-  if (!user) {
-    return { submit: submit, status: 'error', message: 'user not found', redirect: null, lastModified: Date.now() };
-  }
-
-  const draftId = formData.get('draftId') as string;
-  const groupId = (formData.get('groupId') as string) || undefined;
-  const relatedNoteId = (formData.get('relatedNoteId') as string) || undefined;
-  const title = formData.get('title') as string;
-  const topics = formData.getAll('topics') as string[];
-  const body = formData.get('body') as string;
-
-  if (!draftId) {
-    return { submit: submit, status: 'error', message: 'invalid draft id', redirect: null, lastModified: Date.now() };
-  }
-
-  // check group
-  if (groupId) {
-    const group = await prisma.group
-      .findUnique({
-        where: {
-          id: groupId,
-          OR: [
-            { type: 'PUBLIC' },
-            { type: 'PRIVATE', Members: { some: { userId: user.id, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
-          ],
-        },
-      })
-      .catch((err) => null);
-    if (!group) {
-      return { submit: submit, status: 'error', message: 'invalid group id', redirect: null, lastModified: Date.now() };
-    }
-  }
-
-  switch (submit) {
-    case 'autosave':
-      return processAutoSave(user, draftId, groupId, relatedNoteId, title, topics, body);
-    case 'draft':
-      return processDraft(user, draftId, groupId, relatedNoteId, title, topics, body);
-    case 'publish':
-      return processPublish(user, draftId, groupId, relatedNoteId, title, topics, body);
-    default:
-      return { submit: null, status: 'error', message: 'invalid submit', redirect: null, lastModified: Date.now() };
-  }
-}
-
-async function processAutoSave(
-  user: { id: string; name: string; Claim: { oid: string | null } | null },
+export async function processAutoSave(
   draftId: string,
   groupId: string | undefined,
   relatedNoteId: string | undefined,
-  title: string,
-  topics: string[],
-  body: string
-): Promise<ActionState> {
+  title?: string,
+  topics?: string[],
+  body?: string
+) {
+  const session = await auth();
+  const { userId } = await getUserIdFromSession(session);
+  if (!userId) throw new Error('Unauthorized');
+  const user = await getUserWithClaims(userId);
+  if (!user) throw new Error('Unauthorized');
+
+  if (groupId) {
+    const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
+    if (!postable) throw new Error('Forbbiden');
+  }
+
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
@@ -97,33 +47,22 @@ async function processAutoSave(
     oid: user.Claim?.oid || 'n/a',
   };
 
-  const blobName = await prisma.draft
-    .findUnique({ where: { id: draftId, userId: user.id } })
-    .then((draft) => draft?.bodyBlobName)
-    .catch((err) => null);
+  let blobName = undefined;
+  if (body !== undefined) {
+    blobName = `${draftId}/${cuid()}`;
+    const blobUploadResult = await blob
+      .upload('drafts', blobName, 'text/markdown', body, metadata, tags)
+      .then((res) => res._response.status)
+      .catch((err) => 500);
 
-  if (!blobName) {
-    return {
-      submit: 'autosave',
-      status: 'error',
-      message: 'draft blob not found',
-      redirect: null,
-      lastModified: Date.now(),
-    };
+    if (blobUploadResult !== 201) throw new Error('Failed to upload draft');
   }
 
-  const blobUploadResult = await blob
-    .upload('drafts', blobName, 'text/markdown', body, metadata, tags)
-    .then((res) => res._response.status)
-    .catch((err) => 500);
-
-  if (blobUploadResult !== 201) {
-    return {
-      submit: 'autosave',
-      status: 'error',
-      message: 'blob upload failed',
-      redirect: null,
-      lastModified: Date.now(),
+  let _topics = undefined;
+  if (topics !== undefined) {
+    _topics = {
+      deleteMany: { draftId: draftId },
+      create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
     };
   }
 
@@ -134,44 +73,43 @@ async function processAutoSave(
         title: title,
         groupId: groupId,
         relatedNoteId: relatedNoteId,
-        Topics: {
-          deleteMany: { draftId: draftId },
-          create: topics.map((topic) => ({ topicId: topic, order: topics.indexOf(topic) })),
-        },
+        Topics: _topics,
         bodyBlobName: blobName,
       },
     })
     .catch((err) => null);
 
   if (!draft) {
-    await blob.delete('drafts', blobName).catch((err) => null);
-    return {
-      submit: 'autosave',
-      status: 'error',
-      message: 'draft update failed',
-      redirect: null,
-      lastModified: Date.now(),
-    };
+    if (blobName) await blob.delete('drafts', blobName).catch((err) => null);
+    throw new Error('Failed to update draft');
   }
 
-  return {
-    submit: 'autosave',
-    status: 'success',
-    message: null,
-    redirect: `/drafts?id=${draft.id}`,
-    lastModified: Date.now(),
-  };
+  return draft;
 }
 
-async function processDraft(
-  user: { id: string; name: string; Claim: { oid: string | null } | null },
+export async function processDraft(
   draftId: string,
   groupId: string | undefined,
   relatedNoteId: string | undefined,
   title: string,
   topics: string[],
-  body: string
-): Promise<ActionState> {
+  body?: string
+) {
+  const session = await auth();
+  const { userId } = await getUserIdFromSession(session);
+  if (!userId) throw new Error('Unauthorized');
+  const user = await getUserWithClaims(userId);
+  if (!user) throw new Error('Unauthorized');
+
+  if (body === undefined) {
+    throw new Error('body is undefined');
+  }
+
+  if (groupId) {
+    const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
+    if (!postable) throw new Error('Forbbiden');
+  }
+
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
@@ -195,15 +133,7 @@ async function processDraft(
     .then((res) => res._response.status)
     .catch((err) => 500);
 
-  if (blobUploadResult !== 201) {
-    return {
-      submit: 'draft',
-      status: 'error',
-      message: 'blob upload failed',
-      redirect: null,
-      lastModified: Date.now(),
-    };
-  }
+  if (blobUploadResult !== 201) throw new Error('Failed to upload draft');
 
   const draft = await prisma.draft
     .update({
@@ -223,33 +153,35 @@ async function processDraft(
 
   if (!draft) {
     await blob.delete('drafts', blobName).catch((err) => null);
-    return {
-      submit: 'draft',
-      status: 'error',
-      message: 'draft update failed',
-      redirect: null,
-      lastModified: Date.now(),
-    };
+    throw new Error('Failed to update draft');
   }
 
-  return {
-    submit: 'draft',
-    status: 'success',
-    message: null,
-    redirect: `/drafts?id=${draft.id}`,
-    lastModified: Date.now(),
-  };
+  return draft;
 }
 
-async function processPublish(
-  user: { id: string; name: string; Claim: { oid: string | null } | null },
+export async function processPublish(
   draftId: string,
   groupId: string | undefined,
   relatedNoteId: string | undefined,
   title: string,
   topics: string[],
-  body: string
+  body?: string
 ) {
+  const session = await auth();
+  const { userId } = await getUserIdFromSession(session);
+  if (!userId) throw new Error('Unauthorized');
+  const user = await getUserWithClaims(userId);
+  if (!user) throw new Error('Unauthorized');
+
+  if (body === undefined) {
+    throw new Error('body is undefined');
+  }
+
+  if (groupId) {
+    const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
+    if (!postable) throw new Error('Forbbiden');
+  }
+
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
@@ -274,15 +206,7 @@ async function processPublish(
       .upload('notes', blobName, 'text/markdown', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
-    if (blobUploadResult !== 201) {
-      return {
-        submit: 'publish',
-        status: 'error',
-        message: 'blob upload failed',
-        redirect: null,
-        lastModified: Date.now(),
-      };
-    }
+    if (blobUploadResult !== 201) throw new Error('Failed to upload note');
 
     const note = await prisma.$transaction(async (tx) => {
       const note = await tx.note.update({
@@ -309,21 +233,9 @@ async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      return {
-        submit: 'publish',
-        status: 'error',
-        message: 'note update failed',
-        redirect: null,
-        lastModified: Date.now(),
-      };
+      throw new Error('Failed to update note');
     }
-    return {
-      submit: 'publish',
-      status: 'success',
-      message: null,
-      redirect: `/notes/${note.id}`,
-      lastModified: Date.now(),
-    };
+    return note;
   } else {
     // create note
     const noteId = cuid();
@@ -332,15 +244,8 @@ async function processPublish(
       .upload('notes', blobName, 'text/markdown', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
-    if (blobUploadResult !== 201) {
-      return {
-        submit: 'publish',
-        status: 'error',
-        message: 'blob upload failed',
-        redirect: null,
-        lastModified: Date.now(),
-      };
-    }
+    if (blobUploadResult !== 201) throw new Error('Failed to upload note');
+
     const note = await prisma.$transaction(async (tx) => {
       const note = await tx.note.create({
         data: {
@@ -367,20 +272,8 @@ async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      return {
-        submit: 'publish',
-        status: 'error',
-        message: 'note create failed',
-        redirect: null,
-        lastModified: Date.now(),
-      };
+      throw new Error('Failed to update note');
     }
-    return {
-      submit: 'publish',
-      status: 'success',
-      message: null,
-      redirect: `/notes/${note.id}`,
-      lastModified: Date.now(),
-    };
+    return note;
   }
 }

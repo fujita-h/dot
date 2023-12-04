@@ -4,27 +4,22 @@ import { EditorForm } from '@/components/editor/form';
 import { Item as TopicItem } from '@/components/editor/topic-input';
 import { SITE_NAME } from '@/libs/constants';
 import { Menu, Transition } from '@headlessui/react';
+import Placeholder from '@tiptap/extension-placeholder';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
-import { ActionState, action } from './action';
+import { Fragment, useEffect, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { processAutoSave, processDraft, processPublish } from './action';
 
-const initialActionState: ActionState = {
-  submit: null,
-  status: null,
-  message: null,
-  redirect: null,
-  lastModified: 0,
-};
-
-function PublishButton({ action }: { action: (payload: FormData) => void }) {
+function PublishButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
   const { pending } = useFormStatus();
   return (
     <button
-      type="submit"
-      formAction={action}
+      type="button"
+      onClick={onClick}
       disabled={pending}
       aria-disabled={pending}
       className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
@@ -34,12 +29,12 @@ function PublishButton({ action }: { action: (payload: FormData) => void }) {
   );
 }
 
-function DraftButton({ action }: { action: (payload: FormData) => void }) {
+function DraftButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
   const { pending } = useFormStatus();
   return (
     <button
-      type="submit"
-      formAction={action}
+      type="button"
+      onClick={onClick}
       disabled={pending}
       aria-disabled={pending}
       className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
@@ -83,41 +78,37 @@ export function Form({
   topicOptions: TopicItem[];
 }) {
   const router = useRouter();
-  const [publishActionState, formPublishAction] = useFormState(action, { ...initialActionState, submit: 'publish' });
-  const [draftActionState, formDraftAction] = useFormState(action, { ...initialActionState, submit: 'draft' });
-  const [autoSaveActionState, formAutoSaveAction] = useFormState(action, { ...initialActionState, submit: 'autosave' });
-  const autoSaveButtonRef = useRef<HTMLButtonElement>(null);
+  const [titleState, setTitleState] = useState(title);
+  const [topicsState, setTopicsState] = useState(topics);
+  const [autoSaveTimestamp, setAutoSaveTimestamp] = useState(0);
   const [showAutoSavingMessage, setShowAutoSavingMessage] = useState(false);
 
-  useEffect(() => {
-    if (publishActionState.status === 'success') {
-      if (publishActionState.redirect) {
-        router.replace(publishActionState.redirect);
-      }
-    }
-    publishActionState.submit = 'publish';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publishActionState.lastModified]);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'Write something. Start here...',
+      }),
+    ],
+    content: body,
+    onUpdate: ({ editor }) => {
+      setAutoSaveTimestamp(Date.now());
+    },
+  });
 
   useEffect(() => {
-    if (draftActionState.status === 'success') {
-      if (draftActionState.redirect) {
-        router.replace(draftActionState.redirect);
-      }
+    if (autoSaveTimestamp === 0) {
+      return;
     }
-    draftActionState.submit = 'draft';
+    const timer = setTimeout(() => {
+      setShowAutoSavingMessage(true);
+      processAutoSave(draftId, groupId, relatedNoteId, undefined, undefined, editor?.getHTML() || undefined);
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draftActionState.lastModified]);
-
-  useEffect(() => {
-    if (autoSaveActionState.status === 'success') {
-      if (autoSaveActionState.redirect) {
-        setShowAutoSavingMessage(true);
-      }
-    }
-    autoSaveActionState.submit = 'autosave';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoSaveActionState.lastModified]);
+  }, [autoSaveTimestamp]);
 
   useEffect(() => {
     if (!showAutoSavingMessage) return;
@@ -132,23 +123,60 @@ export function Form({
   return (
     <form className="h-full">
       <NavBar
-        formDraftAction={formDraftAction}
-        formPublishAction={formPublishAction}
+        formDraftAction={async () => {
+          setAutoSaveTimestamp(0);
+          const result = await processDraft(
+            draftId,
+            groupId,
+            relatedNoteId,
+            titleState,
+            topicsState.map((t) => t.id),
+            editor?.getHTML()
+          ).catch((e) => null);
+          if (result) {
+            router.replace(`/drafts/?id=${result.id}`);
+          }
+        }}
+        formPublishAction={async () => {
+          setAutoSaveTimestamp(0);
+          const result = await processPublish(
+            draftId,
+            groupId,
+            relatedNoteId,
+            titleState,
+            topicsState.map((t) => t.id),
+            editor?.getHTML()
+          ).catch((e) => null);
+          if (result) {
+            router.replace(`/notes/${result.id}`);
+          }
+        }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
-      <button type="submit" hidden={true} ref={autoSaveButtonRef} formAction={formAutoSaveAction}></button>
       <div className="h-[calc(100%_-_56px)] p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
         <div className="h-full">
           <EditorForm
-            title={title}
-            body={body}
-            topics={topics}
+            title={titleState}
+            topics={topicsState}
             topicOptions={topicOptions}
-            onChange={(x) => {
-              autoSaveButtonRef.current?.click();
+            editor={editor}
+            onTitleChange={async (title) => {
+              setTitleState(title);
+              await processAutoSave(draftId, groupId, relatedNoteId, title, undefined, undefined);
+            }}
+            onTopicsChange={async (topics) => {
+              setTopicsState(topics);
+              await processAutoSave(
+                draftId,
+                groupId,
+                relatedNoteId,
+                undefined,
+                topics.map((t) => t.id),
+                undefined
+              );
             }}
           />
         </div>
@@ -169,8 +197,8 @@ function NavBar({
   formPublishAction,
   showAutoSavingMessage,
 }: {
-  formDraftAction: (payload: FormData) => void;
-  formPublishAction: (payload: FormData) => void;
+  formDraftAction: () => void;
+  formPublishAction: () => void;
   showAutoSavingMessage: boolean;
 }) {
   return (
@@ -188,8 +216,8 @@ function NavBar({
           </div>
           <div className="flex items-center gap-2">
             <AutoSavingMessage show={showAutoSavingMessage} />
-            <DraftButton action={formDraftAction} />
-            <PublishButton action={formPublishAction} />
+            <DraftButton onClick={formDraftAction} />
+            <PublishButton onClick={formPublishAction} />
             {/* Profile dropdown */}
             <Menu as="div" className="ml-1 relative flex-shrink-0">
               <div>
