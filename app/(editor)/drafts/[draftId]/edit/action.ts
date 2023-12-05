@@ -51,7 +51,7 @@ export async function processAutoSave(
   if (body !== undefined) {
     blobName = `${draftId}/${cuid()}`;
     const blobUploadResult = await blob
-      .upload('drafts', blobName, 'text/markdown', body, metadata, tags)
+      .upload('drafts', blobName, 'application/json', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
 
@@ -129,7 +129,7 @@ export async function processDraft(
 
   const blobName = `${draftId}/${cuid()}`;
   const blobUploadResult = await blob
-    .upload('drafts', blobName, 'text/markdown', body, metadata, tags)
+    .upload('drafts', blobName, 'application/json', body, metadata, tags)
     .then((res) => res._response.status)
     .catch((err) => 500);
 
@@ -203,7 +203,7 @@ export async function processPublish(
     // update note
     const blobName = `${relatedNoteId}/${cuid()}`;
     const blobUploadResult = await blob
-      .upload('notes', blobName, 'text/markdown', body, metadata, tags)
+      .upload('notes', blobName, 'application/json', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
     if (blobUploadResult !== 201) throw new Error('Failed to upload note');
@@ -241,7 +241,7 @@ export async function processPublish(
     const noteId = cuid();
     const blobName = `${noteId}/${cuid()}`;
     const blobUploadResult = await blob
-      .upload('notes', blobName, 'text/markdown', body, metadata, tags)
+      .upload('notes', blobName, 'application/json', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
     if (blobUploadResult !== 201) throw new Error('Failed to upload note');

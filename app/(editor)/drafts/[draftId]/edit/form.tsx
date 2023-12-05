@@ -102,7 +102,7 @@ export function Form({
     }
     const timer = setTimeout(() => {
       setShowAutoSavingMessage(true);
-      processAutoSave(draftId, groupId, relatedNoteId, undefined, undefined, editor?.getHTML() || undefined);
+      processAutoSave(draftId, groupId, relatedNoteId, undefined, undefined, JSON.stringify(editor?.getJSON()));
     }, 5000);
     return () => {
       clearTimeout(timer);
@@ -131,7 +131,7 @@ export function Form({
             relatedNoteId,
             titleState,
             topicsState.map((t) => t.id),
-            editor?.getHTML()
+            JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
           if (result) {
             router.replace(`/drafts/?id=${result.id}`);
@@ -145,7 +145,7 @@ export function Form({
             relatedNoteId,
             titleState,
             topicsState.map((t) => t.id),
-            editor?.getHTML()
+            JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
           if (result) {
             router.replace(`/notes/${result.id}`);
