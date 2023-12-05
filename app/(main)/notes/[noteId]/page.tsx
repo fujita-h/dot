@@ -6,12 +6,12 @@ import mdStyles from '@/components/notes/styles.module.css';
 import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import blob from '@/libs/azure/storeage-blob/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
-import { Body } from './body';
-import { CommentForm, OtherMenuButton } from './form';
+import { CommentForm, JsonRenderer, OtherMenuButton } from './form';
 import { ToC } from './toc';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
@@ -23,6 +23,13 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 
   const note = await getNoteWithUserGroupTopics(params.noteId, userId).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
+
+  const blobBody = await blob
+    .downloadToBuffer('notes', note.bodyBlobName)
+    .then((res) => res.toString('utf-8'))
+    .catch((e) => null);
+
+  if (!blobBody) return <Error500 />;
 
   await incrementAccess(note.id, note.groupId).catch((e) => null);
 
@@ -136,7 +143,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
                   <div className={mdStyles.note}>
-                    <Body containerName="notes" bodyBlobName={note.bodyBlobName} />
+                    <JsonRenderer jsonString={blobBody} />
                   </div>
                 </div>
                 <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
@@ -188,11 +195,20 @@ async function CommentList({ noteId }: { noteId: string }) {
           </div>
           <div className="mt-4 px-4">
             <div className="text-sm text-gray-700">
-              {c.bodyBlobName ? <Body containerName="comments" bodyBlobName={c.bodyBlobName} /> : <></>}
+              {c.bodyBlobName ? <CommnetBody containerName="comments" bodyBlobName={c.bodyBlobName} /> : <></>}
             </div>
           </div>
         </div>
       ))}
     </div>
   );
+}
+
+async function CommnetBody({ containerName, bodyBlobName }: { containerName: string; bodyBlobName: string }) {
+  const body = await blob
+    .downloadToBuffer(containerName, bodyBlobName)
+    .then((res) => res.toString('utf-8'))
+    .catch((e) => null);
+  if (!body) return <></>;
+  return <JsonRenderer jsonString={body} />;
 }
