@@ -27,7 +27,7 @@ export async function uploadFiles(fileParams: FileParam[]) {
         userId: user.id,
         userName: user.name || '',
         oid: user.Claim?.oid || '',
-        fileName: fileParam.fileName,
+        fileName: encodeURI(fileParam.fileName),
       };
       const tags = {
         userId: user.id,
