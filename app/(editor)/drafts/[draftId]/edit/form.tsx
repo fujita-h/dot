@@ -129,11 +129,11 @@ export function Form({
                       .then((files) => {
                         return uploadFiles(files);
                       })
-                      .then((response) => {
-                        const fulfilled = response.filter((r) => r.status === 'fulfilled');
-                        fulfilled.forEach((r: any, index: number) => {
+                      .then((results) => {
+                        results.forEach((result) => {
+                          if (result.status !== 'fulfilled') return;
                           const node = schema.nodes.image.create({
-                            src: `/api/blobs/${r.value.blobName}`,
+                            src: `/api/blobs/${result.value.blobName}`,
                           });
                           const transaction = view.state.tr.insert(coordinates.pos, node);
                           view.dispatch(transaction);
@@ -165,18 +165,17 @@ export function Form({
                       .then((files) => {
                         return uploadFiles(files);
                       })
-                      .then((response) => {
-                        const fulfilled = response.filter((r) => r.status === 'fulfilled');
+                      .then((results) => {
                         let transaction = view.state.tr;
-                        fulfilled.forEach((r: any) => {
+                        if (results.filter((result) => result.status === 'fulfilled').length > 0) {
+                          transaction = transaction.deleteSelection();
+                        }
+                        results.forEach((result) => {
+                          if (result.status !== 'fulfilled') return;
                           const node = schema.nodes.image.create({
-                            src: `/api/blobs/${r.value.blobName}`,
+                            src: `/api/blobs/${result.value.blobName}`,
                           });
-                          transaction = transaction.replaceWith(
-                            transaction.selection.from,
-                            transaction.selection.to,
-                            node
-                          );
+                          transaction = transaction.insert(transaction.selection.from, node);
                         });
                         view.dispatch(transaction);
                       });
