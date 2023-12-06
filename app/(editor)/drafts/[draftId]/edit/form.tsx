@@ -90,7 +90,7 @@ export function Form({
         placeholder: 'Write something. Start here...',
       }),
     ],
-    content: body,
+    content: JSON.parse(body),
     onUpdate: ({ editor }) => {
       setAutoSaveTimestamp(Date.now());
     },
