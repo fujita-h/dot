@@ -2,14 +2,17 @@
 
 import { EditorForm } from '@/components/editor/form';
 import { Item as TopicItem } from '@/components/editor/topic-input';
+import { uploadFiles } from '@/components/file-drop-textarea/actions';
 import { SITE_NAME } from '@/libs/constants';
 import { Menu, Transition } from '@headlessui/react';
+import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Plugin } from 'prosemirror-state';
 import { Fragment, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { processAutoSave, processDraft, processPublish } from './action';
@@ -59,7 +62,6 @@ function AutoSavingMessage({ show }: { show: boolean }) {
     </Transition>
   );
 }
-
 export function Form({
   draftId,
   groupId,
@@ -85,6 +87,106 @@ export function Form({
 
   const editor = useEditor({
     extensions: [
+      Image.extend({
+        addProseMirrorPlugins() {
+          return [
+            new Plugin({
+              props: {
+                handleDOMEvents: {
+                  // Although it is possible to insert an image into a document without implementing the drop event,
+                  // the source of the image becomes the URL from which it is pasted, resulting in a cross-site request.
+                  // Therefore, override it to upload the image to your own site.
+                  drop(view, event) {
+                    // Check if the event contains files
+                    const hasFiles = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length;
+                    if (!hasFiles) {
+                      return;
+                    }
+
+                    // Check if these files are images
+                    const images = Array.from(event.dataTransfer.files).filter((file) => /image/i.test(file.type));
+                    if (images.length === 0) {
+                      return;
+                    }
+
+                    // Prevent default behavior
+                    event.preventDefault();
+
+                    // Get the coordinates of the drop point
+                    const { schema } = view.state;
+                    const coordinates = view.posAtCoords({
+                      left: event.clientX,
+                      top: event.clientY,
+                    });
+
+                    // If the coordinates are not inside the document, do nothing
+                    if (!coordinates) {
+                      return;
+                    }
+
+                    // Upload images and insert image nodes
+                    Promise.all(images.map((file) => file2DataUrl(file)))
+                      .then((files) => {
+                        return uploadFiles(files);
+                      })
+                      .then((response) => {
+                        const fulfilled = response.filter((r) => r.status === 'fulfilled');
+                        fulfilled.forEach((r: any, index: number) => {
+                          const node = schema.nodes.image.create({
+                            src: `/api/blobs/${r.value.blobName}`,
+                          });
+                          const transaction = view.state.tr.insert(coordinates.pos, node);
+                          view.dispatch(transaction);
+                        });
+                      });
+                  },
+                  paste(view, event) {
+                    // Check if the event contains files
+                    const hasFiles =
+                      event.clipboardData && event.clipboardData.files && event.clipboardData.files.length;
+                    if (!hasFiles) {
+                      return;
+                    }
+
+                    // Check if these files are images
+                    const images = Array.from(event.clipboardData.files).filter((file) => /image/i.test(file.type));
+                    if (images.length === 0) {
+                      return;
+                    }
+
+                    // Prevent default behavior
+                    event.preventDefault();
+
+                    // Get schema
+                    const { schema } = view.state;
+
+                    // Upload images and insert image nodes
+                    Promise.all(images.map((file) => file2DataUrl(file)))
+                      .then((files) => {
+                        return uploadFiles(files);
+                      })
+                      .then((response) => {
+                        const fulfilled = response.filter((r) => r.status === 'fulfilled');
+                        let transaction = view.state.tr;
+                        fulfilled.forEach((r: any) => {
+                          const node = schema.nodes.image.create({
+                            src: `/api/blobs/${r.value.blobName}`,
+                          });
+                          transaction = transaction.replaceWith(
+                            transaction.selection.from,
+                            transaction.selection.to,
+                            node
+                          );
+                        });
+                        view.dispatch(transaction);
+                      });
+                  },
+                },
+              },
+            }),
+          ];
+        },
+      }),
       StarterKit,
       Placeholder.configure({
         placeholder: 'Write something. Start here...',
@@ -259,4 +361,23 @@ function NavBar({
       </div>
     </div>
   );
+}
+
+/**
+ * Convert File to DataUrl
+ *
+ * @param file File object
+ * @returns Promise of { fileName: string; data: string }
+ */
+function file2DataUrl(file: File) {
+  return new Promise<{ fileName: string; data: string }>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      resolve({ fileName: file.name, data: reader.result as string });
+    };
+    reader.onerror = () => {
+      reject();
+    };
+    reader.readAsDataURL(file);
+  });
 }
