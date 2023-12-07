@@ -85,6 +85,13 @@ export function Form({
   const [autoSaveTimestamp, setAutoSaveTimestamp] = useState(0);
   const [showAutoSavingMessage, setShowAutoSavingMessage] = useState(false);
 
+  let content: any = undefined;
+  try {
+    content = JSON.parse(body);
+  } catch (e) {
+    content = body || '';
+  }
+
   const editor = useEditor({
     extensions: [
       Image.extend({
@@ -191,7 +198,7 @@ export function Form({
         placeholder: 'Write something. Start here...',
       }),
     ],
-    content: JSON.parse(body),
+    content: content,
     onUpdate: ({ editor }) => {
       setAutoSaveTimestamp(Date.now());
     },
