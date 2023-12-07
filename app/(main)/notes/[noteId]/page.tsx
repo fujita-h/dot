@@ -77,7 +77,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               </div>
             </div>
             <div className="flex space-x-4">
-              <div className="order-0 hidden md:block w-12 print:hidden">
+              <div className="order-0 hidden md:block w-12 print:hidden z-[1]">
                 <div></div>
                 <div className="sticky top-0">
                   <div className="pt-5 flex flex-col gap-4">
