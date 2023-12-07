@@ -8,6 +8,9 @@ import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
 import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
+import { generateText } from '@tiptap/core';
+import Image from '@tiptap/extension-image';
+import StarterKit from '@tiptap/starter-kit';
 
 const cuid = initCuid({ length: 24 });
 
@@ -199,6 +202,11 @@ export async function processPublish(
     oid: user.Claim?.oid || 'n/a',
   };
 
+  let bodyText: string = body;
+  try {
+    bodyText = generateText(JSON.parse(body), [StarterKit, Image]);
+  } catch (err) {}
+
   if (relatedNoteId) {
     // update note
     const blobName = `${relatedNoteId}/${cuid()}`;
@@ -227,7 +235,7 @@ export async function processPublish(
         },
       });
       tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body });
+      es.create('notes', note.id, { ...note, body: bodyText });
       return note;
     });
 
@@ -266,7 +274,7 @@ export async function processPublish(
         },
       });
       await tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body });
+      es.create('notes', note.id, { ...note, body: bodyText });
       return note;
     });
 
