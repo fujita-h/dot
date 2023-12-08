@@ -11,8 +11,7 @@ import { getCommentsByNoteId } from '@/libs/prisma/comment';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
-import { CommentForm, JsonRenderer, OtherMenuButton } from './form';
-import { ToC } from './toc';
+import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
   const session = await auth();
@@ -136,14 +135,14 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 </div>
                 <div className="sticky top-0">
                   <div className="pt-5">
-                    <ToC bodyBlobName={note.bodyBlobName} />
+                    <ScrollToC body={blobBody} />
                   </div>
                 </div>
               </div>
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
                   <div className={mdStyles.note}>
-                    <JsonRenderer jsonString={blobBody} />
+                    <NoteViewer jsonString={blobBody} />
                   </div>
                 </div>
                 <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
@@ -154,7 +153,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
                     <div className="p-4">
-                      <CommentForm noteId={note.id} />
+                      <CommentEditor noteId={note.id} />
                     </div>
                   </div>
                 </div>
@@ -210,5 +209,5 @@ async function CommnetBody({ containerName, bodyBlobName }: { containerName: str
     .then((res) => res.toString('utf-8'))
     .catch((e) => null);
   if (!body) return <></>;
-  return <JsonRenderer jsonString={body} />;
+  return <CommentViewer jsonString={body} />;
 }

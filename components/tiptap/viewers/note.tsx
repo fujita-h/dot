@@ -1,12 +1,13 @@
 'use client';
 
+import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
-export function TipTapJsonRenderer({ jsonString }: { jsonString: string }) {
+export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
     extensions: [
       StarterKit,

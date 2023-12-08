@@ -7,21 +7,32 @@ import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
-import { deleteNote } from './action';
+import { commentOnNote, deleteNote } from './action';
 
-const DynamicJsonRenderer = dynamic(() => import('./renderer').then((mod) => mod.TipTapJsonRenderer), { ssr: false });
-const DynamicCommentForm = dynamic(() => import('./comment-form').then((mod) => mod.CommentForm), { ssr: false });
+const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), { ssr: false });
+const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), { ssr: false });
+const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), { ssr: false });
+const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), { ssr: false });
+
 interface Note {
   id: string;
   title: string;
 }
 
-export function JsonRenderer({ jsonString }: { jsonString: string }) {
-  return <DynamicJsonRenderer jsonString={jsonString} />;
+export function NoteViewer({ jsonString }: { jsonString: string }) {
+  return <DynamicNoteViewer jsonString={jsonString} />;
 }
 
-export function CommentForm({ noteId }: { noteId: string }) {
-  return <DynamicCommentForm noteId={noteId} />;
+export function CommentViewer({ jsonString }: { jsonString: string }) {
+  return <DynamicCommentViewer jsonString={jsonString} />;
+}
+
+export function CommentEditor({ noteId }: { noteId: string }) {
+  return <DynamicCommentEditor noteId={noteId} postAction={commentOnNote} />;
+}
+
+export function ScrollToC({ body }: { body: string }) {
+  return <DynamicScrollToc>{body}</DynamicScrollToc>;
 }
 
 export function OtherMenuButton({ note, className }: { note: Note; className?: string }) {

@@ -6,7 +6,7 @@ import throttle from 'lodash/throttle';
 import { useEffect, useState } from 'react';
 import { Link as Scroll } from 'react-scroll';
 
-export function ScrollToc({ children: jsonString }: { children: string }) {
+export default function ScrollToc({ children: jsonString }: { children: string }) {
   const json = JSON.parse(jsonString);
   const contents: any[] = json.content;
 
