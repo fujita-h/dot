@@ -1,6 +1,6 @@
 'use client';
 
-import mdStyles from '@/components/notes/styles.module.css';
+import '@/components/editor/style.css';
 import '@/components/tiptap/tiptap.css';
 import { Editor, EditorContent } from '@tiptap/react';
 import clsx from 'clsx';
@@ -54,8 +54,8 @@ export function EditorForm({
           'h-[calc(100%_-_104px)] grid mb-2' // 104px = 44px + 8px (margin) +  44px + 8px (margin)
         )}
       >
-        <div className="bg-white w-full h-full">
-          <div className={mdStyles.note}>
+        <div className="px-2 pb-1 bg-white w-full h-full rounded-md ring-1 ring-inset ring-gray-300">
+          <div className="note">
             <EditorContent editor={editor} />
           </div>
         </div>

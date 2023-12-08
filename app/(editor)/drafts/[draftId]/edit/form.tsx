@@ -261,7 +261,7 @@ export function Form({
         }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
-      <div className="h-[calc(100%_-_56px)] p-2">
+      <div className="max-w-screen-2xl mx-auto h-[calc(100%_-_56px)] p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
@@ -310,8 +310,8 @@ function NavBar({
   showAutoSavingMessage: boolean;
 }) {
   return (
-    <div className="bg-white">
-      <div className="mx-auto px-8">
+    <div className="border-b border-inset">
+      <div className="max-w-screen-2xl mx-auto px-8">
         <div className="flex h-14 justify-between">
           <div className="flex flex-shrink-0 items-center">
             <Link href="/">

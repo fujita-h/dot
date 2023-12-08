@@ -1,8 +1,11 @@
 .note {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
+  padding-left: 1.5rem;
+  height: 100%;
 }
 .note h1 {
+  position: relative;
   font-size: 1.8rem;
   line-height: 1.5;
   font-weight: bold;
@@ -10,16 +13,35 @@
   margin-top: 2.0rem;
   margin-bottom: 1.8rem;
 }
+.note h1::before {
+  content: "#";
+  font-weight: normal;
+  color: #aaa;
+  position: absolute;
+  left: -2.0rem;
+  top: 0.8rem;
+  font-size: 1.0rem;
+}
 .note h1:first-child {
   margin-top: 0rem;
 }
 .note h2 {
+  position: relative;
   font-size: 1.6rem;
   line-height: 1.5;
   font-weight: bold;
   border-bottom: 2px solid #eee;
   margin-top: 1.8rem;
   margin-bottom: 1.6rem;
+}
+.note h2::before {
+  content: "##";
+  font-weight: normal;
+  color: #aaa;
+  position: absolute;
+  left: -2.0rem;
+  top: 0.5rem;
+  font-size: 1.0rem;
 }
 .note h2:first-child {
   margin-top: 0rem;
@@ -43,6 +65,9 @@
   line-height: 1.8;
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
+}
+.note p:first-child {
+  margin-top: 0rem;
 }
 .note a {
   color: #4f46e5;
@@ -116,120 +141,10 @@
   border-radius: 4px;
 }
 .note img {
-  display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
 }
-
-.comment {
-  overflow-wrap: break-word;
-  font-size: 1.0rem;
-}
-.comment h1 {
-  font-size: 1.4rem;
-  line-height: 1.4;
-  font-weight: bold;
-  border-bottom: 1px solid #eee;
-  margin-top: 1.2rem;
-  margin-bottom: 1.4rem;
-}
-.comment h1:first-child {
-  margin-top: 0rem;
-}
-.comment h2 {
-  font-size: 1.2rem;
-  line-height: 1.2;
-  font-weight: bold;
-  border-bottom: 1px solid #eee;
-  margin-top: 1.0rem;
-  margin-bottom: 1.2rem;
-}
-.comment h2:first-child {
-  margin-top: 0rem;
-}
-.comment h3, .comment h4, .comment h5 {
-  font-size: 1.0rem;
-  line-height: 1.0;
-  font-weight: bold;
-  border-bottom: 1px solid #eee;
-  margin-top: 1.0rem;
-  margin-bottom: 1.0rem;
-}
-.comment p {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-}
-.comment a {
-  color: #4f46e5;
-  text-decoration: none;
-}
-.comment a:hover {
-  text-decoration: underline;
-}
-.comment table {
-  font-size: 1.0rem;
-  line-height: 2.0;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  border: 1px solid #ddd;
-}
-.comment table th {
-  font-weight: bold;
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-.comment table td {
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-}
-.comment ul {
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  padding-left: 1.2rem;
-  list-style-type: disc;
-}
-.comment ul ul {
-  list-style-type: circle;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.comment ol {
-  list-style-type: number;
-  counter-reset: number;
-}
-.comment li {
-  font-size: 1.0rem;
-  line-height: 1.6;
-  margin: 0rem;
-}
-.comment blockquote {
-  font-size: 0.9rem;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  padding-left: 0.6rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.3rem;
-  border-left: 4px solid #eee;
-}
-.comment pre {
-  font-size: 0.9rem;
-  line-height: 1.2;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  padding: 0.8rem;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-.comment img {
-  display: inline-block;
-  box-shadow: 0 0 0 1px #ddd;
-  max-width: 100%;
-  background-color: #fff;
+.note img.ProseMirror-selectednode {
+  box-shadow: 0 0 0 3px #aaa;
 }
