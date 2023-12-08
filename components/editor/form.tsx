@@ -1,10 +1,10 @@
 'use client';
 
 import mdStyles from '@/components/notes/styles.module.css';
+import '@/components/tiptap/tiptap.css';
+import { Editor, EditorContent } from '@tiptap/react';
 import clsx from 'clsx';
 import { TopicInput, Item as TopicItem } from './topic-input';
-import { EditorContent, Editor } from '@tiptap/react';
-import '@/components/tiptap/tiptap.css';
 
 export function EditorForm({
   title,
