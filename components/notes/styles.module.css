@@ -200,6 +200,9 @@
   margin-bottom: 0;
 }
 .comment ol {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-left: 1.2rem;
   list-style-type: number;
   counter-reset: number;
 }
