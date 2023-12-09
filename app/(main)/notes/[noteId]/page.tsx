@@ -209,5 +209,9 @@ async function CommnetBody({ containerName, bodyBlobName }: { containerName: str
     .then((res) => res.toString('utf-8'))
     .catch((e) => null);
   if (!body) return <></>;
-  return <CommentViewer jsonString={body} />;
+  return (
+    <div className={mdStyles.comment}>
+      <CommentViewer jsonString={body} />
+    </div>
+  );
 }
