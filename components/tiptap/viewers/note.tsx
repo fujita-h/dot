@@ -4,6 +4,7 @@ import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
+import Underline from '@tiptap/extension-underline';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
@@ -11,6 +12,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Underline,
       Heading.extend({
         addAttributes() {
           return {

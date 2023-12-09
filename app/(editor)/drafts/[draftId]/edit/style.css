@@ -1,7 +1,7 @@
 .note {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
-  padding-left: 1.5rem;
+  padding-left: 2.0rem;
   height: 100%;
 }
 .note h1 {
@@ -14,7 +14,7 @@
   margin-bottom: 1.8rem;
 }
 .note h1::before {
-  content: "#";
+  content: "H1";
   font-weight: normal;
   color: #aaa;
   position: absolute;
@@ -35,7 +35,7 @@
   margin-bottom: 1.6rem;
 }
 .note h2::before {
-  content: "##";
+  content: "H2";
   font-weight: normal;
   color: #aaa;
   position: absolute;
