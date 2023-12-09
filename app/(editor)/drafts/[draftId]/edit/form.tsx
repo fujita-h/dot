@@ -1,7 +1,7 @@
 'use client';
 
-import { EditorForm } from '@/components/editor/form';
-import { Item as TopicItem } from '@/components/editor/topic-input';
+import { EditorForm } from '@/components/drafts/form';
+import { Item as TopicItem } from '@/components/drafts/topic-input';
 import { uploadFiles } from '@/components/file-drop-textarea/actions';
 import { SITE_NAME } from '@/libs/constants';
 import { Menu, Transition } from '@headlessui/react';

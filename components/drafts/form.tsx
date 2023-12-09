@@ -1,6 +1,6 @@
 'use client';
 
-import '@/components/editor/style.css';
+import '@/components/drafts/style.css';
 import '@/components/tiptap/tiptap.css';
 import { Editor, EditorContent } from '@tiptap/react';
 import clsx from 'clsx';
