@@ -199,6 +199,11 @@ async function CommentList({ noteId }: { noteId: string }) {
           </div>
         </div>
       ))}
+      {comments.length === 0 && (
+        <div className="px-4 py-4">
+          <div className="text-base text-gray-700">この記事にまだコメントはありません。</div>
+        </div>
+      )}
     </div>
   );
 }
