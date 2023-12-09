@@ -1,13 +1,15 @@
 'use client';
 
-import { EditorForm } from '@/components/drafts/form';
-import { Item as TopicItem } from '@/components/drafts/topic-input';
 import { uploadFiles } from '@/components/file-drop-textarea/actions';
 import { SITE_NAME } from '@/libs/constants';
-import { Menu, Transition } from '@headlessui/react';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Combobox, Menu, Transition } from '@headlessui/react';
+import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
-import { useEditor } from '@tiptap/react';
+import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -17,51 +19,15 @@ import { Fragment, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { processAutoSave, processDraft, processPublish } from './action';
 
-function PublishButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={pending}
-      aria-disabled={pending}
-      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
-    >
-      公開する
-    </button>
-  );
+import '@/components/tiptap/tiptap.css';
+import './style.css';
+
+export interface TopicItem {
+  id: string;
+  handle: string;
+  name: string;
 }
 
-function DraftButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={pending}
-      aria-disabled={pending}
-      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
-    >
-      下書きに保存
-    </button>
-  );
-}
-
-function AutoSavingMessage({ show }: { show: boolean }) {
-  return (
-    <Transition
-      show={show}
-      enter="transition ease-out duration-100"
-      enterFrom="transform opacity-0 scale-95"
-      enterTo="transform opacity-100 scale-100"
-      leave="transition ease-in duration-100"
-      leaveFrom="transform opacity-100 scale-100"
-      leaveTo="transform opacity-0 scale-95"
-    >
-      <span className="px-1 text-sm font-medium text-indigo-500 animate-pulse">Auto-Saving...</span>
-    </Transition>
-  );
-}
 export function Form({
   draftId,
   groupId,
@@ -293,6 +259,21 @@ export function Form({
   );
 }
 
+function PublishButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={pending}
+      aria-disabled={pending}
+      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
+    >
+      公開する
+    </button>
+  );
+}
+
 const userNavigation = [
   { name: 'プロフィール', href: '/profile' },
   { name: 'ストック', href: '/stocks' },
@@ -366,6 +347,268 @@ function NavBar({
         </div>
       </div>
     </div>
+  );
+}
+
+function EditorForm({
+  title,
+  topics,
+  topicOptions,
+  editor,
+  onTitleChange,
+  onTopicsChange,
+}: {
+  title: string;
+  topics: TopicItem[];
+  topicOptions: TopicItem[];
+  editor: Editor | null;
+  onTitleChange?: (title: string) => void;
+  onTopicsChange?: (topics: TopicItem[]) => void;
+}) {
+  return (
+    <div className="h-full">
+      <div className="flex gap-2 mb-2">
+        <div className="flex-1 h-[44px]">
+          <input
+            type="text"
+            name="title"
+            className="block w-full h-full rounded-md border-0 py-1.5 text-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-400 sm:leading-6"
+            placeholder="Title"
+            autoComplete="off"
+            defaultValue={title}
+            onChange={(e) => {
+              onTitleChange && onTitleChange(e.target.value);
+            }}
+          />
+        </div>
+      </div>
+      <div className="flex gap-2 mb-2">
+        <div className="flex-1 h-[44px]">
+          <TopicInput
+            selected={topics}
+            options={topicOptions}
+            onChange={(e) => {
+              onTopicsChange && onTopicsChange(e);
+            }}
+          />
+        </div>
+      </div>
+      <div
+        className={clsx(
+          'h-[calc(100%_-_104px)] grid mb-2' // 104px = 44px + 8px (margin) +  44px + 8px (margin)
+        )}
+      >
+        <div className="px-2 pb-1 bg-white w-full h-full rounded-md ring-1 ring-inset ring-gray-300">
+          <div className="note">
+            <EditorContent editor={editor} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DraftButton({ onClick }: { onClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={pending}
+      aria-disabled={pending}
+      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
+    >
+      下書きに保存
+    </button>
+  );
+}
+
+function AutoSavingMessage({ show }: { show: boolean }) {
+  return (
+    <Transition
+      show={show}
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-100"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
+    >
+      <span className="px-1 text-sm font-medium text-indigo-500 animate-pulse">Auto-Saving...</span>
+    </Transition>
+  );
+}
+
+export function TopicInput({
+  selected,
+  options,
+  onChange,
+}: {
+  selected: TopicItem[];
+  options: TopicItem[];
+  onChange: (values: TopicItem[]) => void;
+}) {
+  const [items, setItems] = useState(selected);
+
+  return (
+    <div className="border-0 rounded-md px-2 py-1.5 ring-1 ring-inset ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-400 shadow-sm bg-white w-full text-sm flex gap-1.5">
+      {items.map((item) => (
+        <input type="hidden" name="topics" key={item.id} value={item.id} />
+      ))}
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={(event) => {
+          const { active, over } = event;
+          if (over == null || active.id === over.id) {
+            return;
+          }
+          const oldIndex = items.findIndex((item) => item.id === active.id);
+          const newIndex = items.findIndex((item) => item.id === over.id);
+          const newItems = arrayMove(items, oldIndex, newIndex);
+          setItems(newItems);
+          onChange(newItems);
+        }}
+      >
+        <SortableContext items={items}>
+          <div className="flex gap-1.5">
+            {items.map((item) => (
+              <SortableItem
+                key={item.id}
+                item={item}
+                onDelete={(item) => {
+                  const newItems = items.filter((i) => i.id !== item.id);
+                  setItems(newItems);
+                  onChange(newItems);
+                }}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+
+      <div className={items.length >= 5 ? 'hidden' : ''}>
+        <TopicsComboBox
+          options={options.filter((option) => !items.some((item) => item.id === option.id))}
+          onChange={(item) => {
+            const newItems = [...new Set([...items, item])];
+            setItems(newItems);
+            onChange(newItems);
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SortableItem({ item, onDelete }: { item: TopicItem; onDelete: (value: TopicItem) => void }) {
+  const { isDragging, setActivatorNodeRef, attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: item.id,
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      className={clsx('relative', isDragging ? 'z-[1]' : '')}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+    >
+      <div className="flex items-center gap-2 px-2 py-1 border-0 ring-1 ring-inset ring-gray-300 rounded-md bg-white">
+        <div className="flex items-center relative gap-2">
+          <span
+            className="absolute inset-x-0 -top-px bottom-0"
+            ref={setActivatorNodeRef}
+            style={{
+              cursor: isDragging ? 'grabbing' : 'grab',
+            }}
+            {...attributes}
+            {...listeners}
+          />
+          <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+          <div className="flex-1">{item.handle}</div>
+        </div>
+        <div
+          className="text-gray-500 hover:text-red-700 hover:cursor-pointer"
+          onClick={() => {
+            onDelete(item);
+          }}
+        >
+          <XMarkIcon className="w-5 h-5" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange: (value: TopicItem) => void }) {
+  const [query, setQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState<TopicItem | null>(null);
+
+  const handleChange = (topic: TopicItem) => {
+    setQuery('');
+    setSelectedItem(null);
+    onChange(topic);
+  };
+
+  const filteredOptions =
+    query === '' ? options : options.filter((option) => option.name.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <Combobox as="div" value={selectedItem} onChange={handleChange}>
+      <div className="relative">
+        <Combobox.Input
+          className="w-full rounded-md border-0 bg-white pt-2 pb-1 pl-3 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm"
+          onKeyDown={(event) => {
+            if (filteredOptions.length === 0 && event.key === 'Enter') {
+              event.preventDefault();
+            }
+          }}
+          onChange={(event) => setQuery(event.target.value)}
+          displayValue={(person: any) => person?.name}
+          placeholder="トピック..."
+        />
+        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+          <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        </Combobox.Button>
+
+        {filteredOptions.length > 0 && (
+          <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {filteredOptions.map((item) => (
+              <Combobox.Option
+                key={item.id}
+                value={item}
+                className={({ active }) =>
+                  clsx(
+                    'relative cursor-default select-none py-2 pl-3 pr-9',
+                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                  )
+                }
+              >
+                {({ active, selected }) => (
+                  <>
+                    <div className="flex items-center">
+                      <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+                      <span className={clsx('ml-3 truncate', selected && 'font-semibold')}>{item.name}</span>
+                    </div>
+
+                    {selected && (
+                      <span
+                        className={clsx(
+                          'absolute inset-y-0 right-0 flex items-center pr-4',
+                          active ? 'text-white' : 'text-indigo-600'
+                        )}
+                      >
+                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    )}
+                  </>
+                )}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        )}
+      </div>
+    </Combobox>
   );
 }
 
