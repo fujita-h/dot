@@ -10,9 +10,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useRef } from 'react';
 
 const navigation = [
-  { name: 'ホーム', href: '/', current: false, matchPath: /^\/$/ },
+  { name: 'トレンド', href: '/', current: false, matchPath: /^\/$/ },
   { name: 'タイムライン', href: '/timeline', current: false, matchPath: /^\/timeline/ },
   { name: 'グループ', href: '/groups', current: false, matchPath: /^\/groups/ },
+  { name: 'トピック', href: '/topics', current: false, matchPath: /^\/topics/ },
 ];
 const userNavigation = [
   { name: 'プロフィール', href: '/profile' },
