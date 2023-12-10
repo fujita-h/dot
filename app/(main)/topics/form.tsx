@@ -14,10 +14,10 @@ export function AddTopicButton() {
     <>
       <button
         type="button"
-        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
+        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-noto-sans-jp font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
         onClick={() => setOpen(true)}
       >
-        Create New Topic
+        新しいトピックを作成する
       </button>
       <AddTopicModal open={open} setOpen={setOpen} />
     </>

@@ -40,8 +40,8 @@ export default async function Page({ params, searchParams }: Props) {
   const notes = await getNotesWithUserGroupTopicsByTopicId(topic.id, sessionUserId).catch((e) => []);
 
   return (
-    <div className="md:flex md:gap-1">
-      <div className="md:w-80 p-2">
+    <div className="md:flex md:gap-2 md:m-2">
+      <div className="md:w-80 px-2">
         <div className="relative p-4 bg-white rounded-md">
           <div className="absolute top-0 right-0 mt-1 mr-1">
             <OtherMenuButton id={topic.id} />
