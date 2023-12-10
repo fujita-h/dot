@@ -117,19 +117,23 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                       <></>
                     )}
                     <div className="pt-2">
-                      <div className="mx-1 flex space-x-2 items-center">
-                        <div>
-                          <img
-                            src={`/api/users/${note.User.id}/icon`}
-                            className="w-10 h-10 rounded-full"
-                            alt="user icon"
-                          />
+                      <Link href={`/users/${note.User.handle}`} className="group">
+                        <div className="mx-1 flex space-x-2 items-center">
+                          <div>
+                            <img
+                              src={`/api/users/${note.User.id}/icon`}
+                              className="w-10 h-10 rounded-full group-hover:opacity-80"
+                              alt="user icon"
+                            />
+                          </div>
+                          <div>
+                            <div className="text-sm text-gray-700">@{note.User.handle}</div>
+                            <div className="text-base font-bold text-gray-900 group-hover:underline">
+                              {note.User.name}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="text-sm text-gray-700">@{note.User.handle}</div>
-                          <div className="text-base font-bold text-gray-900">{note.User.name}</div>
-                        </div>
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>

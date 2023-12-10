@@ -11,7 +11,9 @@ import StarterKit from '@tiptap/starter-kit';
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: false, // disable Heading extension in StarterKit, because we use extended Heading extension.
+      }),
       Underline,
       Heading.extend({
         addAttributes() {

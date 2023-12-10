@@ -5,7 +5,7 @@ import { SimpleTab } from '@/components/tabs/simple-tab';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
-import { getNotesWithUserGroupTopics } from '@/libs/prisma/note';
+import { getCommentedNotesWithUserGroupTopics, getNotesWithUserGroupTopics } from '@/libs/prisma/note';
 import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
 import clsx from 'clsx';
 import { Metadata } from 'next';
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${user.name} - ${SITE_NAME}` };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   const session = await auth();
   const { status, userId: sessionUserId } = await getUserIdFromSession(session, true);
   if (status === 401) return <SignInForm />;
@@ -40,7 +40,10 @@ export default async function Page({ params }: Props) {
 
   const isFollowing = user.FollowedUsers.find((follow) => follow.fromUserId === sessionUserId) ? true : false;
 
-  const notes = await getNotesWithUserGroupTopics(user.id);
+  const tab = searchParams.tab;
+  const currentTab = tab === 'comments' ? 'comments' : 'posts';
+  const notesFunc = tab === 'comments' ? getCommentedNotesWithUserGroupTopics : getNotesWithUserGroupTopics;
+  const notes = await notesFunc(user.id);
 
   return (
     <div className="space-y-4">
@@ -105,8 +108,8 @@ export default async function Page({ params }: Props) {
               <div className="my-3">
                 <SimpleTab
                   tabs={[
-                    { name: '投稿したノート', href: '#', current: true },
-                    { name: 'コメントしたノート', href: './comments', current: false },
+                    { name: '投稿したノート', href: '?tab=posts', current: currentTab === 'posts' },
+                    { name: 'コメントしたノート', href: '?tab=comments', current: currentTab === 'comments' },
                   ]}
                 />
               </div>
