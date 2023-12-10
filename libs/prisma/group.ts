@@ -130,3 +130,23 @@ export function getGroupWithMembersFollowedFromHandle(handle: string) {
       throw new Error('Error occurred while fetching group');
     });
 }
+
+export function getFollowingGroupsByUserId(userId: string) {
+  return prisma.group
+    .findMany({
+      where: {
+        FollowedUsers: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      orderBy: {
+        handle: 'asc',
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching groups');
+    });
+}

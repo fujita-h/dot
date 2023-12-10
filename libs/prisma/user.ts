@@ -94,3 +94,23 @@ export function getUsersWithEmail(take?: number, skip?: number) {
       throw new Error('Error occurred while fetching users');
     });
 }
+
+export function getFollowingUsersByUserId(userId: string) {
+  return prisma.user
+    .findMany({
+      where: {
+        FollowedUsers: {
+          some: {
+            fromUserId: userId,
+          },
+        },
+      },
+      orderBy: {
+        handle: 'asc',
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching users');
+    });
+}
