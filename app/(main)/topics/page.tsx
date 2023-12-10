@@ -27,7 +27,7 @@ export default async function Page() {
         </div>
       </div>
       <div className="mt-6 flex">
-        <div className="w-80 min-w-[320px]">left menu</div>
+        {/* <div className="w-80 min-w-[320px]">left menu</div> */}
         <div className="flex-1 flex gap-4 flex-wrap">
           {topics.map((topic) => (
             <TopicBadge key={topic.id} topic={topic} />
