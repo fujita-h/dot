@@ -8,5 +8,8 @@
     "next.config.js",
     "next-env.d.ts"
   ],
+  "rules": {
+    "@next/next/no-img-element": "off"
+  },
   "root": true
 }

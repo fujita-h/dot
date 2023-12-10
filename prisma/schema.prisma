@@ -1,0 +1,292 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(cuid())
+  handle          String         @unique
+  name            String
+  about           String         @db.Text
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  Claim           UserClaim?
+  JoiendGroups    Membership[]
+  Drafts          Draft[]
+  Notes           Note[]
+  Comments        Comment[]
+  Stocks          Stock[]
+  Likes           Like[]
+  FollowedUsers   FollowUser[]   @relation("to_user")
+  FollowingUsers  FollowUser[]   @relation("from_user")
+  FollowingGroups FollowGroup[]
+  Followingopics  FollowTopic[]
+  UserSetting     UserSetting?
+  Notifications   Notification[]
+  StockLabels     StockLabel[]
+
+  @@map("user")
+}
+
+model UserClaim {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  oid       String   @unique
+  email     String
+  data      Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_claim")
+}
+
+model UserSetting {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_setting")
+}
+
+model FollowUser {
+  fromUserId String   @map("from_user_id")
+  toUserId   String   @map("to_user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  FromUser   User     @relation("from_user", fields: [fromUserId], references: [id], onDelete: Cascade)
+  ToUser     User     @relation("to_user", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@id([fromUserId, toUserId])
+  @@map("follow_user")
+}
+
+model FollowGroup {
+  userId    String   @map("user_id")
+  groupId   String   @map("group_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@map("follow_group")
+}
+
+model FollowTopic {
+  userId    String   @map("user_id")
+  topicId   String   @map("topic_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([userId, topicId])
+  @@map("follow_topic")
+}
+
+model Group {
+  id            String        @id @default(cuid())
+  handle        String        @unique
+  name          String
+  about         String        @db.Text
+  type          GroupType     @default(PRIVATE)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  Members       Membership[]
+  Notes         Note[]
+  Drafts        Draft[]
+  FollowedUsers FollowGroup[]
+
+  @@map("group")
+}
+
+enum GroupType {
+  PRIVATE
+  PUBLIC
+}
+
+model Membership {
+  userId    String         @map("user_id")
+  groupId   String         @map("group_id")
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  User      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group     Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role      MembershipRole @default(CONTRIBUTOR)
+
+  @@id([userId, groupId])
+  @@index([role])
+  @@map("membership")
+}
+
+enum MembershipRole {
+  READER
+  CONTRIBUTOR
+  ADMIN
+}
+
+model Draft {
+  id             String          @id @default(cuid())
+  userId         String          @map("user_id")
+  groupId        String?         @map("group_id")
+  relatedNoteId  String?         @map("related_note_id")
+  title          String?
+  bodyBlobName   String?         @map("body_blob_name")
+  canPostComment Boolean         @default(true) @map("can_post_comment")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  User           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group          Group?          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  RelatedNote    Note?           @relation(fields: [relatedNoteId], references: [id], onDelete: Cascade)
+  Topics         DraftTopicMap[]
+
+  @@map("draft")
+}
+
+model Note {
+  id             String     @id @default(cuid())
+  userId         String     @map("user_id")
+  groupId        String?    @map("group_id")
+  title          String
+  bodyBlobName   String     @map("body_blob_name")
+  canPostComment Boolean    @default(true) @map("can_post_comment")
+  releasedAt     DateTime   @map("released_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+  isUserPinned   Boolean    @default(false) @map("is_user_pinned")
+  isGroupPinned  Boolean    @default(false) @map("is_group_pinned")
+  User           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Group          Group?     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  Drafts         Draft[]
+  Comments       Comment[]
+  Stocks         Stock[]
+  Topics         TopicMap[]
+  Likes          Like[]
+
+  @@map("note")
+}
+
+model Comment {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  noteId       String   @map("note_id")
+  bodyBlobName String?  @map("body_blob_name")
+  isEdited     Boolean  @default(false) @map("is_edited")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Note         Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@map("comment")
+}
+
+model Topic {
+  id            String          @id @default(cuid())
+  handle        String          @unique
+  name          String
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  Notes         TopicMap[]
+  FollowedUsers FollowTopic[]
+  Drafts        DraftTopicMap[]
+
+  @@map("topic")
+}
+
+model TopicMap {
+  noteId    String   @map("note_id")
+  topicId   String   @map("topic_id")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  Topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, topicId])
+  @@map("topic_map")
+}
+
+model DraftTopicMap {
+  draftId   String   @map("note_id")
+  topicId   String   @map("topic_id")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Draft     Draft    @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  Topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([draftId, topicId])
+  @@map("draft_topic_map")
+}
+
+model Stock {
+  userId    String     @map("user_id")
+  noteId    String     @map("note_id")
+  labelId   String     @map("label_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  User      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Note      Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  Label     StockLabel @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, noteId, labelId])
+  @@map("stock")
+}
+
+model StockLabel {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  name      String
+  default   Boolean?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Stocks    Stock[]
+
+  @@unique([userId, default])
+  @@map("stock_label")
+}
+
+model Like {
+  userId    String   @map("user_id")
+  noteId    String   @map("note_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@id([userId, noteId])
+  @@map("like")
+}
+
+model Notification {
+  id        String            @id @default(cuid())
+  userId    String            @map("user_id")
+  type      NotificationType  @default(NORMAL)
+  status    NotificationStaus @default(UNREAD)
+  body      String            @db.Text
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
+  User      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification")
+}
+
+enum NotificationType {
+  NORMAL
+}
+
+enum NotificationStaus {
+  UNREAD
+  READ
+}

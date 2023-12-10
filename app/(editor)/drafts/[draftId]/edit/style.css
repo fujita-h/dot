@@ -1,0 +1,150 @@
+.note {
+  font-family: var(--font-inter), var(--font-noto-sans-jp);
+  overflow-wrap: break-word;
+  padding-left: 2.0rem;
+  height: 100%;
+}
+.note h1 {
+  position: relative;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  font-weight: bold;
+  border-bottom: 2px solid #eee;
+  margin-top: 2.0rem;
+  margin-bottom: 1.8rem;
+}
+.note h1::before {
+  content: "H1";
+  font-weight: normal;
+  color: #aaa;
+  position: absolute;
+  left: -2.0rem;
+  top: 0.8rem;
+  font-size: 1.0rem;
+}
+.note h1:first-child {
+  margin-top: 0rem;
+}
+.note h2 {
+  position: relative;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  font-weight: bold;
+  border-bottom: 2px solid #eee;
+  margin-top: 1.8rem;
+  margin-bottom: 1.6rem;
+}
+.note h2::before {
+  content: "H2";
+  font-weight: normal;
+  color: #aaa;
+  position: absolute;
+  left: -2.0rem;
+  top: 0.5rem;
+  font-size: 1.0rem;
+}
+.note h2:first-child {
+  margin-top: 0rem;
+}
+.note h3 {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  font-weight: bold;
+  margin-top: 1.6rem;
+  margin-bottom: 1.4rem;
+}
+.note h4, .note h5 {
+  font-size: 1.2rem;
+  line-height: 1.3;
+  font-weight: bold;
+  margin-top: 1.4rem;
+  margin-bottom: 1.2rem;
+}
+.note p {
+  font-size: 1.0rem;
+  line-height: 1.8;
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+}
+.note p:first-child {
+  margin-top: 0rem;
+}
+.note a {
+  color: #4f46e5;
+  text-decoration: none;
+}
+.note a:hover {
+  text-decoration: underline;
+}
+.note table {
+  font-size: 1.0rem;
+  line-height: 2.0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  border: 1px solid #ddd;
+}
+.note table th {
+  font-weight: bold;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+.note table td {
+  padding: 0.3rem 0.8rem; 
+  border: 1px solid #ddd;
+}
+.note ul {
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+.note ul ul {
+  list-style-type: circle;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.note ol {
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+  padding-left: 1.5rem;
+  list-style-type: number;
+  counter-reset: number;
+}
+.note li {
+  font-size: 1.0rem;
+  line-height: 2.0;
+  margin: 0rem;
+}
+.note li>p:first-child {
+  margin: 0rem;
+}
+.note blockquote {
+  font-size: 1.0rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-left: 0.6rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.3rem;
+  border-left: 4px solid #ddd;
+}
+.note pre {
+  font-size: 0.9rem;
+  line-height: 1.3;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.note img {
+  box-shadow: 0 0 0 1px #ddd;
+  max-width: 100%;
+  background-color: #fff;
+}
+.note img.ProseMirror-selectednode {
+  box-shadow: 0 0 0 3px #aaa;
+}
