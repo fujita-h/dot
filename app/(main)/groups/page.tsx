@@ -20,7 +20,7 @@ export default async function Page() {
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Groups</div>
-          <div>グループ</div>
+          <div className="text-gray-600 font-noto-sans-jp">グループ</div>
         </div>
         <div>
           <CreateGroupButton />
