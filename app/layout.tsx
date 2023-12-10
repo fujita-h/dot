@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import type { Metadata } from 'next';
+import { SITE_NAME } from '@/libs/constants';
 import { Inter, Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
 
@@ -7,7 +8,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const notoSansJP = Noto_Sans_JP({ subsets: ['latin'], variable: '--font-noto-sans-jp' });
 
 export const metadata: Metadata = {
-  title: 'mdocs',
+  title: SITE_NAME,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

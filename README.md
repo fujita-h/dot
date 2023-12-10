@@ -1,6 +1,3 @@
-# mdocs
-
-
 # Environment variables
 
 | Variable                          | Description                                                                                                               | Required | Sample                               |
