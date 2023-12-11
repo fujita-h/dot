@@ -2,9 +2,10 @@
 
 import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
-import Heading from '@tiptap/extension-heading';
-import Image from '@tiptap/extension-image';
-import Underline from '@tiptap/extension-underline';
+import HeadingExtension from '@tiptap/extension-heading';
+import ImageExtension from '@tiptap/extension-image';
+import LinkExtension from '@tiptap/extension-link';
+import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
@@ -14,8 +15,8 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       StarterKit.configure({
         heading: false, // disable Heading extension in StarterKit, because we use extended Heading extension.
       }),
-      Underline,
-      Heading.extend({
+      UnderlineExtension,
+      HeadingExtension.extend({
         addAttributes() {
           return {
             ...this.parent?.(),
@@ -35,7 +36,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
           ];
         },
       }),
-      Image.extend({
+      ImageExtension.extend({
         renderHTML({ node, HTMLAttributes }) {
           return [
             'a',
@@ -49,6 +50,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
           ];
         },
       }),
+      LinkExtension,
     ],
     content: JSON.parse(jsonString),
     editable: false,
