@@ -418,7 +418,7 @@ function EditorForm({
               <MdFormatBold />
             </button>
           </div> */}
-          <div className="note px-2 pb-1">
+          <div className="px-2 pb-1">
             {editor && (
               <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
                 <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
@@ -480,7 +480,9 @@ function EditorForm({
                 </IconContext.Provider>
               </FloatingMenu>
             )}
-            <EditorContent editor={editor} />
+            <div id="draft-editor">
+              <EditorContent editor={editor} />
+            </div>
           </div>
         </div>
       </div>

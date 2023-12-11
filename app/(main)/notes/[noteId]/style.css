@@ -1,8 +1,8 @@
-.note {
+#note-viewer {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
 }
-.note h1 {
+#note-viewer h1 {
   font-size: 1.8rem;
   line-height: 1.5;
   font-weight: bold;
@@ -10,10 +10,10 @@
   margin-top: 2.0rem;
   margin-bottom: 1.8rem;
 }
-.note h1:first-child {
+#note-viewer h1:first-child {
   margin-top: 0rem;
 }
-.note h2 {
+#note-viewer h2 {
   font-size: 1.6rem;
   line-height: 1.5;
   font-weight: bold;
@@ -21,37 +21,37 @@
   margin-top: 1.8rem;
   margin-bottom: 1.6rem;
 }
-.note h2:first-child {
+#note-viewer h2:first-child {
   margin-top: 0rem;
 }
-.note h3 {
+#note-viewer h3 {
   font-size: 1.4rem;
   line-height: 1.4;
   font-weight: bold;
   margin-top: 1.6rem;
   margin-bottom: 1.4rem;
 }
-.note h4, .note h5 {
+#note-viewer h4, #note-viewer h5 {
   font-size: 1.2rem;
   line-height: 1.3;
   font-weight: bold;
   margin-top: 1.4rem;
   margin-bottom: 1.2rem;
 }
-.note p {
+#note-viewer p {
   font-size: 1.0rem;
   line-height: 1.8;
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
 }
-.note a {
+#note-viewer a {
   color: #4f46e5;
   text-decoration: none;
 }
-.note a:hover {
+#note-viewer a:hover {
   text-decoration: underline;
 }
-.note table {
+#note-viewer table {
   font-size: 1.0rem;
   line-height: 2.0;
   border-collapse: collapse;
@@ -60,43 +60,43 @@
   margin-bottom: 0.8rem;
   border: 1px solid #ddd;
 }
-.note table th {
+#note-viewer table th {
   font-weight: bold;
   padding: 0.3rem 0.8rem;
   border: 1px solid #ddd;
   background-color: #f8f8f8;
 }
-.note table td {
+#note-viewer table td {
   padding: 0.3rem 0.8rem; 
   border: 1px solid #ddd;
 }
-.note ul {
+#note-viewer ul {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
   padding-left: 1.5rem;
   list-style-type: disc;
 }
-.note ul ul {
+#note-viewer ul ul {
   list-style-type: circle;
   margin-top: 0;
   margin-bottom: 0;
 }
-.note ol {
+#note-viewer ol {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
   padding-left: 1.5rem;
   list-style-type: number;
   counter-reset: number;
 }
-.note li {
+#note-viewer li {
   font-size: 1.0rem;
   line-height: 2.0;
   margin: 0rem;
 }
-.note li>p:first-child {
+#note-viewer li>p:first-child {
   margin: 0rem;
 }
-.note blockquote {
+#note-viewer blockquote {
   font-size: 1.0rem;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
@@ -105,7 +105,7 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
 }
-.note pre {
+#note-viewer pre {
   font-size: 0.9rem;
   line-height: 1.3;
   margin-top: 0.8rem;
@@ -115,18 +115,21 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-.note img {
+#note-viewer img {
   display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
 }
+#note-viewer a.note-image-anchor + p {
+  margin-top: 0rem;
+}
 
-.comment {
+#comment-viewer {
   overflow-wrap: break-word;
   font-size: 1.0rem;
 }
-.comment h1 {
+#comment-viewer h1 {
   font-size: 1.4rem;
   line-height: 1.4;
   font-weight: bold;
@@ -134,10 +137,10 @@
   margin-top: 1.2rem;
   margin-bottom: 1.4rem;
 }
-.comment h1:first-child {
+#comment-viewer h1:first-child {
   margin-top: 0rem;
 }
-.comment h2 {
+#comment-viewer h2 {
   font-size: 1.2rem;
   line-height: 1.2;
   font-weight: bold;
@@ -145,10 +148,10 @@
   margin-top: 1.0rem;
   margin-bottom: 1.2rem;
 }
-.comment h2:first-child {
+#comment-viewer h2:first-child {
   margin-top: 0rem;
 }
-.comment h3, .comment h4, .comment h5 {
+#comment-viewer h3, #comment-viewer h4, #comment-viewer h5 {
   font-size: 1.0rem;
   line-height: 1.0;
   font-weight: bold;
@@ -156,20 +159,20 @@
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
 }
-.comment p {
+#comment-viewer p {
   font-size: 0.9rem;
   line-height: 1.7;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
 }
-.comment a {
+#comment-viewer a {
   color: #4f46e5;
   text-decoration: none;
 }
-.comment a:hover {
+#comment-viewer a:hover {
   text-decoration: underline;
 }
-.comment table {
+#comment-viewer table {
   font-size: 1.0rem;
   line-height: 2.0;
   border-collapse: collapse;
@@ -178,40 +181,40 @@
   margin-bottom: 0.8rem;
   border: 1px solid #ddd;
 }
-.comment table th {
+#comment-viewer table th {
   font-weight: bold;
   padding: 0.2rem 0.3rem;
   border: 1px solid #ddd;
   background-color: #f8f8f8;
 }
-.comment table td {
+#comment-viewer table td {
   padding: 0.2rem 0.3rem;
   border: 1px solid #ddd;
 }
-.comment ul {
+#comment-viewer ul {
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
   padding-left: 1.2rem;
   list-style-type: disc;
 }
-.comment ul ul {
+#comment-viewer ul ul {
   list-style-type: circle;
   margin-top: 0;
   margin-bottom: 0;
 }
-.comment ol {
+#comment-viewer ol {
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
   padding-left: 1.2rem;
   list-style-type: number;
   counter-reset: number;
 }
-.comment li {
+#comment-viewer li {
   font-size: 1.0rem;
   line-height: 1.6;
   margin: 0rem;
 }
-.comment blockquote {
+#comment-viewer blockquote {
   font-size: 0.9rem;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
@@ -220,7 +223,7 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #eee;
 }
-.comment pre {
+#comment-viewer pre {
   font-size: 0.9rem;
   line-height: 1.2;
   margin-top: 0.8rem;
@@ -230,7 +233,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-.comment img {
+#comment-viewer img {
   display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;

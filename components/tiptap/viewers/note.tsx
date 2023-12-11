@@ -41,6 +41,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
             'a',
             {
               href: node.attrs.src,
+              class: 'note-image-anchor',
               target: '_blank',
               rel: 'noopener noreferrer',
             },
