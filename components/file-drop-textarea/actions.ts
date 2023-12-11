@@ -25,14 +25,13 @@ export async function uploadFiles(fileParams: FileParam[]) {
       const fileName = fileParam.fileName;
       const metadata = {
         userId: user.id,
-        userName: user.name || '',
-        oid: user.Claim?.oid || '',
+        userName: encodeURI(user.name) || 'n/a',
+        oid: user.Claim?.oid || 'n/a',
         fileName: encodeURI(fileParam.fileName),
       };
       const tags = {
         userId: user.id,
-        userName: user.name || '',
-        oid: user.Claim?.oid || '',
+        oid: user.Claim?.oid || 'n/a',
       };
       return fetch(fileParam.data)
         .then((res) => res.blob())
