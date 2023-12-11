@@ -2,7 +2,6 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
-import mdStyles from '@/components/notes/styles.module.css';
 import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
@@ -12,6 +11,8 @@ import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
 import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
+
+import './style.css';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
   const session = await auth();
@@ -145,7 +146,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               </div>
               <div className="order-1 flex-1">
                 <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
-                  <div className={mdStyles.note}>
+                  <div id="note-viewer">
                     <NoteViewer jsonString={blobBody} />
                   </div>
                 </div>
@@ -219,7 +220,7 @@ async function CommnetBody({ containerName, bodyBlobName }: { containerName: str
     .catch((e) => null);
   if (!body) return <></>;
   return (
-    <div className={mdStyles.comment}>
+    <div id="comment-viewer">
       <CommentViewer jsonString={body} />
     </div>
   );

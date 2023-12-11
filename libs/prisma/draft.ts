@@ -34,15 +34,14 @@ export async function createDraft(
   if (body) {
     const metadata = {
       userId: userId,
-      groupId: groupId || '',
-      userName: userName || '',
+      groupId: groupId || 'n/a',
+      userName: userName ? encodeURI(userName) : 'n/a',
       oid: oid || '',
     };
     const tags = {
       userId: userId,
-      groupId: groupId || '',
-      userName: userName || '',
-      oid: oid || '',
+      groupId: groupId || 'n/a',
+      oid: oid || 'n/a',
     };
     blobName = `${draftId}/${cuid()}`;
     const blobUploadResult = await blob

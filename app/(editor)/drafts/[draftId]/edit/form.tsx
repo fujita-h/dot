@@ -7,9 +7,10 @@ import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Combobox, Menu, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import Image from '@tiptap/extension-image';
-import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
+import ImageExtension from '@tiptap/extension-image';
+import LinkExtension from '@tiptap/extension-link';
+import PlaceholderExtension from '@tiptap/extension-placeholder';
+import UnderlineExtension from '@tiptap/extension-underline';
 import { BubbleMenu, Editor, EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
@@ -69,7 +70,7 @@ export function Form({
 
   const editor = useEditor({
     extensions: [
-      Image.extend({
+      ImageExtension.extend({
         addProseMirrorPlugins() {
           return [
             new Plugin({
@@ -169,8 +170,11 @@ export function Form({
         },
       }),
       StarterKit,
-      Underline,
-      Placeholder.configure({
+      UnderlineExtension,
+      LinkExtension.configure({
+        openOnClick: false,
+      }),
+      PlaceholderExtension.configure({
         placeholder: 'Write something. Start here...',
       }),
     ],
@@ -418,7 +422,7 @@ function EditorForm({
               <MdFormatBold />
             </button>
           </div> */}
-          <div className="note px-2 pb-1">
+          <div className="px-2 pb-1">
             {editor && (
               <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
                 <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
@@ -480,7 +484,9 @@ function EditorForm({
                 </IconContext.Provider>
               </FloatingMenu>
             )}
-            <EditorContent editor={editor} />
+            <div id="draft-editor">
+              <EditorContent editor={editor} />
+            </div>
           </div>
         </div>
       </div>

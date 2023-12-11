@@ -1,10 +1,10 @@
-.note {
+#draft-editor {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
   padding-left: 2.0rem;
   height: 100%;
 }
-.note h1 {
+#draft-editor h1 {
   position: relative;
   font-size: 1.8rem;
   line-height: 1.5;
@@ -13,7 +13,7 @@
   margin-top: 2.0rem;
   margin-bottom: 1.8rem;
 }
-.note h1::before {
+#draft-editor h1::before {
   content: "H1";
   font-weight: normal;
   color: #aaa;
@@ -22,10 +22,10 @@
   top: 0.8rem;
   font-size: 1.0rem;
 }
-.note h1:first-child {
+#draft-editor h1:first-child {
   margin-top: 0rem;
 }
-.note h2 {
+#draft-editor h2 {
   position: relative;
   font-size: 1.6rem;
   line-height: 1.5;
@@ -34,7 +34,7 @@
   margin-top: 1.8rem;
   margin-bottom: 1.6rem;
 }
-.note h2::before {
+#draft-editor h2::before {
   content: "H2";
   font-weight: normal;
   color: #aaa;
@@ -43,40 +43,40 @@
   top: 0.5rem;
   font-size: 1.0rem;
 }
-.note h2:first-child {
+#draft-editor h2:first-child {
   margin-top: 0rem;
 }
-.note h3 {
+#draft-editor h3 {
   font-size: 1.4rem;
   line-height: 1.4;
   font-weight: bold;
   margin-top: 1.6rem;
   margin-bottom: 1.4rem;
 }
-.note h4, .note h5 {
+#draft-editor h4, #draft-editor h5 {
   font-size: 1.2rem;
   line-height: 1.3;
   font-weight: bold;
   margin-top: 1.4rem;
   margin-bottom: 1.2rem;
 }
-.note p {
+#draft-editor p {
   font-size: 1.0rem;
   line-height: 1.8;
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
 }
-.note p:first-child {
+#draft-editor p:first-child {
   margin-top: 0rem;
 }
-.note a {
+#draft-editor a {
   color: #4f46e5;
   text-decoration: none;
 }
-.note a:hover {
+#draft-editor a:hover {
   text-decoration: underline;
 }
-.note table {
+#draft-editor table {
   font-size: 1.0rem;
   line-height: 2.0;
   border-collapse: collapse;
@@ -85,43 +85,43 @@
   margin-bottom: 0.8rem;
   border: 1px solid #ddd;
 }
-.note table th {
+#draft-editor table th {
   font-weight: bold;
   padding: 0.3rem 0.8rem;
   border: 1px solid #ddd;
   background-color: #f8f8f8;
 }
-.note table td {
+#draft-editor table td {
   padding: 0.3rem 0.8rem; 
   border: 1px solid #ddd;
 }
-.note ul {
+#draft-editor ul {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
   padding-left: 1.5rem;
   list-style-type: disc;
 }
-.note ul ul {
+#draft-editor ul ul {
   list-style-type: circle;
   margin-top: 0;
   margin-bottom: 0;
 }
-.note ol {
+#draft-editor ol {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
   padding-left: 1.5rem;
   list-style-type: number;
   counter-reset: number;
 }
-.note li {
+#draft-editor li {
   font-size: 1.0rem;
   line-height: 2.0;
   margin: 0rem;
 }
-.note li>p:first-child {
+#draft-editor li>p:first-child {
   margin: 0rem;
 }
-.note blockquote {
+#draft-editor blockquote {
   font-size: 1.0rem;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
@@ -130,7 +130,7 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
 }
-.note pre {
+#draft-editor pre {
   font-size: 0.9rem;
   line-height: 1.3;
   margin-top: 0.8rem;
@@ -140,11 +140,58 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-.note img {
+#draft-editor img {
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
 }
-.note img.ProseMirror-selectednode {
+#draft-editor img.ProseMirror-selectednode {
   box-shadow: 0 0 0 3px #aaa;
+}
+#draft-editor img + p {
+  margin-top: 0rem;
+}
+
+
+#draft-editor .bubble-menu {
+  display: flex;
+  background-color: #0D0D0D;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+}
+#draft-editor .bubble-menu button {
+  border: none;
+  background: none;
+  color: #FFF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0 0.2rem;
+  opacity: 0.6;
+}
+#draft-editor .bubble-menu button + button {
+  margin-left: 0.2rem;
+}
+#draft-editor .bubble-menu button:hover, .bubble-menu button.is-active {
+  opacity: 1;
+}
+
+#draft-editor .floating-menu {
+  display: flex;
+  background-color: #0D0D0D10;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+}
+#draft-editor .floating-menu button {
+  border: none;
+  background: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0 0.2rem;
+  opacity: 0.6;
+}
+#draft-editor .floating-menu button + button {
+  margin-left: 0.2rem;
+}
+#draft-editor .floating-menu button:hover, .floating-menu button.is-active {
+  opacity: 1;
 }

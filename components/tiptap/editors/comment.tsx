@@ -1,7 +1,10 @@
 'use client';
 
 import '@/components/tiptap/tiptap.css';
-import Placeholder from '@tiptap/extension-placeholder';
+import ImageExtension from '@tiptap/extension-image';
+import LinkExtension from '@tiptap/extension-link';
+import PlaceholderExtension from '@tiptap/extension-placeholder';
+import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
@@ -15,9 +18,14 @@ export default function CommentEditor({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Placeholder.configure({
+      ImageExtension,
+      LinkExtension.configure({
+        openOnClick: false,
+      }),
+      PlaceholderExtension.configure({
         placeholder: 'Write comment here...',
       }),
+      UnderlineExtension,
     ],
   });
 

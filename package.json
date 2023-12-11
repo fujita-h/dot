@@ -1,6 +1,6 @@
 {
   "name": "dot",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,7 @@
     "@prisma/client": "^5.7.0",
     "@tiptap/extension-heading": "^2.1.13",
     "@tiptap/extension-image": "^2.1.13",
+    "@tiptap/extension-link": "^2.1.13",
     "@tiptap/extension-placeholder": "^2.1.13",
     "@tiptap/extension-underline": "^2.1.13",
     "@tiptap/pm": "^2.1.13",

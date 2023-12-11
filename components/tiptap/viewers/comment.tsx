@@ -1,15 +1,18 @@
 'use client';
 
-import '@/components/tiptap/tiptap.css';
-import Image from '@tiptap/extension-image';
+import ImageExtension from '@tiptap/extension-image';
+import LinkExtension from '@tiptap/extension-link';
+import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+
+import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Image.extend({
+      ImageExtension.extend({
         renderHTML({ node, HTMLAttributes }) {
           return [
             'a',
@@ -22,6 +25,8 @@ export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: 
           ];
         },
       }),
+      LinkExtension,
+      UnderlineExtension,
     ],
     content: JSON.parse(jsonString),
     editable: false,
