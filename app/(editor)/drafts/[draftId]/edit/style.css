@@ -69,6 +69,28 @@
 #draft-editor p:first-child {
   margin-top: 0rem;
 }
+#draft-editor code {
+  font-family: var(--font-source-code-pro), var(--font-noto-sans-jp), Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+}
+#draft-editor p>code{
+  font-size: 1.0rem;
+  line-height: 1.4;
+  margin: 0rem 0.2rem;
+  padding: 0.2rem 0.4rem;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+#draft-editor pre {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
 #draft-editor a {
   color: #4f46e5;
   text-decoration: none;
@@ -129,16 +151,6 @@
   padding-top: 0.2rem;
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
-}
-#draft-editor pre {
-  font-size: 0.9rem;
-  line-height: 1.3;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  padding: 0.8rem;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 4px;
 }
 #draft-editor img {
   box-shadow: 0 0 0 1px #ddd;
