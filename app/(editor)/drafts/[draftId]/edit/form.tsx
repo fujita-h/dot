@@ -209,7 +209,7 @@ export function Form({
   }, [showAutoSavingMessage]);
 
   return (
-    <form className="h-full">
+    <form>
       <NavBar
         formDraftAction={async () => {
           setAutoSaveTimestamp(0);
@@ -241,33 +241,31 @@ export function Form({
         }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
-      <div className="max-w-screen-2xl mx-auto h-[calc(100%_-_56px)] p-2">
+      <div className="max-w-screen-2xl mx-auto p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
-        <div className="h-full">
-          <EditorForm
-            title={titleState}
-            topics={topicsState}
-            topicOptions={topicOptions}
-            editor={editor}
-            onTitleChange={async (title) => {
-              setTitleState(title);
-              await processAutoSave(draftId, groupId, relatedNoteId, title, undefined, undefined);
-            }}
-            onTopicsChange={async (topics) => {
-              setTopicsState(topics);
-              await processAutoSave(
-                draftId,
-                groupId,
-                relatedNoteId,
-                undefined,
-                topics.map((t) => t.id),
-                undefined
-              );
-            }}
-          />
-        </div>
+        <EditorForm
+          title={titleState}
+          topics={topicsState}
+          topicOptions={topicOptions}
+          editor={editor}
+          onTitleChange={async (title) => {
+            setTitleState(title);
+            await processAutoSave(draftId, groupId, relatedNoteId, title, undefined, undefined);
+          }}
+          onTopicsChange={async (topics) => {
+            setTopicsState(topics);
+            await processAutoSave(
+              draftId,
+              groupId,
+              relatedNoteId,
+              undefined,
+              topics.map((t) => t.id),
+              undefined
+            );
+          }}
+        />
       </div>
     </form>
   );
@@ -380,7 +378,7 @@ function EditorForm({
   onTopicsChange?: (topics: TopicItem[]) => void;
 }) {
   return (
-    <div className="h-full">
+    <div>
       <div className="flex gap-2 mb-2">
         <div className="flex-1 h-[44px]">
           <input
@@ -407,13 +405,8 @@ function EditorForm({
           />
         </div>
       </div>
-      <div
-        className={clsx(
-          'h-[calc(100%_-_104px)] grid mb-2' // 104px = 44px + 8px (margin) +  44px + 8px (margin)
-        )}
-      >
-        <div className=" bg-white w-full h-full rounded-md ring-1 ring-inset ring-gray-300">
-          {/* <div className="bg-slate-100 sticky top-0 p-2 rounded-t-md z-20">
+      <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
+        {/* <div className="bg-slate-100 sticky top-0 p-2 rounded-t-md z-20">
             <button
               type="button"
               onClick={() => editor?.chain().focus().toggleBold().run()}
@@ -422,71 +415,70 @@ function EditorForm({
               <MdFormatBold />
             </button>
           </div> */}
-          <div className="px-2 pb-1">
-            {editor && (
-              <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
-                <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={editor.isActive('bold') ? 'is-active' : ''}
-                  >
-                    <MdFormatBold />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={editor.isActive('italic') ? 'is-active' : ''}
-                  >
-                    <MdFormatItalic />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleUnderline().run()}
-                    className={editor.isActive('underline') ? 'is-active' : ''}
-                  >
-                    <MdFormatUnderlined />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleStrike().run()}
-                    className={editor.isActive('strike') ? 'is-active' : ''}
-                  >
-                    <MdFormatStrikethrough />
-                  </button>
-                </IconContext.Provider>
-              </BubbleMenu>
-            )}
-            {editor && (
-              <FloatingMenu className="floating-menu" tippyOptions={{ duration: 100 }} editor={editor}>
-                <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                    className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-                  >
-                    H1
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-                  >
-                    H2
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={editor.isActive('bulletList') ? 'is-active' : ''}
-                  >
-                    <MdFormatListBulleted />
-                  </button>
-                </IconContext.Provider>
-              </FloatingMenu>
-            )}
-            <div id="draft-editor">
-              <EditorContent editor={editor} />
-            </div>
+        <div className="px-2 pb-1">
+          {editor && (
+            <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
+              <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                  className={editor.isActive('bold') ? 'is-active' : ''}
+                >
+                  <MdFormatBold />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                  className={editor.isActive('italic') ? 'is-active' : ''}
+                >
+                  <MdFormatItalic />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleUnderline().run()}
+                  className={editor.isActive('underline') ? 'is-active' : ''}
+                >
+                  <MdFormatUnderlined />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleStrike().run()}
+                  className={editor.isActive('strike') ? 'is-active' : ''}
+                >
+                  <MdFormatStrikethrough />
+                </button>
+              </IconContext.Provider>
+            </BubbleMenu>
+          )}
+          {editor && (
+            <FloatingMenu className="floating-menu" tippyOptions={{ duration: 100 }} editor={editor}>
+              <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                  className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+                >
+                  H1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                  className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+                >
+                  H2
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                  className={editor.isActive('bulletList') ? 'is-active' : ''}
+                >
+                  <MdFormatListBulleted />
+                </button>
+              </IconContext.Provider>
+            </FloatingMenu>
+          )}
+          <div id="draft-editor">
+            <EditorContent editor={editor} />
           </div>
         </div>
       </div>
