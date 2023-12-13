@@ -157,7 +157,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   </div>
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
-                    <div className="p-4">
+                    <div id="comment-editor" className="p-4">
                       <CommentEditor noteId={note.id} />
                     </div>
                   </div>
