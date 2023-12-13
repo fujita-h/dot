@@ -7,7 +7,7 @@
   line-height: 1.5;
   font-weight: bold;
   border-bottom: 2px solid #eee;
-  margin-top: 2.0rem;
+  margin-top: 3.0rem;
   margin-bottom: 1.8rem;
 }
 #note-viewer h1:first-child {
@@ -18,7 +18,7 @@
   line-height: 1.5;
   font-weight: bold;
   border-bottom: 2px solid #eee;
-  margin-top: 1.8rem;
+  margin-top: 2.8rem;
   margin-bottom: 1.6rem;
 }
 #note-viewer h2:first-child {
@@ -28,7 +28,7 @@
   font-size: 1.4rem;
   line-height: 1.4;
   font-weight: bold;
-  margin-top: 1.6rem;
+  margin-top: 2.0rem;
   margin-bottom: 1.4rem;
 }
 #note-viewer h4, #note-viewer h5 {
