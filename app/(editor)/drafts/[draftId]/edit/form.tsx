@@ -209,7 +209,7 @@ export function Form({
         openOnClick: false,
       }),
       PlaceholderExtension.configure({
-        placeholder: 'Write something. Start here...',
+        placeholder: 'Start writing here...',
       }),
     ],
     content: content,
