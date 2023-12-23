@@ -2,20 +2,37 @@
 
 import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
-import HeadingExtension from '@tiptap/extension-heading';
 import ImageExtension from '@tiptap/extension-image';
 import LinkExtension from '@tiptap/extension-link';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import BlockquoteExtension from '@tiptap/extension-blockquote';
+import BulletListExtension from '@tiptap/extension-bullet-list';
+import CodeBlockExtension from '@tiptap/extension-code-block';
+import DocumentExtension from '@tiptap/extension-document';
+import HardBreakExtension from '@tiptap/extension-hard-break';
+import HeadingExtension from '@tiptap/extension-heading';
+import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
+import ListItemExtension from '@tiptap/extension-list-item';
+import OrderedListExtension from '@tiptap/extension-ordered-list';
+import ParagraphExtension from '@tiptap/extension-paragraph';
+import TextExtension from '@tiptap/extension-text';
+import BoldExtension from '@tiptap/extension-bold';
+import CodeExtension from '@tiptap/extension-code';
+import ItalicExtension from '@tiptap/extension-italic';
+import StrikeExtension from '@tiptap/extension-strike';
+import DropcursorExtension from '@tiptap/extension-dropcursor';
+import GapcursorExtension from '@tiptap/extension-gapcursor';
+import HistoryExtension from '@tiptap/extension-history';
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        heading: false, // disable Heading extension in StarterKit, because we use extended Heading extension.
-      }),
-      UnderlineExtension,
+      BlockquoteExtension,
+      BulletListExtension,
+      CodeBlockExtension,
+      DocumentExtension,
+      HardBreakExtension,
       HeadingExtension.extend({
         addAttributes() {
           return {
@@ -36,6 +53,19 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
           ];
         },
       }),
+      HorizontalRuleExtension,
+      ListItemExtension,
+      OrderedListExtension,
+      ParagraphExtension,
+      TextExtension,
+      BoldExtension,
+      CodeExtension,
+      ItalicExtension,
+      StrikeExtension,
+      DropcursorExtension,
+      GapcursorExtension,
+      HistoryExtension,
+      UnderlineExtension,
       ImageExtension.extend({
         renderHTML({ node, HTMLAttributes }) {
           return [
