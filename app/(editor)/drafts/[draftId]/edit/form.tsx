@@ -87,6 +87,24 @@ export function Form({
 
   const editor = useEditor({
     extensions: [
+      BlockquoteExtension,
+      BulletListExtension,
+      CodeBlockExtension,
+      DocumentExtension,
+      HardBreakExtension,
+      HeadingExtension,
+      HorizontalRuleExtension,
+      ListItemExtension,
+      OrderedListExtension,
+      ParagraphExtension,
+      TextExtension,
+      BoldExtension,
+      CodeExtension,
+      ItalicExtension,
+      StrikeExtension,
+      DropcursorExtension,
+      GapcursorExtension,
+      HistoryExtension,
       ImageExtension.extend({
         addProseMirrorPlugins() {
           return [
@@ -186,24 +204,6 @@ export function Form({
           ];
         },
       }),
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension,
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
       UnderlineExtension,
       LinkExtension.configure({
         openOnClick: false,
