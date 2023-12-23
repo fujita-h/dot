@@ -1,6 +1,7 @@
 #draft-editor {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
+  padding-top: 1.0rem;
   padding-left: 2.0rem;
   height: 100%;
 }
