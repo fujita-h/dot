@@ -30,6 +30,7 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import { TextSelection } from '@tiptap/pm/state';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -455,7 +456,16 @@ function EditorForm({
               className="bubble-menu"
               tippyOptions={{ duration: 100 }}
               editor={editor}
-              shouldShow={({ editor }) => {
+              shouldShow={({ editor, view, state, oldState, from, to }) => {
+                // original shouldShow function
+                const { doc, selection } = state;
+                const { empty } = selection;
+                const isEmptyTextBlock = !doc.textBetween(from, to).length && state.selection instanceof TextSelection;
+                const hasEditorFocus = view.hasFocus();
+                if (!hasEditorFocus || empty || isEmptyTextBlock || !editor.isEditable) {
+                  return false;
+                }
+                // custom shouldShow function
                 if (editor.isActive('image')) return false;
                 return true;
               }}
