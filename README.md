@@ -13,3 +13,6 @@
 | `NEXTAUTH_URL`                    | See https://next-auth.js.org/configuration/options                                                                        | Yes      | https://example.com                  |
 | `NEXTAUTH_URL_INTERNAL`           | See https://next-auth.js.org/configuration/options                                                                        | No       | http://localhost:3000                |
 | `SESSION_MAX_AGE`                 | Maximum session time (in seconds).                                                                                        | No       | 86400                                |
+| `LOCALE `                         | Locale to use for the app. A string with a BCP 47 language tag or an `Intl.Locale instance`.                              | No       | ja-JP                                |
+| `TIMEZONE`                        | Timezone to use for the app. The time zone names of the IANA time zone database.                                          | No       | Asia/Tokyo                           |
+ 
