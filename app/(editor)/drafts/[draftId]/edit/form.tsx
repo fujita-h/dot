@@ -451,7 +451,15 @@ function EditorForm({
           </div> */}
         <div className="px-2 pb-1">
           {editor && (
-            <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
+            <BubbleMenu
+              className="bubble-menu"
+              tippyOptions={{ duration: 100 }}
+              editor={editor}
+              shouldShow={({ editor }) => {
+                if (editor.isActive('image')) return false;
+                return true;
+              }}
+            >
               <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
                 <button
                   type="button"
