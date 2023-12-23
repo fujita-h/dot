@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+const LOCALE = process.env.LOCALE || 'ja-JP';
+const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+
 export type Note = {
   id: string;
   title: string | null;
@@ -57,7 +60,9 @@ export function StackList({ notes }: { notes: Note[] }) {
               </div>
               <div className="flex-1 flex flex-col">
                 <div>
-                  <p className="text-sm text-gray-800">{note.releasedAt.toLocaleDateString('ja-jp')}</p>
+                  <p className="text-sm text-gray-800">
+                    {note.releasedAt.toLocaleDateString(LOCALE, { timeZone: TIMEZONE })}
+                  </p>
                 </div>
                 <div className="z-[1]">
                   <p className="text-sm text-gray-800">
