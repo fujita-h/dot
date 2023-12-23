@@ -453,8 +453,8 @@ function EditorForm({
         <div className="px-2 pb-1">
           {editor && (
             <BubbleMenu
-              className="bubble-menu"
-              tippyOptions={{ duration: 100 }}
+              className="flex rounded-md text-xl font-medium bg-gray-800 text-white divide-x divide-gray-500"
+              tippyOptions={{ duration: 100, placement: 'top-start' }}
               editor={editor}
               shouldShow={({ editor, view, state, oldState, from, to }) => {
                 // original shouldShow function
@@ -470,36 +470,30 @@ function EditorForm({
                 return true;
               }}
             >
-              <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                  className={editor.isActive('bold') ? 'is-active' : ''}
-                >
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleBold().run()}>
+                <span className={editor.isActive('bold') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
                   <MdFormatBold />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                  className={editor.isActive('italic') ? 'is-active' : ''}
-                >
+                </span>
+              </button>
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleItalic().run()}>
+                <span className={editor.isActive('italic') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
                   <MdFormatItalic />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleUnderline().run()}
-                  className={editor.isActive('underline') ? 'is-active' : ''}
-                >
+                </span>
+              </button>
+              <button
+                type="button"
+                className="p-1 group"
+                onClick={() => editor.chain().focus().toggleUnderline().run()}
+              >
+                <span className={editor.isActive('underline') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
                   <MdFormatUnderlined />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleStrike().run()}
-                  className={editor.isActive('strike') ? 'is-active' : ''}
-                >
+                </span>
+              </button>
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleStrike().run()}>
+                <span className={editor.isActive('strike') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
                   <MdFormatStrikethrough />
-                </button>
-              </IconContext.Provider>
+                </span>
+              </button>
             </BubbleMenu>
           )}
           {editor && (
