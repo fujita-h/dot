@@ -556,7 +556,7 @@ function EditorForm({
               </button>
               <button
                 type="button"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
                 className="px-1 group text-xl"
               >
                 <span
@@ -569,7 +569,7 @@ function EditorForm({
               </button>
               <button
                 type="button"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
                 className="px-1 group text-xl"
               >
                 <span
@@ -582,7 +582,7 @@ function EditorForm({
               </button>
               <button
                 type="button"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
                 className="px-1 group text-xl"
               >
                 <span
