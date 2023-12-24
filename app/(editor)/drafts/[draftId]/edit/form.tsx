@@ -572,7 +572,7 @@ function EditorForm({
           {editor && (
             <FloatingMenu
               pluginKey="newLineFloatingMenu"
-              className="flex rounded-md font-base bg-gray-200 text-black p-1"
+              className="flex rounded-md text-base bg-gray-200 text-black p-1"
               tippyOptions={{ duration: 200 }}
               editor={editor}
               shouldShow={({ editor, view, state, oldState }) => {
