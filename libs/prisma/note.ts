@@ -16,7 +16,7 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
       include: {
         User: true,
         Group: true,
-        Topics: { include: { Topic: true } },
+        Topics: { include: { Topic: true }, orderBy: { order: 'asc' } },
       },
     })
     .catch((e) => {
