@@ -37,14 +37,10 @@ import { useRouter } from 'next/navigation';
 import { Plugin } from 'prosemirror-state';
 import { Fragment, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { IconContext } from 'react-icons';
-import {
-  MdFormatBold,
-  MdFormatItalic,
-  MdFormatListBulleted,
-  MdFormatStrikethrough,
-  MdFormatUnderlined,
-} from 'react-icons/md';
+import { MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdFormatUnderlined } from 'react-icons/md';
+import { BsTextParagraph } from 'react-icons/bs';
+import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
+import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
 import { processAutoSave, processDraft, processPublish } from './action';
 
 import '@/components/tiptap/tiptap.css';
@@ -454,7 +450,7 @@ function EditorForm({
           {editor && (
             <BubbleMenu
               className="flex rounded-md text-xl font-medium bg-gray-800 text-white divide-x divide-gray-500"
-              tippyOptions={{ duration: 100, placement: 'top-start' }}
+              tippyOptions={{ duration: 200, placement: 'top-start' }}
               editor={editor}
               shouldShow={({ editor, view, state, oldState, from, to }) => {
                 // original shouldShow function
@@ -497,30 +493,90 @@ function EditorForm({
             </BubbleMenu>
           )}
           {editor && (
-            <FloatingMenu className="floating-menu" tippyOptions={{ duration: 100 }} editor={editor}>
-              <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                  className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+            <FloatingMenu
+              pluginKey="newLineFloatingMenu"
+              className="flex rounded-md font-base bg-gray-200 text-black p-1"
+              tippyOptions={{ duration: 200 }}
+              editor={editor}
+              shouldShow={({ editor, view, state, oldState }) => {
+                const { selection } = state;
+                const { $anchor, empty } = selection;
+                const isRootDepth = $anchor.depth === 1;
+                const isEmptyTextBlock =
+                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
+                if (!view.hasFocus() || !empty || !isRootDepth || !isEmptyTextBlock || !editor?.isEditable) {
+                  return false;
+                }
+                return true;
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setParagraph().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('paragraph') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <BsTextParagraph />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 1 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
                 >
-                  H1
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                  className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+                  <LuHeading1 />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 2 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
                 >
-                  H2
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editor.chain().focus().toggleBulletList().run()}
-                  className={editor.isActive('bulletList') ? 'is-active' : ''}
+                  <LuHeading2 />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 3 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
                 >
-                  <MdFormatListBulleted />
-                </button>
-              </IconContext.Provider>
+                  <LuHeading3 />
+                </span>
+              </button>
+              <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('bulletList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <PiListDashesFill />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('orderedList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <PiListNumbersFill />
+                </span>
+              </button>
             </FloatingMenu>
           )}
           <div id="draft-editor">
