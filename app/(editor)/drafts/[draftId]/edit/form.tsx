@@ -656,6 +656,30 @@ function EditorForm({
               </button>
             </FloatingMenu>
           )}
+          {editor && (
+            <FloatingMenu
+              pluginKey="headerLevelChangeFloatingMenu"
+              className="flex rounded-md text-base bg-gray-200/80 text-black p-1"
+              tippyOptions={{ duration: 200, placement: 'right' }}
+              editor={editor}
+              shouldShow={({ editor, view, state, oldState }) => {
+                const { selection } = state;
+                const { $anchor, empty } = selection;
+                const isRootDepth = $anchor.depth === 1;
+                const isEmptyTextBlock =
+                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
+                if (!view.hasFocus() || !empty || !isRootDepth || isEmptyTextBlock || !editor?.isEditable) {
+                  return false;
+                }
+                return true;
+              }}
+            >
+              <div className="text-sm px-0.5">
+                <span className="text-xs border border-gray-300 rounded-md bg-gray-50 p-0.5">Tab</span>
+                <span className="ml-0.5">で切替</span>
+              </div>
+            </FloatingMenu>
+          )}
           <div id="draft-editor">
             <EditorContent editor={editor} />
           </div>
