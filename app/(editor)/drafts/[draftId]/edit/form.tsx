@@ -737,6 +737,9 @@ export function TopicInput({
         <input type="hidden" name="topics" key={item.id} value={item.id} />
       ))}
       <DndContext
+        // Unique id is required for avoid warning: "Prop `aria-describedby` did not match."
+        // See https://github.com/clauderic/dnd-kit/issues/926
+        id="dnd-context-topics-input"
         collisionDetection={closestCenter}
         onDragEnd={(event) => {
           const { active, over } = event;
