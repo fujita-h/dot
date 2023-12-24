@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         'noto-sans-jp': ['var(--font-inter)', 'var(--font-noto-sans-jp)'],
+        'source-code-pro': ['var(--font-source-code-pro)'],
       },
     },
   },

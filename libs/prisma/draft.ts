@@ -117,7 +117,7 @@ export function getDraftWithGroupTopics(userId: string, draftId: string) {
       where: { id: draftId, userId: userId },
       include: {
         Group: true,
-        Topics: { include: { Topic: true } },
+        Topics: { include: { Topic: true }, orderBy: { order: 'asc' } },
       },
     })
     .catch((e) => {

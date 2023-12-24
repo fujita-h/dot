@@ -12,21 +12,35 @@ import LinkExtension from '@tiptap/extension-link';
 import PlaceholderExtension from '@tiptap/extension-placeholder';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { BubbleMenu, Editor, EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import BlockquoteExtension from '@tiptap/extension-blockquote';
+import BulletListExtension from '@tiptap/extension-bullet-list';
+import CodeBlockExtension from '@tiptap/extension-code-block';
+import DocumentExtension from '@tiptap/extension-document';
+import HardBreakExtension from '@tiptap/extension-hard-break';
+import HeadingExtension from '@tiptap/extension-heading';
+import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
+import ListItemExtension from '@tiptap/extension-list-item';
+import OrderedListExtension from '@tiptap/extension-ordered-list';
+import ParagraphExtension from '@tiptap/extension-paragraph';
+import TextExtension from '@tiptap/extension-text';
+import BoldExtension from '@tiptap/extension-bold';
+import CodeExtension from '@tiptap/extension-code';
+import ItalicExtension from '@tiptap/extension-italic';
+import StrikeExtension from '@tiptap/extension-strike';
+import DropcursorExtension from '@tiptap/extension-dropcursor';
+import GapcursorExtension from '@tiptap/extension-gapcursor';
+import HistoryExtension from '@tiptap/extension-history';
+import { TextSelection } from '@tiptap/pm/state';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Plugin } from 'prosemirror-state';
 import { Fragment, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { IconContext } from 'react-icons';
-import {
-  MdFormatBold,
-  MdFormatItalic,
-  MdFormatListBulleted,
-  MdFormatStrikethrough,
-  MdFormatUnderlined,
-} from 'react-icons/md';
+import { MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdFormatUnderlined } from 'react-icons/md';
+import { BsTextParagraph } from 'react-icons/bs';
+import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
+import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
 import { processAutoSave, processDraft, processPublish } from './action';
 
 import '@/components/tiptap/tiptap.css';
@@ -70,6 +84,59 @@ export function Form({
 
   const editor = useEditor({
     extensions: [
+      BlockquoteExtension,
+      BulletListExtension,
+      CodeBlockExtension,
+      DocumentExtension,
+      HardBreakExtension,
+      HeadingExtension.configure({ levels: [1, 2, 3] }).extend({
+        addKeyboardShortcuts() {
+          return {
+            Tab: () => {
+              // pass if not heading. maybe this is not needed.
+              if (!this.editor.isActive('heading')) return false;
+
+              // get node
+              const { state } = this.editor;
+              const { selection } = state;
+              const { $anchor } = selection;
+              const node = $anchor.parent;
+
+              // if node is empty, do nothing
+              if (node && node.content.size === 0) {
+                return false;
+              }
+
+              // if node is a heading, change level
+              if (this.editor.isActive('heading', { level: 1 })) {
+                this.editor.chain().focus().toggleHeading({ level: 2 }).run();
+                return true;
+              } else if (this.editor.isActive('heading', { level: 2 })) {
+                this.editor.chain().focus().toggleHeading({ level: 3 }).run();
+                return true;
+              } else if (this.editor.isActive('heading', { level: 3 })) {
+                this.editor.chain().focus().toggleHeading({ level: 1 }).run();
+                return true;
+              }
+
+              // default return false
+              return false;
+            },
+          };
+        },
+      }),
+      HorizontalRuleExtension,
+      ListItemExtension,
+      OrderedListExtension,
+      ParagraphExtension,
+      TextExtension,
+      BoldExtension,
+      CodeExtension,
+      ItalicExtension,
+      StrikeExtension,
+      DropcursorExtension,
+      GapcursorExtension,
+      HistoryExtension,
       ImageExtension.extend({
         addProseMirrorPlugins() {
           return [
@@ -169,13 +236,12 @@ export function Form({
           ];
         },
       }),
-      StarterKit,
       UnderlineExtension,
       LinkExtension.configure({
         openOnClick: false,
       }),
       PlaceholderExtension.configure({
-        placeholder: 'Write something. Start here...',
+        placeholder: 'Start writing here...',
       }),
     ],
     content: content,
@@ -209,7 +275,7 @@ export function Form({
   }, [showAutoSavingMessage]);
 
   return (
-    <form className="h-full">
+    <form>
       <NavBar
         formDraftAction={async () => {
           setAutoSaveTimestamp(0);
@@ -241,33 +307,31 @@ export function Form({
         }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
-      <div className="max-w-screen-2xl mx-auto h-[calc(100%_-_56px)] p-2">
+      <div className="max-w-screen-2xl mx-auto p-2">
         <input type="hidden" name="draftId" value={draftId} />
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
-        <div className="h-full">
-          <EditorForm
-            title={titleState}
-            topics={topicsState}
-            topicOptions={topicOptions}
-            editor={editor}
-            onTitleChange={async (title) => {
-              setTitleState(title);
-              await processAutoSave(draftId, groupId, relatedNoteId, title, undefined, undefined);
-            }}
-            onTopicsChange={async (topics) => {
-              setTopicsState(topics);
-              await processAutoSave(
-                draftId,
-                groupId,
-                relatedNoteId,
-                undefined,
-                topics.map((t) => t.id),
-                undefined
-              );
-            }}
-          />
-        </div>
+        <EditorForm
+          title={titleState}
+          topics={topicsState}
+          topicOptions={topicOptions}
+          editor={editor}
+          onTitleChange={async (title) => {
+            setTitleState(title);
+            await processAutoSave(draftId, groupId, relatedNoteId, title, undefined, undefined);
+          }}
+          onTopicsChange={async (topics) => {
+            setTopicsState(topics);
+            await processAutoSave(
+              draftId,
+              groupId,
+              relatedNoteId,
+              undefined,
+              topics.map((t) => t.id),
+              undefined
+            );
+          }}
+        />
       </div>
     </form>
   );
@@ -379,8 +443,50 @@ function EditorForm({
   onTitleChange?: (title: string) => void;
   onTopicsChange?: (topics: TopicItem[]) => void;
 }) {
+  useEffect(() => {
+    // Tab key handling. Prevent tab key from moving focus to outside of the editor.
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') {
+        return;
+      }
+
+      // Collect focusable elements
+      const focusableElements = document.querySelectorAll('#draft-editor button');
+
+      // If there are no focusable elements, do nothing
+      if (focusableElements.length === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      // Find first and last focusable elements
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      // Control focus. If shift + tab key pressed, move focus to the last element. If tab key pressed, move focus to the first element.
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   return (
-    <div className="h-full">
+    <div>
       <div className="flex gap-2 mb-2">
         <div className="flex-1 h-[44px]">
           <input
@@ -407,13 +513,8 @@ function EditorForm({
           />
         </div>
       </div>
-      <div
-        className={clsx(
-          'h-[calc(100%_-_104px)] grid mb-2' // 104px = 44px + 8px (margin) +  44px + 8px (margin)
-        )}
-      >
-        <div className=" bg-white w-full h-full rounded-md ring-1 ring-inset ring-gray-300">
-          {/* <div className="bg-slate-100 sticky top-0 p-2 rounded-t-md z-20">
+      <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
+        {/* <div className="bg-slate-100 sticky top-0 p-2 rounded-t-md z-20">
             <button
               type="button"
               onClick={() => editor?.chain().focus().toggleBold().run()}
@@ -422,71 +523,165 @@ function EditorForm({
               <MdFormatBold />
             </button>
           </div> */}
-          <div className="px-2 pb-1">
-            {editor && (
-              <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
-                <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={editor.isActive('bold') ? 'is-active' : ''}
-                  >
-                    <MdFormatBold />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={editor.isActive('italic') ? 'is-active' : ''}
-                  >
-                    <MdFormatItalic />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleUnderline().run()}
-                    className={editor.isActive('underline') ? 'is-active' : ''}
-                  >
-                    <MdFormatUnderlined />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleStrike().run()}
-                    className={editor.isActive('strike') ? 'is-active' : ''}
-                  >
-                    <MdFormatStrikethrough />
-                  </button>
-                </IconContext.Provider>
-              </BubbleMenu>
-            )}
-            {editor && (
-              <FloatingMenu className="floating-menu" tippyOptions={{ duration: 100 }} editor={editor}>
-                <IconContext.Provider value={{ className: 'text-xl m-0.5' }}>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                    className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-                  >
-                    H1
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-                  >
-                    H2
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={editor.isActive('bulletList') ? 'is-active' : ''}
-                  >
-                    <MdFormatListBulleted />
-                  </button>
-                </IconContext.Provider>
-              </FloatingMenu>
-            )}
-            <div id="draft-editor">
-              <EditorContent editor={editor} />
-            </div>
+        <div className="px-2 pb-1">
+          {editor && (
+            <BubbleMenu
+              className="flex rounded-md text-xl font-medium bg-gray-800 text-white divide-x divide-gray-500"
+              tippyOptions={{ duration: 200, placement: 'top-start' }}
+              editor={editor}
+              shouldShow={({ editor, view, state, oldState, from, to }) => {
+                // original shouldShow function
+                const { doc, selection } = state;
+                const { empty } = selection;
+                const isEmptyTextBlock = !doc.textBetween(from, to).length && state.selection instanceof TextSelection;
+                const hasEditorFocus = view.hasFocus();
+                if (!hasEditorFocus || empty || isEmptyTextBlock || !editor.isEditable) {
+                  return false;
+                }
+                // custom shouldShow function
+                if (editor.isActive('image')) return false;
+                return true;
+              }}
+            >
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleBold().run()}>
+                <span className={editor.isActive('bold') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
+                  <MdFormatBold />
+                </span>
+              </button>
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleItalic().run()}>
+                <span className={editor.isActive('italic') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
+                  <MdFormatItalic />
+                </span>
+              </button>
+              <button
+                type="button"
+                className="p-1 group"
+                onClick={() => editor.chain().focus().toggleUnderline().run()}
+              >
+                <span className={editor.isActive('underline') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
+                  <MdFormatUnderlined />
+                </span>
+              </button>
+              <button type="button" className="p-1 group" onClick={() => editor.chain().focus().toggleStrike().run()}>
+                <span className={editor.isActive('strike') ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}>
+                  <MdFormatStrikethrough />
+                </span>
+              </button>
+            </BubbleMenu>
+          )}
+          {editor && (
+            <FloatingMenu
+              pluginKey="newLineFloatingMenu"
+              className="flex rounded-md text-base bg-gray-200 text-black p-1"
+              tippyOptions={{ duration: 200 }}
+              editor={editor}
+              shouldShow={({ editor, view, state, oldState }) => {
+                const { selection } = state;
+                const { $anchor, empty } = selection;
+                const isRootDepth = $anchor.depth === 1;
+                const isEmptyTextBlock =
+                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
+                if (!view.hasFocus() || !empty || !isRootDepth || !isEmptyTextBlock || !editor?.isEditable) {
+                  return false;
+                }
+                return true;
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setParagraph().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('paragraph') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <BsTextParagraph />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 1 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
+                >
+                  <LuHeading1 />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 2 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
+                >
+                  <LuHeading2 />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
+                className="px-1 group text-xl"
+              >
+                <span
+                  className={
+                    editor.isActive('heading', { level: 3 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                  }
+                >
+                  <LuHeading3 />
+                </span>
+              </button>
+              <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('bulletList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <PiListDashesFill />
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                className="px-1 group text-xl"
+              >
+                <span className={editor.isActive('orderedList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                  <PiListNumbersFill />
+                </span>
+              </button>
+            </FloatingMenu>
+          )}
+          {editor && (
+            <FloatingMenu
+              pluginKey="headerLevelChangeFloatingMenu"
+              className="flex rounded-md text-base bg-gray-200/80 text-black p-1"
+              tippyOptions={{ duration: 200, placement: 'right' }}
+              editor={editor}
+              shouldShow={({ editor, view, state, oldState }) => {
+                const { selection } = state;
+                const { $anchor, empty } = selection;
+                const isRootDepth = $anchor.depth === 1;
+                const isEmptyTextBlock =
+                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
+                if (!view.hasFocus() || !empty || !isRootDepth || isEmptyTextBlock || !editor?.isEditable) {
+                  return false;
+                }
+                return true;
+              }}
+            >
+              <div className="text-sm px-0.5">
+                <span className="text-xs border border-gray-300 rounded-md bg-gray-50 p-0.5">Tab</span>
+                <span className="ml-0.5">で切替</span>
+              </div>
+            </FloatingMenu>
+          )}
+          <div id="draft-editor">
+            <EditorContent editor={editor} />
           </div>
         </div>
       </div>
@@ -542,6 +737,9 @@ export function TopicInput({
         <input type="hidden" name="topics" key={item.id} value={item.id} />
       ))}
       <DndContext
+        // Unique id is required for avoid warning: "Prop `aria-describedby` did not match."
+        // See https://github.com/clauderic/dnd-kit/issues/926
+        id="dnd-context-topics-input"
         collisionDetection={closestCenter}
         onDragEnd={(event) => {
           const { active, over } = event;

@@ -14,6 +14,9 @@ import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } 
 
 import './style.css';
 
+const LOCALE = process.env.LOCALE || 'ja-JP';
+const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+
 export default async function Page({ params }: { params: { noteId: string } }) {
   const session = await auth();
   const { status, userId, error } = await getUserIdFromSession(session, true);
@@ -33,9 +36,12 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 
   await incrementAccess(note.id, note.groupId).catch((e) => null);
 
-  const releasedAt = note.releasedAt
-    ? new Date(note.releasedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' })
-    : '不明な日時';
+  const releasedAt = new Date(note.releasedAt).toLocaleDateString(LOCALE, {
+    timeZone: TIMEZONE,
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 
   return (
     <div>
@@ -157,7 +163,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   </div>
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
-                    <div className="p-4">
+                    <div id="comment-editor" className="p-4">
                       <CommentEditor noteId={note.id} />
                     </div>
                   </div>
@@ -194,7 +200,9 @@ async function CommentList({ noteId }: { noteId: string }) {
               </div>
             </div>
             <div>
-              <div className="text-sm text-gray-600">{new Date(c.createdAt).toLocaleString('ja-JP')}</div>
+              <div className="text-sm text-gray-600">
+                {new Date(c.createdAt).toLocaleString(LOCALE, { timeZone: TIMEZONE })}
+              </div>
             </div>
           </div>
           <div className="mt-4 px-4">

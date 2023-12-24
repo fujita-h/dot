@@ -10,7 +10,24 @@ import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { generateText } from '@tiptap/core';
 import Image from '@tiptap/extension-image';
-import StarterKit from '@tiptap/starter-kit';
+import BlockquoteExtension from '@tiptap/extension-blockquote';
+import BulletListExtension from '@tiptap/extension-bullet-list';
+import CodeBlockExtension from '@tiptap/extension-code-block';
+import DocumentExtension from '@tiptap/extension-document';
+import HardBreakExtension from '@tiptap/extension-hard-break';
+import HeadingExtension from '@tiptap/extension-heading';
+import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
+import ListItemExtension from '@tiptap/extension-list-item';
+import OrderedListExtension from '@tiptap/extension-ordered-list';
+import ParagraphExtension from '@tiptap/extension-paragraph';
+import TextExtension from '@tiptap/extension-text';
+import BoldExtension from '@tiptap/extension-bold';
+import CodeExtension from '@tiptap/extension-code';
+import ItalicExtension from '@tiptap/extension-italic';
+import StrikeExtension from '@tiptap/extension-strike';
+import DropcursorExtension from '@tiptap/extension-dropcursor';
+import GapcursorExtension from '@tiptap/extension-gapcursor';
+import HistoryExtension from '@tiptap/extension-history';
 
 const cuid = initCuid({ length: 24 });
 
@@ -204,7 +221,27 @@ export async function processPublish(
 
   let bodyText: string = body;
   try {
-    bodyText = generateText(JSON.parse(body), [StarterKit, Image]);
+    bodyText = generateText(JSON.parse(body), [
+      BlockquoteExtension,
+      BulletListExtension,
+      CodeBlockExtension,
+      DocumentExtension,
+      HardBreakExtension,
+      HeadingExtension.configure({ levels: [1, 2, 3] }),
+      HorizontalRuleExtension,
+      ListItemExtension,
+      OrderedListExtension,
+      ParagraphExtension,
+      TextExtension,
+      BoldExtension,
+      CodeExtension,
+      ItalicExtension,
+      StrikeExtension,
+      DropcursorExtension,
+      GapcursorExtension,
+      HistoryExtension,
+      Image,
+    ]);
   } catch (err) {}
 
   if (relatedNoteId) {

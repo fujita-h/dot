@@ -1,6 +1,7 @@
 #draft-editor {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
+  padding-top: 1.0rem;
   padding-left: 2.0rem;
   height: 100%;
 }
@@ -8,19 +9,16 @@
   position: relative;
   font-size: 1.8rem;
   line-height: 1.5;
-  font-weight: bold;
+  font-weight: 700;
   border-bottom: 2px solid #eee;
-  margin-top: 2.0rem;
+  margin-top: 3.0rem;
   margin-bottom: 1.8rem;
 }
 #draft-editor h1::before {
-  content: "H1";
-  font-weight: normal;
-  color: #aaa;
+  content: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(170,170,170,1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heading-1"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="m17 12 3-2v8"/></svg>');
   position: absolute;
   left: -2.0rem;
-  top: 0.8rem;
-  font-size: 1.0rem;
+  top: 0.4rem;
 }
 #draft-editor h1:first-child {
   margin-top: 0rem;
@@ -29,45 +27,78 @@
   position: relative;
   font-size: 1.6rem;
   line-height: 1.5;
-  font-weight: bold;
+  font-weight: 700;
   border-bottom: 2px solid #eee;
-  margin-top: 1.8rem;
+  margin-top: 2.8rem;
   margin-bottom: 1.6rem;
 }
 #draft-editor h2::before {
-  content: "H2";
-  font-weight: normal;
-  color: #aaa;
+  content: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(170,170,170,1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heading-2"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1"/></svg>');
   position: absolute;
   left: -2.0rem;
-  top: 0.5rem;
-  font-size: 1.0rem;
+  top: 0.4rem;
 }
 #draft-editor h2:first-child {
   margin-top: 0rem;
 }
 #draft-editor h3 {
-  font-size: 1.4rem;
-  line-height: 1.4;
-  font-weight: bold;
+  position: relative;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  font-weight: 600;
   margin-top: 1.6rem;
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.3rem;
+}
+#draft-editor h3::before {
+  content: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(170,170,170,1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heading-3"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2"/><path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2"/></svg>');
+  position: absolute;
+  left: -2.0rem;
+  top: 0.4rem;
 }
 #draft-editor h4, #draft-editor h5 {
-  font-size: 1.2rem;
-  line-height: 1.3;
-  font-weight: bold;
-  margin-top: 1.4rem;
+  position: relative;
+  font-size: 1.0rem;
+  line-height: 1.8;
+  margin-top: 1.2rem;
   margin-bottom: 1.2rem;
 }
 #draft-editor p {
+  position: relative;
   font-size: 1.0rem;
   line-height: 1.8;
-  margin-top: 1.0rem;
-  margin-bottom: 1.0rem;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+#draft-editor .tiptap>p::before {
+  content: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="rgba(170,170,170,1)" class="bi bi-text-paragraph" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/></svg>');
+  position: absolute;
+  left: -2.0rem;
+  top: 0.3rem;
 }
 #draft-editor p:first-child {
   margin-top: 0rem;
+}
+#draft-editor code {
+  font-family: var(--font-source-code-pro), var(--font-noto-sans-jp), Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+}
+#draft-editor p>code{
+  font-size: 1.0rem;
+  line-height: 1.4;
+  margin: 0rem 0.2rem;
+  padding: 0.2rem 0.4rem;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+#draft-editor pre {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 #draft-editor a {
   color: #4f46e5;
@@ -113,6 +144,11 @@
   list-style-type: number;
   counter-reset: number;
 }
+#draft-editor ol ol {
+  list-style-type: number;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 #draft-editor li {
   font-size: 1.0rem;
   line-height: 2.0;
@@ -130,16 +166,6 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
 }
-#draft-editor pre {
-  font-size: 0.9rem;
-  line-height: 1.3;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  padding: 0.8rem;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
 #draft-editor img {
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
@@ -152,46 +178,15 @@
   margin-top: 0rem;
 }
 
-
-#draft-editor .bubble-menu {
-  display: flex;
-  background-color: #0D0D0D;
-  padding: 0.2rem;
-  border-radius: 0.5rem;
-}
-#draft-editor .bubble-menu button {
-  border: none;
-  background: none;
-  color: #FFF;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0 0.2rem;
-  opacity: 0.6;
-}
-#draft-editor .bubble-menu button + button {
-  margin-left: 0.2rem;
-}
-#draft-editor .bubble-menu button:hover, .bubble-menu button.is-active {
-  opacity: 1;
+/* Placeholder */
+#draft-editor .tiptap:not(.ProseMirror-focused) p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
 
-#draft-editor .floating-menu {
-  display: flex;
-  background-color: #0D0D0D10;
-  padding: 0.2rem;
-  border-radius: 0.5rem;
-}
-#draft-editor .floating-menu button {
-  border: none;
-  background: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0 0.2rem;
-  opacity: 0.6;
-}
-#draft-editor .floating-menu button + button {
-  margin-left: 0.2rem;
-}
-#draft-editor .floating-menu button:hover, .floating-menu button.is-active {
-  opacity: 1;
+#draft-editor .tiptap p.is-editor-empty:first-child {
+  margin-top: 0rem;
 }
