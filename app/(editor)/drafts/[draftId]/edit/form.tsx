@@ -443,6 +443,48 @@ function EditorForm({
   onTitleChange?: (title: string) => void;
   onTopicsChange?: (topics: TopicItem[]) => void;
 }) {
+  useEffect(() => {
+    // Tab key handling. Prevent tab key from moving focus to outside of the editor.
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') {
+        return;
+      }
+
+      // Collect focusable elements
+      const focusableElements = document.querySelectorAll('#draft-editor button');
+
+      // If there are no focusable elements, do nothing
+      if (focusableElements.length === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      // Find first and last focusable elements
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      // Control focus. If shift + tab key pressed, move focus to the last element. If tab key pressed, move focus to the first element.
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   return (
     <div>
       <div className="flex gap-2 mb-2">
