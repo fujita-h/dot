@@ -89,7 +89,42 @@ export function Form({
       CodeBlockExtension,
       DocumentExtension,
       HardBreakExtension,
-      HeadingExtension.configure({ levels: [1, 2, 3] }),
+      HeadingExtension.configure({ levels: [1, 2, 3] }).extend({
+        addKeyboardShortcuts() {
+          return {
+            Tab: () => {
+              // pass if not heading. maybe this is not needed.
+              if (!this.editor.isActive('heading')) return false;
+
+              // get node
+              const { state } = this.editor;
+              const { selection } = state;
+              const { $anchor } = selection;
+              const node = $anchor.parent;
+
+              // if node is empty, do nothing
+              if (node && node.content.size === 0) {
+                return false;
+              }
+
+              // if node is a heading, change level
+              if (this.editor.isActive('heading', { level: 1 })) {
+                this.editor.chain().focus().toggleHeading({ level: 2 }).run();
+                return true;
+              } else if (this.editor.isActive('heading', { level: 2 })) {
+                this.editor.chain().focus().toggleHeading({ level: 3 }).run();
+                return true;
+              } else if (this.editor.isActive('heading', { level: 3 })) {
+                this.editor.chain().focus().toggleHeading({ level: 1 }).run();
+                return true;
+              }
+
+              // default return false
+              return false;
+            },
+          };
+        },
+      }),
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
