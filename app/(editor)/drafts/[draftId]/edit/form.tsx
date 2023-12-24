@@ -93,7 +93,7 @@ export function Form({
       CodeBlockExtension,
       DocumentExtension,
       HardBreakExtension,
-      HeadingExtension,
+      HeadingExtension.configure({ levels: [1, 2, 3] }),
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
