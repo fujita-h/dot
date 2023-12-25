@@ -35,6 +35,10 @@
           "analyzer": "ja_ngram_index_analyzer"
         }
       }
+    },
+    "body_embed_ada_002": {
+      "type": "dense_vector",
+      "dims": 1536
     }
   }
 }

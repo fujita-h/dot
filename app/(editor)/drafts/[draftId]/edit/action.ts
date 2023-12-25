@@ -2,6 +2,8 @@
 
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import { get_encoding } from '@dqbd/tiktoken';
+import aoai from '@/libs/azure/openai/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
@@ -250,6 +252,28 @@ export async function processPublish(
     console.error(err);
   }
 
+  // count body tokens, if it's over 8000, slice it
+  const encoding = await get_encoding('cl100k_base');
+  const tokens = await encoding.encode(bodyText);
+  const token_slice = tokens.slice(0, 8000);
+  const body_slice = new TextDecoder().decode(encoding.decode(token_slice));
+  encoding.free();
+
+  // get embedding
+  const embed = await aoai
+    .getEmbedding(body_slice)
+    .then((res) => {
+      const data = res.data;
+      if (data.length === 0) {
+        return [] as number[];
+      }
+      return data[0].embedding;
+    })
+    .catch((err) => {
+      console.error(err);
+      return [] as number[];
+    });
+
   if (relatedNoteId) {
     // update note
     const blobName = `${relatedNoteId}/${cuid()}`;
@@ -278,7 +302,7 @@ export async function processPublish(
         },
       });
       tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body: bodyText });
+      es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
       return note;
     });
 
