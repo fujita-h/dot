@@ -9,7 +9,6 @@ import prisma from '@/libs/prisma/instance';
 import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { generateText } from '@tiptap/core';
-import Image from '@tiptap/extension-image';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeBlockExtension from '@tiptap/extension-code-block';
@@ -28,6 +27,9 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import ImageExtension from '@tiptap/extension-image';
+import UnderlineExtension from '@tiptap/extension-underline';
+import LinkEntension from '@tiptap/extension-link';
 
 const cuid = initCuid({ length: 24 });
 
@@ -240,9 +242,13 @@ export async function processPublish(
       DropcursorExtension,
       GapcursorExtension,
       HistoryExtension,
-      Image,
+      ImageExtension,
+      UnderlineExtension,
+      LinkEntension,
     ]);
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+  }
 
   if (relatedNoteId) {
     // update note
