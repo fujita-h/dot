@@ -2,6 +2,8 @@
 
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import { get_encoding } from '@dqbd/tiktoken';
+import aoai from '@/libs/azure/openai/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
@@ -9,7 +11,6 @@ import prisma from '@/libs/prisma/instance';
 import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { generateText } from '@tiptap/core';
-import Image from '@tiptap/extension-image';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeBlockExtension from '@tiptap/extension-code-block';
@@ -28,6 +29,9 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import ImageExtension from '@tiptap/extension-image';
+import UnderlineExtension from '@tiptap/extension-underline';
+import LinkEntension from '@tiptap/extension-link';
 
 const cuid = initCuid({ length: 24 });
 
@@ -240,9 +244,35 @@ export async function processPublish(
       DropcursorExtension,
       GapcursorExtension,
       HistoryExtension,
-      Image,
+      ImageExtension,
+      UnderlineExtension,
+      LinkEntension,
     ]);
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+  }
+
+  // count body tokens, if it's over 8000, slice it
+  const encoding = await get_encoding('cl100k_base');
+  const tokens = await encoding.encode(bodyText);
+  const token_slice = tokens.slice(0, 8000);
+  const body_slice = new TextDecoder().decode(encoding.decode(token_slice));
+  encoding.free();
+
+  // get embedding
+  const embed = await aoai
+    .getEmbedding(body_slice)
+    .then((res) => {
+      const data = res.data;
+      if (data.length === 0) {
+        return [] as number[];
+      }
+      return data[0].embedding;
+    })
+    .catch((err) => {
+      console.error(err);
+      return [] as number[];
+    });
 
   if (relatedNoteId) {
     // update note
@@ -271,8 +301,8 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
-      tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body: bodyText });
+      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
+      await tx.draft.delete({ where: { id: draftId } });
       return note;
     });
 
@@ -310,8 +340,8 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
+      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
       await tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body: bodyText });
       return note;
     });
 

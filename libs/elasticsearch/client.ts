@@ -53,8 +53,8 @@ export class EsClient {
     return this.esClient.index({ index, id, body });
   }
 
-  get(index: string, id: string) {
-    return this.esClient.get({ index, id });
+  get(index: string, id: string, _source?: boolean | string | string[]) {
+    return this.esClient.get({ index, id, _source });
   }
 
   exists(index: string, id: string) {

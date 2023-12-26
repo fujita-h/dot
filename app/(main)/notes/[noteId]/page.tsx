@@ -2,11 +2,14 @@ import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
+import { StackList } from '@/components/notes/stack-list';
 import { TopicBadge } from '@/components/topics/badge';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
+import es from '@/libs/elasticsearch/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
+import { getReadableGroups } from '@/libs/prisma/group';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
@@ -168,6 +171,12 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                     </div>
                   </div>
                 </div>
+                <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
+                  <div className="text-lg font-bold text-gray-900 border-b px-4 pt-2 pb-1">関連記事</div>
+                  <div className="p-4">
+                    <RelatedNoteList userId={userId} noteId={note.id} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -232,4 +241,62 @@ async function CommnetBody({ containerName, bodyBlobName }: { containerName: str
       <CommentViewer jsonString={body} />
     </div>
   );
+}
+
+async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: string }) {
+  // Get groups that user can read
+  const groups = await getReadableGroups(userId)
+    .then((groups) => groups.map((g) => g.id))
+    .then((groupIds) => [...groupIds, 'NULL'])
+    .catch((e) => []);
+
+  // Get embed vector of the note
+  const embed = await es
+    .get('notes', noteId, 'body_embed_ada_002')
+    .then((doc) => {
+      if (!doc.found) return null;
+      const source: any = doc._source;
+      if (!source || !source.body_embed_ada_002) return null;
+      return source.body_embed_ada_002;
+    })
+    .catch((e) => null);
+  if (!embed) return <></>;
+
+  // Get related notes
+  const relatedNotes = await es
+    .search('notes', {
+      _source: ['title', 'releasedAt', 'userId', 'groupId', 'User.handle', 'User.name', 'Group.handle', 'Group.name'],
+      knn: {
+        field: 'body_embed_ada_002',
+        query_vector: embed,
+        k: 10,
+        num_candidates: 10,
+        filter: {
+          bool: {
+            must_not: [{ term: { id: noteId } }],
+            should: [{ terms: { groupId: groups } }],
+            minimum_should_match: 1,
+          },
+        },
+      },
+    })
+    .then((res) => {
+      return res.hits.hits.map((hit: any) => {
+        const source = hit._source;
+        const User = { id: source.userId, handle: source.User.handle, name: source.User.name };
+        const Group = source.groupId
+          ? { id: source.groupId, handle: source.Group.handle, name: source.Group.name }
+          : null;
+        return {
+          id: hit._id,
+          title: source.title,
+          releasedAt: new Date(source.releasedAt),
+          User,
+          Group,
+        };
+      });
+    })
+    .catch((e) => []);
+
+  return <StackList notes={relatedNotes} />;
 }

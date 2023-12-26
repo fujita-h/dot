@@ -26,6 +26,10 @@ const nextConfig = {
             value:
               "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
           },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000',
+          }
         ],
       },
     ]

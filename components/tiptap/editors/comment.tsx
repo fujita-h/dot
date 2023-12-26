@@ -73,7 +73,6 @@ export default function CommentEditor({
           onClick={async () => {
             const result = await post(noteId, JSON.stringify(editor?.getJSON())).catch((e) => null);
             if (result) {
-              console.log(result);
               editor?.commands.clearContent();
             }
           }}
