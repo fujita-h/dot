@@ -282,7 +282,6 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
     })
     .then((res) => {
       return res.hits.hits.map((hit: any) => {
-        console.log(hit);
         const source = hit._source;
         const User = { id: source.userId, handle: source.User.handle, name: source.User.name };
         const Group = source.groupId
