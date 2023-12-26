@@ -301,8 +301,8 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
-      tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
+      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
+      await tx.draft.delete({ where: { id: draftId } });
       return note;
     });
 
@@ -340,8 +340,8 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
+      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
       await tx.draft.delete({ where: { id: draftId } });
-      es.create('notes', note.id, { ...note, body: bodyText });
       return note;
     });
 
