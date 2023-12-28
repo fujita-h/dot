@@ -23,4 +23,12 @@ export class OpenAIClient {
     }
     return this.client.getEmbeddings(deployment, [text]);
   }
+
+  async getCompletion(text: string, maxTokens = 200, temperature = 0.5, stop = ['\n']) {
+    const deployment = process.env.AZURE_OPENAI_COMPLETION_DEPLOYMENT;
+    if (!deployment) {
+      throw new Error('AZURE_OPENAI_SUGGESTIONS_DEPLOYMENT is not defined');
+    }
+    return this.client.getCompletions(deployment, [text], { maxTokens, temperature, stop });
+  }
 }

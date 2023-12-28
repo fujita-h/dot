@@ -30,6 +30,7 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import { TextSelection } from '@tiptap/pm/state';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -41,7 +42,7 @@ import { MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdFormatUnderlined
 import { BsTextParagraph } from 'react-icons/bs';
 import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
 import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
-import { processAutoSave, processDraft, processPublish } from './action';
+import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
 
 import '@/components/tiptap/tiptap.css';
 import './style.css';
@@ -84,6 +85,10 @@ export function Form({
 
   const editor = useEditor({
     extensions: [
+      AzureOpenAIExtension.configure({
+        tabCompletion: true,
+        completionFunc: textCompletion,
+      }),
       BlockquoteExtension,
       BulletListExtension,
       CodeBlockExtension,
