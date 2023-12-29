@@ -1,6 +1,6 @@
 'use client';
 
-import { uploadFiles } from '@/components/file-drop-textarea/actions';
+import { uploadFiles } from '@/components/tiptap/action';
 import { SITE_NAME } from '@/libs/constants';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
@@ -31,11 +31,11 @@ import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
+import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import { TextSelection } from '@tiptap/pm/state';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plugin } from 'prosemirror-state';
 import { Fragment, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdFormatUnderlined } from 'react-icons/md';
@@ -142,104 +142,9 @@ export function Form({
       DropcursorExtension,
       GapcursorExtension,
       HistoryExtension,
-      ImageExtension.extend({
-        addProseMirrorPlugins() {
-          return [
-            new Plugin({
-              props: {
-                handleDOMEvents: {
-                  // Although it is possible to insert an image into a document without implementing the drop event,
-                  // the source of the image becomes the URL from which it is pasted, resulting in a cross-site request.
-                  // Therefore, override it to upload the image to your own site.
-                  drop(view, event) {
-                    // Check if the event contains files
-                    const hasFiles = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length;
-                    if (!hasFiles) {
-                      return;
-                    }
-
-                    // Check if these files are images
-                    const images = Array.from(event.dataTransfer.files).filter((file) => /image/i.test(file.type));
-                    if (images.length === 0) {
-                      return;
-                    }
-
-                    // Prevent default behavior
-                    event.preventDefault();
-
-                    // Get the coordinates of the drop point
-                    const { schema } = view.state;
-                    const coordinates = view.posAtCoords({
-                      left: event.clientX,
-                      top: event.clientY,
-                    });
-
-                    // If the coordinates are not inside the document, do nothing
-                    if (!coordinates) {
-                      return;
-                    }
-
-                    // Upload images and insert image nodes
-                    Promise.all(images.map((file) => file2DataUrl(file)))
-                      .then((files) => {
-                        return uploadFiles(files);
-                      })
-                      .then((results) => {
-                        results.forEach((result) => {
-                          if (result.status !== 'fulfilled') return;
-                          const node = schema.nodes.image.create({
-                            src: `/api/blobs/${result.value.blobName}`,
-                          });
-                          const transaction = view.state.tr.insert(coordinates.pos, node);
-                          view.dispatch(transaction);
-                        });
-                      });
-                  },
-                  paste(view, event) {
-                    // Check if the event contains files
-                    const hasFiles =
-                      event.clipboardData && event.clipboardData.files && event.clipboardData.files.length;
-                    if (!hasFiles) {
-                      return;
-                    }
-
-                    // Check if these files are images
-                    const images = Array.from(event.clipboardData.files).filter((file) => /image/i.test(file.type));
-                    if (images.length === 0) {
-                      return;
-                    }
-
-                    // Prevent default behavior
-                    event.preventDefault();
-
-                    // Get schema
-                    const { schema } = view.state;
-
-                    // Upload images and insert image nodes
-                    Promise.all(images.map((file) => file2DataUrl(file)))
-                      .then((files) => {
-                        return uploadFiles(files);
-                      })
-                      .then((results) => {
-                        let transaction = view.state.tr;
-                        if (results.filter((result) => result.status === 'fulfilled').length > 0) {
-                          transaction = transaction.deleteSelection();
-                        }
-                        results.forEach((result) => {
-                          if (result.status !== 'fulfilled') return;
-                          const node = schema.nodes.image.create({
-                            src: `/api/blobs/${result.value.blobName}`,
-                          });
-                          transaction = transaction.insert(transaction.selection.from, node);
-                        });
-                        view.dispatch(transaction);
-                      });
-                  },
-                },
-              },
-            }),
-          ];
-        },
+      ImageExtension,
+      UploadImageExtension.configure({
+        uploadImageFunc: uploadFiles,
       }),
       UnderlineExtension,
       LinkExtension.configure({
@@ -903,23 +808,4 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
       </div>
     </Combobox>
   );
-}
-
-/**
- * Convert File to DataUrl
- *
- * @param file File object
- * @returns Promise of { fileName: string; data: string }
- */
-function file2DataUrl(file: File) {
-  return new Promise<{ fileName: string; data: string }>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      resolve({ fileName: file.name, data: reader.result as string });
-    };
-    reader.onerror = () => {
-      reject();
-    };
-    reader.readAsDataURL(file);
-  });
 }
