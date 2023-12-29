@@ -1,8 +1,6 @@
 import { Extension } from '@tiptap/core';
-import { init as initCuid } from '@paralleldrive/cuid2';
-import { Plugin } from 'prosemirror-state';
 import { PluginKey } from '@tiptap/pm/state';
-import { Transform } from '@tiptap/pm/transform';
+import { Plugin } from 'prosemirror-state';
 
 const AzureOpenAIExtension = Extension.create({
   name: 'azureOpenAI',
