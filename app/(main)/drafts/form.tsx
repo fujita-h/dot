@@ -7,6 +7,13 @@ import { Fragment, useRef, useState } from 'react';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { deleteDraft } from './action';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const DynamicDraftViewer = dynamic(() => import('@/components/tiptap/viewers/draft'), { ssr: false });
+
+export function DraftViewer({ jsonString }: { jsonString: string }) {
+  return <DynamicDraftViewer jsonString={jsonString} />;
+}
 
 export function OtherMenuButton({ id, page }: { id: string; page: number }) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

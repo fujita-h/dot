@@ -5,6 +5,8 @@ import { getUserIdFromSession } from '@/libs/auth/utils';
 import { List } from './list';
 import { Preview } from './preview';
 
+import './style.css';
+
 export default async function Page({ searchParams }: { searchParams: { id?: string; page?: string } }) {
   const session = await auth();
   const { status, userId } = await getUserIdFromSession(session);
