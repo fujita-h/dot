@@ -78,6 +78,11 @@
 #draft-editor p:first-child {
   margin-top: 0rem;
 }
+#draft-editor p::after {
+  content: attr(data-azure-openai-completion)"";
+  color: #999999;
+  font-style: italic;
+}
 #draft-editor code {
   font-family: var(--font-source-code-pro), var(--font-noto-sans-jp), Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
 }

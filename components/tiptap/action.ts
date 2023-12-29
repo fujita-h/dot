@@ -5,13 +5,8 @@ import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getUserWithClaims } from '@/libs/prisma/user';
 import { init as initCuid } from '@paralleldrive/cuid2';
-
+import type { FileParam } from '@/libs/tiptap/extensions/upload-image/types';
 const fileCuid = initCuid({ length: 24 });
-
-export interface FileParam {
-  fileName: string;
-  data: string;
-}
 
 export async function uploadFiles(fileParams: FileParam[]) {
   const session = await auth();
@@ -19,6 +14,7 @@ export async function uploadFiles(fileParams: FileParam[]) {
   if (!userId) throw new Error('userId is not defined');
   const user = await getUserWithClaims(userId);
   if (!user) throw new Error('user is not defined');
+
   return Promise.allSettled(
     fileParams.map((fileParam) => {
       const blobName = `${fileCuid()}`;
@@ -33,7 +29,7 @@ export async function uploadFiles(fileParams: FileParam[]) {
         userId: user.id,
         oid: user.Claim?.oid || 'n/a',
       };
-      return fetch(fileParam.data)
+      return fetch(fileParam.fileDataURL)
         .then((res) => res.blob())
         .then(async (file) =>
           blob.upload('user-uploaded-files', blobName, file.type, Buffer.from(await file.arrayBuffer()), metadata, tags)

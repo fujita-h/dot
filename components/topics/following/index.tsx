@@ -13,9 +13,9 @@ export async function FollowingUsers({ userId }: { userId: string }) {
       {users.map((user) => (
         <div key={user.id}>
           <Link key={user.id} href={`/users/${user.handle}`}>
-            <div className="flex items-center gap-3 px-3 py-1 hover:bg-white rounded-sm">
+            <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/users/${user.id}/icon`} className="w-4 h-4 rounded-full" alt="user icon" />
+                <img src={`/api/users/${user.id}/icon`} className="w-5 h-5 rounded-full" alt="user icon" />
               </div>
               <div className="flex-none text-sm text-gray-900 truncate">{user.name}</div>
             </div>
@@ -36,9 +36,9 @@ export async function FollowingGroups({ userId }: { userId: string }) {
       {groups.map((group) => (
         <div key={group.id}>
           <Link key={group.id} href={`/groups/${group.handle}`}>
-            <div className="flex items-center gap-3 px-3 py-1 hover:bg-white rounded-sm">
+            <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/groups/${group.id}/icon`} className="w-4 h-4 rounded-full" alt="group icon" />
+                <img src={`/api/groups/${group.id}/icon`} className="w-5 h-5 rounded-md" alt="group icon" />
               </div>
               <div className="flex-none text-sm text-gray-900 truncate">{group.name}</div>
             </div>
@@ -59,9 +59,9 @@ export async function FollowingTopics({ userId }: { userId: string }) {
       {topics.map((topic) => (
         <div key={topic.id}>
           <Link key={topic.id} href={`/topics/${topic.handle}`}>
-            <div className="flex items-center gap-3 px-3 py-1 hover:bg-white rounded-sm">
+            <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/topics/${topic.id}/icon`} className="w-4 h-4 rounded-full" alt="topic icon" />
+                <img src={`/api/topics/${topic.id}/icon`} className="w-5 h-5 rounded-md" alt="topic icon" />
               </div>
               <div className="flex-none text-sm text-gray-900 truncate">{topic.name}</div>
             </div>

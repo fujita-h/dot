@@ -1,22 +1,23 @@
-import { Parser } from '@/components/react-markdown/parser';
 import { TopicBadge } from '@/components/topics/badge';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { getDraftWithGroupTopics } from '@/libs/prisma/draft';
-import { OtherMenuButton } from './form';
+import { DraftViewer, OtherMenuButton } from './form';
 
 export async function Preview({ userId, id, page }: { userId: string; id?: string; page: number }) {
   if (!id) return <></>;
 
   const draft = await getDraftWithGroupTopics(userId, id).catch((e) => null);
-  if (!draft) {
+  if (!draft || !draft.bodyBlobName) {
     return <div>データがありません</div>;
   }
-  let body = '';
-  if (draft.bodyBlobName) {
-    body = await blob
-      .downloadToBuffer('drafts', draft.bodyBlobName)
-      .then((res) => res.toString('utf-8'))
-      .catch((e) => '');
+
+  const blobBody = await blob
+    .downloadToBuffer('drafts', draft.bodyBlobName)
+    .then((res) => res.toString('utf-8'))
+    .catch((e) => '');
+
+  if (!blobBody) {
+    return <div>データがありません</div>;
   }
 
   return (
@@ -46,8 +47,8 @@ export async function Preview({ userId, id, page }: { userId: string; id?: strin
           </div>
         </div>
       </div>
-      <div className="mt-4 border border-inset border-gray-300 shadow bg-white p-2 rounded-md">
-        <Parser>{body}</Parser>
+      <div id="draft-viewer" className="mt-4 border border-inset border-gray-300 shadow bg-white p-2 rounded-md">
+        <DraftViewer jsonString={blobBody} />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@
 | `AZURE_OPENAI_ENDPOINT`             | Endpoint of OpenAI API                                                                                                    | Yes      | https://<resource name>.openai.azure.com/  |
 | `AZURE_OPENAI_KEY`                  | Key of OpenAI API                                                                                                         | Yes      |                                            |
 | `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` | Deployment name of embedding model of `text-embedding-ada-002`                                                            | Yes      | text-embedding-ada-002                     |
+| `AZURE_OPENAI_COMPLETION_DEPLOYMENT`| Deployment name of completion model of `gpt-35-turbo-instruct`                                                            | Yes      | gpt-35-turbo-instruct                      |
 | `DATABASE_URL`                      | See https://www.prisma.io/docs/reference/database-reference/connection-urls                                               | Yes      | mysql://user:pass@host:port/database       |
 | `REDIS_URL`                         | Redis URL, see https://github.com/redis/ioredis                                                                           | Yes      | reids://user:pass@host:port/db             |
 | `ELASTICSEARCH_URL`                 | Elasticsearch URL, see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html | Yes      | http://user:pass@host:port                 |
