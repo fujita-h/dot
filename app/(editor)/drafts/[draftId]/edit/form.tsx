@@ -447,7 +447,6 @@ function EditorForm({
           {editor && (
             <FloatingMenu
               pluginKey="newLineFloatingMenu"
-              className="flex rounded-md text-base bg-gray-200 text-black p-1"
               tippyOptions={{ duration: 200 }}
               editor={editor}
               shouldShow={({ editor, view, state, oldState }) => {
@@ -462,73 +461,152 @@ function EditorForm({
                 return true;
               }}
             >
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().setParagraph().run()}
-                className="px-1 group text-xl"
-              >
-                <span className={editor.isActive('paragraph') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
-                  <BsTextParagraph />
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
-                className="px-1 group text-xl"
-              >
-                <span
-                  className={
-                    editor.isActive('heading', { level: 1 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
-                  }
+              <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 ml-2 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
+                <button
+                  id="newLineFloatingMenuButton-paragraph"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('paragraph') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'p-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().setParagraph().run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading1')?.focus();
+                    }
+                  }}
                 >
-                  <LuHeading1 />
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
-                className="px-1 group text-xl"
-              >
-                <span
-                  className={
-                    editor.isActive('heading', { level: 2 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
-                  }
+                  <span className={editor.isActive('paragraph') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                    <BsTextParagraph />
+                  </span>
+                </button>
+                <div className="border-l-2 border-gray-400/30 ml-1 pl-1"></div>
+                <button
+                  id="newLineFloatingMenuButton-heading1"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('heading', { level: 1 }) ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'px-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-paragraph')?.focus();
+                    }
+                    if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading2')?.focus();
+                    }
+                  }}
                 >
-                  <LuHeading2 />
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
-                className="px-1 group text-xl"
-              >
-                <span
-                  className={
-                    editor.isActive('heading', { level: 3 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
-                  }
+                  <span
+                    className={
+                      editor.isActive('heading', { level: 1 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                    }
+                  >
+                    <LuHeading1 />
+                  </span>
+                </button>
+                <button
+                  id="newLineFloatingMenuButton-heading2"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('heading', { level: 2 }) ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'px-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading1')?.focus();
+                    }
+                    if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading3')?.focus();
+                    }
+                  }}
                 >
-                  <LuHeading3 />
-                </span>
-              </button>
-              <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className="px-1 group text-xl"
-              >
-                <span className={editor.isActive('bulletList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
-                  <PiListDashesFill />
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className="px-1 group text-xl"
-              >
-                <span className={editor.isActive('orderedList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
-                  <PiListNumbersFill />
-                </span>
-              </button>
+                  <span
+                    className={
+                      editor.isActive('heading', { level: 2 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                    }
+                  >
+                    <LuHeading2 />
+                  </span>
+                </button>
+                <button
+                  id="newLineFloatingMenuButton-heading3"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('heading', { level: 3 }) ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'px-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading2')?.focus();
+                    } else if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-bulletList')?.focus();
+                    }
+                  }}
+                >
+                  <span
+                    className={
+                      editor.isActive('heading', { level: 3 }) ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'
+                    }
+                  >
+                    <LuHeading3 />
+                  </span>
+                </button>
+                <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
+                <button
+                  id="newLineFloatingMenuButton-bulletList"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('bulletList') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'px-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-heading3')?.focus();
+                    } else if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-orderedList')?.focus();
+                    }
+                  }}
+                >
+                  <span className={editor.isActive('bulletList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}>
+                    <PiListDashesFill />
+                  </span>
+                </button>
+                <button
+                  id="newLineFloatingMenuButton-orderedList"
+                  type="button"
+                  className={clsx(
+                    editor.isActive('orderedList') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                    'px-1 group rounded-md focus:outline-1 focus:outline-gray-500'
+                  )}
+                  onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      document.getElementById('newLineFloatingMenuButton-bulletList')?.focus();
+                    }
+                  }}
+                >
+                  <span
+                    className={editor.isActive('orderedList') ? 'opacity-100' : 'opacity-50 group-hover:opacity-80'}
+                  >
+                    <PiListNumbersFill />
+                  </span>
+                </button>
+              </div>
             </FloatingMenu>
           )}
           <div id="draft-editor">
