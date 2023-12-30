@@ -94,42 +94,7 @@ export function Form({
       CodeBlockExtension,
       DocumentExtension,
       HardBreakExtension,
-      HeadingExtension.configure({ levels: [1, 2, 3] }).extend({
-        addKeyboardShortcuts() {
-          return {
-            Tab: () => {
-              // pass if not heading. maybe this is not needed.
-              if (!this.editor.isActive('heading')) return false;
-
-              // get node
-              const { state } = this.editor;
-              const { selection } = state;
-              const { $anchor } = selection;
-              const node = $anchor.parent;
-
-              // if node is empty, do nothing
-              if (node && node.content.size === 0) {
-                return false;
-              }
-
-              // if node is a heading, change level
-              if (this.editor.isActive('heading', { level: 1 })) {
-                this.editor.chain().focus().toggleHeading({ level: 2 }).run();
-                return true;
-              } else if (this.editor.isActive('heading', { level: 2 })) {
-                this.editor.chain().focus().toggleHeading({ level: 3 }).run();
-                return true;
-              } else if (this.editor.isActive('heading', { level: 3 })) {
-                this.editor.chain().focus().toggleHeading({ level: 1 }).run();
-                return true;
-              }
-
-              // default return false
-              return false;
-            },
-          };
-        },
-      }),
+      HeadingExtension.configure({ levels: [1, 2, 3] }),
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
@@ -564,34 +529,6 @@ function EditorForm({
                   <PiListNumbersFill />
                 </span>
               </button>
-            </FloatingMenu>
-          )}
-          {editor && (
-            <FloatingMenu
-              pluginKey="headerLevelChangeFloatingMenu"
-              className="flex rounded-md text-base bg-gray-200/80 text-black p-1"
-              tippyOptions={{ duration: 200, placement: 'right' }}
-              editor={editor}
-              shouldShow={({ editor, view, state, oldState }) => {
-                const { selection } = state;
-                const { $anchor, empty } = selection;
-                const isHeader = $anchor.parent.type.name === 'heading';
-                if (!view.hasFocus() || !isHeader || !empty) {
-                  return false;
-                }
-                const isRootDepth = $anchor.depth === 1;
-                const isEmptyTextBlock =
-                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
-                if (!isRootDepth || isEmptyTextBlock || !editor?.isEditable) {
-                  return false;
-                }
-                return true;
-              }}
-            >
-              <div className="text-sm px-0.5">
-                <span className="text-xs border border-gray-300 rounded-md bg-gray-50 p-0.5">Tab</span>
-                <span className="ml-0.5">で切替</span>
-              </div>
             </FloatingMenu>
           )}
           <div id="draft-editor">
