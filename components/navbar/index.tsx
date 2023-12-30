@@ -42,8 +42,10 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                     <div className="flex flex-shrink-0 items-center">
                       <Link href="/">
                         <div className="flex items-center">
-                          <div className="pt-1">
-                            <span className="text-2xl text-gray-700 font-semibold">{SITE_NAME}</span>
+                          <div className="pt-2 pl-[0.375rem]">
+                            <span className="text-[1.8rem] leading-[2rem] text-gray-700 font-semibold">
+                              {SITE_NAME}
+                            </span>
                           </div>
                         </div>
                       </Link>
