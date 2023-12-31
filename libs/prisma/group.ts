@@ -10,6 +10,13 @@ export function getGroups() {
   });
 }
 
+export function getGroupsCount() {
+  return prisma.group.count().catch((e) => {
+    console.error(e);
+    throw new Error('Error occurred while fetching groups');
+  });
+}
+
 export function getJoinedGroups(userId: string) {
   return prisma.group
     .findMany({
@@ -74,7 +81,6 @@ export function checkPostableGroup(userId: string, groupId: string): Promise<boo
 export function getGroupsWithRecentNotesCountHEAVY(days: number, take?: number, skip?: number) {
   return prisma.group
     .findMany({
-      where: { Notes: { some: { releasedAt: { gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } } } },
       include: {
         _count: {
           select: { Notes: { where: { releasedAt: { gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } } } },
