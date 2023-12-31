@@ -78,6 +78,7 @@ export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take
     });
 }
 
+// if you change this function, you should change getNotesCountByGroupId too
 export function getNotesWithUserGroupTopicsByGroupId(
   groupId: string,
   requestUserId: string,
@@ -140,6 +141,7 @@ export function getNotesWithUserGroupTopicsByTopicId(
     });
 }
 
+// if you change this function, you should change getNotesWithUserGroupTopicsByGroupId too
 export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
   return prisma.note
     .count({
