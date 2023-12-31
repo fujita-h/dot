@@ -12,6 +12,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { FollowToggleButton, OtherMenuButton } from './form';
+import { GroupType } from '@prisma/client';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -44,7 +45,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   const isFollowing = group.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
 
-  if (group.type === 'PRIVATE' && !group.Members.find((member) => member.userId === sessionUserId)) {
+  if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === sessionUserId)) {
     return (
       <div className="space-y-4">
         <Header group={group} isFollowing={false} />

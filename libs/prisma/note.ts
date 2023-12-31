@@ -11,7 +11,7 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       include: {
@@ -34,7 +34,7 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -60,7 +60,7 @@ export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' }, // ToDo: Sort by user's latest comment date
@@ -91,7 +91,7 @@ export function getNotesWithUserGroupTopicsByGroupId(
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -122,7 +122,7 @@ export function getNotesWithUserGroupTopicsByTopicId(
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -148,7 +148,7 @@ export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
         OR: [
           { Group: null },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
     })
@@ -166,7 +166,7 @@ export function getTimelineNotesWithUserGroupTopics(userId: string, take?: numbe
           OR: [
             { Group: null },
             { Group: { type: GroupType.BLOG } },
-            { Group: { type: 'PRIVATE', Members: { some: { userId } } } },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
           ],
         },
         {

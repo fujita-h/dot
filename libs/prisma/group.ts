@@ -26,7 +26,7 @@ export function getReadableGroups(userId: string) {
   return prisma.group
     .findMany({
       where: {
-        OR: [{ type: GroupType.BLOG }, { type: 'PRIVATE', Members: { some: { userId } } }],
+        OR: [{ type: GroupType.BLOG }, { type: GroupType.PRIVATE, Members: { some: { userId } } }],
       },
       orderBy: { handle: 'asc' },
     })
@@ -42,7 +42,7 @@ export function getPostableGroups(userId: string) {
       where: {
         OR: [
           { type: GroupType.BLOG },
-          { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
       orderBy: { handle: 'asc' },
@@ -60,7 +60,7 @@ export function checkPostableGroup(userId: string, groupId: string): Promise<boo
         id: groupId,
         OR: [
           { type: GroupType.BLOG },
-          { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
     })

@@ -83,7 +83,7 @@ export function getStockedNotesWithUserGroupTopicsByLabelId(
           OR: [
             { Group: null },
             { Group: { type: GroupType.BLOG } },
-            { Group: { type: 'PRIVATE', Members: { some: { userId } } } },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
           ],
         },
       },
