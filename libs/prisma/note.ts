@@ -1,6 +1,7 @@
 'server-only';
 
 import prisma from '@/libs/prisma/instance';
+import { GroupType } from '@prisma/client';
 
 export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string) {
   return prisma.note
@@ -9,7 +10,7 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
         id: noteId,
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -32,7 +33,7 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
         userId: requestUserId,
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -58,7 +59,7 @@ export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take
         Comments: { some: { userId: requestUserId } },
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -89,7 +90,7 @@ export function getNotesWithUserGroupTopicsByGroupId(
         Group: { id: groupId },
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -120,7 +121,7 @@ export function getNotesWithUserGroupTopicsByTopicId(
         Topics: { some: { topicId } },
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -146,7 +147,7 @@ export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
         Group: { id: groupId },
         OR: [
           { Group: null },
-          { Group: { type: 'PUBLIC' } },
+          { Group: { type: GroupType.BLOG } },
           { Group: { type: 'PRIVATE', Members: { some: { userId: requestUserId } } } },
         ],
       },
@@ -164,7 +165,7 @@ export function getTimelineNotesWithUserGroupTopics(userId: string, take?: numbe
         {
           OR: [
             { Group: null },
-            { Group: { type: 'PUBLIC' } },
+            { Group: { type: GroupType.BLOG } },
             { Group: { type: 'PRIVATE', Members: { some: { userId } } } },
           ],
         },

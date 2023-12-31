@@ -112,7 +112,7 @@ model Group {
 
 enum GroupType {
   PRIVATE
-  PUBLIC
+  BLOG
 }
 
 model Membership {

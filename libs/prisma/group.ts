@@ -1,6 +1,7 @@
 'server-only';
 
 import prisma from '@/libs/prisma/instance';
+import { GroupType } from '@prisma/client';
 
 export function getGroups() {
   return prisma.group.findMany().catch((e) => {
@@ -25,7 +26,7 @@ export function getReadableGroups(userId: string) {
   return prisma.group
     .findMany({
       where: {
-        OR: [{ type: 'PUBLIC' }, { type: 'PRIVATE', Members: { some: { userId } } }],
+        OR: [{ type: GroupType.BLOG }, { type: 'PRIVATE', Members: { some: { userId } } }],
       },
       orderBy: { handle: 'asc' },
     })
@@ -40,7 +41,7 @@ export function getPostableGroups(userId: string) {
     .findMany({
       where: {
         OR: [
-          { type: 'PUBLIC' },
+          { type: GroupType.BLOG },
           { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
@@ -58,7 +59,7 @@ export function checkPostableGroup(userId: string, groupId: string): Promise<boo
       where: {
         id: groupId,
         OR: [
-          { type: 'PUBLIC' },
+          { type: GroupType.BLOG },
           { type: 'PRIVATE', Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },

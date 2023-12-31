@@ -1,6 +1,7 @@
 'server-only';
 
 import prisma from '@/libs/prisma/instance';
+import { GroupType } from '@prisma/client';
 
 export function getStockedLabelsWithCount(userId: string) {
   return prisma.stockLabel
@@ -81,7 +82,7 @@ export function getStockedNotesWithUserGroupTopicsByLabelId(
         Note: {
           OR: [
             { Group: null },
-            { Group: { type: 'PUBLIC' } },
+            { Group: { type: GroupType.BLOG } },
             { Group: { type: 'PRIVATE', Members: { some: { userId } } } },
           ],
         },

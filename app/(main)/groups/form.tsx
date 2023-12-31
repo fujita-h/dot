@@ -9,7 +9,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, createGroupAction } from './action';
 
 const groupTypes = [
-  { name: 'public', value: 'PUBLIC', description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
+  { name: 'blog', value: 'BLOG', description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
   { name: 'private', value: 'PRIVATE', description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
 ];
 
