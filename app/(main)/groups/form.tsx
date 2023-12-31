@@ -7,10 +7,11 @@ import clsx from 'clsx';
 import { Fragment, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, createGroupAction } from './action';
+import { GroupType } from '@prisma/client';
 
 const groupTypes = [
-  { name: 'blog', value: 'BLOG', description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
-  { name: 'private', value: 'PRIVATE', description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
+  { name: 'blog', value: GroupType.BLOG, description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
+  { name: 'private', value: GroupType.PRIVATE, description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
 ];
 
 export function CreateGroupButton() {
