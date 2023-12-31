@@ -6,6 +6,7 @@ import { getUserIdFromSession } from '@/libs/auth/utils';
 import { checkHandle } from '@/libs/utils/check-handle';
 import { redirect } from 'next/navigation';
 import { init as initCuid } from '@paralleldrive/cuid2';
+import { GroupType } from '@prisma/client';
 
 const cuid = initCuid({ length: 24 });
 
@@ -34,6 +35,9 @@ export async function createGroupAction(state: ActionState, formData: FormData):
     };
   }
 
+  // Convert string to GroupType
+  const type: GroupType = Object.values(GroupType).find((t) => t === formData.get('type')) || GroupType.PRIVATE;
+
   const [group, prismaError] = await prisma.group
     .create({
       data: {
@@ -41,6 +45,7 @@ export async function createGroupAction(state: ActionState, formData: FormData):
         handle: formData.get('handle') as string,
         name: formData.get('name') as string,
         about: (formData.get('about') as string) || '',
+        type: type,
         Members: { create: { userId: userId, role: 'ADMIN' } },
       },
     })
