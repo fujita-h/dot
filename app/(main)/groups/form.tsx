@@ -99,10 +99,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                       <div className="">
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                           <div className="col-span-full">
-                            <label
-                              htmlFor="name"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                               名前
                             </label>
                             <div className="mt-1">
@@ -117,10 +114,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </div>
                           </div>
                           <div className="col-span-full">
-                            <label
-                              htmlFor="handle"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="handle" className="block text-sm font-medium leading-6 text-gray-900">
                               ハンドル
                             </label>
                             <div className="mt-1">
@@ -138,10 +132,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </p>
                           </div>
                           <div className="col-span-full">
-                            <label
-                              htmlFor="about"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
                               概要
                             </label>
                             <div className="mt-1">
@@ -155,9 +146,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </div>
                           </div>
                           <div className="col-span-full">
-                            <label className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900">
-                              タイプ
-                            </label>
+                            <label className="block text-sm font-medium leading-6 text-gray-900">タイプ</label>
                             <input type="hidden" name="type" value={typeSelected.value} />
                             <RadioGroup value={typeSelected} onChange={setTypeSelected}>
                               <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
@@ -213,9 +202,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                 ))}
                               </div>
                             </RadioGroup>
-                            <p className="mt-1 ml-2 text-xs font-noto-sans-jp text-gray-500">
-                              この設定は後から変えることが出来ません。
-                            </p>
+                            <p className="mt-1 ml-2 text-xs text-gray-500">この設定は後から変えることが出来ません。</p>
                           </div>
                         </div>
                       </div>

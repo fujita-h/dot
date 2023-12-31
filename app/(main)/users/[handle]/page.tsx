@@ -90,19 +90,19 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">所属グループ</div>
+            <div className="text-base font-semibold text-gray-800">所属グループ</div>
           </div>
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">フォロー中のグループ</div>
+            <div className="text-base font-semibold text-gray-800">フォロー中のグループ</div>
           </div>
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">フォロー中のトピック</div>
+            <div className="text-base font-semibold text-gray-800">フォロー中のトピック</div>
           </div>
         </div>
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
+              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
             </div>
             <div className="bg-white rounded-md p-2">
               <div className="my-3">

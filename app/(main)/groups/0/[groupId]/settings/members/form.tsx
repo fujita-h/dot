@@ -62,7 +62,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
               onClick={() => {
                 setAddUser(users.filter((user) => !members.find((member) => member.id === user.id)));
               }}
-              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-noto-sans-jp font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               メンバーを追加
             </button>
@@ -145,7 +145,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                       >
                         <div className="space-x-4">
                           <span
-                            className="font-noto-sans-jp font-semibold text-indigo-600 hover:text-indigo-800 hover:underline hover:cursor-pointer"
+                            className="font-semibold text-indigo-600 hover:text-indigo-800 hover:underline hover:cursor-pointer"
                             onClick={() => {
                               setEditUser(member);
                             }}
@@ -153,7 +153,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                             変更<span className="sr-only">, {member.name}</span>
                           </span>
                           <span
-                            className="font-noto-sans-jp font-semibold text-red-600 hover:text-red-800 hover:underline hover:cursor-pointer"
+                            className="font-semibold text-red-600 hover:text-red-800 hover:underline hover:cursor-pointer"
                             onClick={() => {
                               setDeleteUser(member);
                             }}
@@ -221,7 +221,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
           >
             <Dialog.Panel className="mx-auto max-w-3xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
               <div className="px-6 py-4">
-                <div className="text-xl font-noto-sans-jp font-semibold">メンバーの追加</div>
+                <div className="text-xl font-semibold">メンバーの追加</div>
               </div>
               <Combobox value={userSelected} onChange={setUserSelected}>
                 {({ activeOption }) => {
@@ -363,7 +363,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                 </RadioGroup>
                                 <button
                                   type="button"
-                                  className="mt-6 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-noto-sans-jp font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                  className="mt-6 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                   onClick={async () => {
                                     const res = await addMemberToGroup(
                                       group.id,
@@ -483,7 +483,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                             <div className="text-sm">{user?.name}</div>
                           </div>
                         </div>
-                        <p className="text-gray-900 my-4 text-base font-noto-sans-jp font-semibold">ロールの変更</p>
+                        <p className="text-gray-900 my-4 text-base font-semibold">ロールの変更</p>
 
                         <RadioGroup value={selected} onChange={setSelected}>
                           <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
@@ -544,7 +544,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                   <button
                     type="button"
                     disabled={selected === null}
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-noto-sans-jp font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto disabled:bg-indigo-300 disabled:cursor-not-allowed"
+                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto disabled:bg-indigo-300 disabled:cursor-not-allowed"
                     onClick={async () => {
                       const role = selected?.value || 'READER';
                       const res = await updateMemberRole(group.id, user?.id || '', role).catch((e) => null);
@@ -557,7 +557,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-noto-sans-jp font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
                   >
                     キャンセル
@@ -645,7 +645,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                           </div>
                         </div>
                         <p className="text-gray-600 my-4">この操作について、以下の点に注意してください。</p>
-                        <ul className="text-gray-900 list-disc font-noto-sans-jp font-semibold ml-4">
+                        <ul className="text-gray-900 list-disc font-semibold ml-4">
                           <li className="my-1">このメンバーがこのグループに投稿したノートは削除されません</li>
                           <li className="my-1">
                             このメンバーがこのグループに投稿したノートの所有権は変わらずこのユーザーに残り、このユーザーに編集・削除する権利が残ります
@@ -671,7 +671,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                   <button
                     type="button"
                     disabled={confirm.replace('@', '') !== user?.handle}
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-noto-sans-jp font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
+                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
                     onClick={async () => {
                       const res = await removeMemberFromGroup(group.id, user?.id || '')
                         .then((data) => ({ ...data, error: null }))
@@ -687,7 +687,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-noto-sans-jp font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
                   >
                     キャンセル

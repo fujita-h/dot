@@ -21,7 +21,7 @@ export default async function Page() {
             <div className="md:flex md:gap-1">
               <div className="flex-none w-80 p-2 space-y-6">
                 <div className="mx-2">
-                  <h3 className="text-sm font-noto-sans-jp font-semibold">フォロー中のユーザー</h3>
+                  <h3 className="text-sm font-semibold">フォロー中のユーザー</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
                       <FollowingUsers userId={userId} />
@@ -29,7 +29,7 @@ export default async function Page() {
                   </div>
                 </div>
                 <div className="mx-2">
-                  <h3 className="text-sm font-noto-sans-jp font-semibold">フォロー中のグループ</h3>
+                  <h3 className="text-sm font-semibold">フォロー中のグループ</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
                       <FollowingGroups userId={userId} />
@@ -37,7 +37,7 @@ export default async function Page() {
                   </div>
                 </div>
                 <div className="mx-2">
-                  <h3 className="text-sm font-noto-sans-jp font-semibold">フォロー中のトピック</h3>
+                  <h3 className="text-sm font-semibold">フォロー中のトピック</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
                       <FollowingTopics userId={userId} />

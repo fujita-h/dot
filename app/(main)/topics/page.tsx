@@ -20,7 +20,7 @@ export default async function Page() {
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Topics</div>
-          <div className="text-gray-600 font-noto-sans-jp">トピック</div>
+          <div className="text-gray-600">トピック</div>
         </div>
         <div>
           <AddTopicButton />

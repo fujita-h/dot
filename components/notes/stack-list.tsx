@@ -86,7 +86,7 @@ export function StackList({ notes }: { notes: Note[] }) {
             <div className="ml-12 mt-2">
               <Link href={`/notes/${note.id}`} className="group">
                 <span className="absolute inset-x-0 -top-px bottom-0" />
-                <p className="text-xl font-medium font-noto-sans-jp truncate text-gray-700 group-hover:underline">
+                <p className="text-xl font-medium truncate text-gray-700 group-hover:underline">
                   {note.title || 'タイトルなし'}
                 </p>
               </Link>

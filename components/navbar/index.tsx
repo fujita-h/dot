@@ -140,7 +140,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                     </Menu>
                     <Menu as="div" className="ml-2 relative flex-shrink-0">
                       <div>
-                        <Menu.Button className="flex rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium font-noto-sans-jp text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <Menu.Button className="flex rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                           <span>投稿する</span>
                         </Menu.Button>
                       </div>
@@ -161,7 +161,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                   href="/drafts/new"
                                   className={clsx(
                                     active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm font-noto-sans-jp font-semibold text-gray-600'
+                                    'block px-4 py-2 text-sm font-semibold text-gray-600'
                                   )}
                                 >
                                   投稿する
@@ -176,7 +176,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                   href="/drafts/new"
                                   className={clsx(
                                     active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm font-noto-sans-jp font-semibold text-gray-600'
+                                    'block px-4 py-2 text-sm font-semibold text-gray-600'
                                   )}
                                 >
                                   下書き
@@ -185,7 +185,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                             </Menu.Item>
                           </div>
                           <div className="py-1">
-                            <div className="block px-4 py-2 text-sm font-noto-sans-jp font-semibold text-gray-600">
+                            <div className="block px-4 py-2 text-sm font-semibold text-gray-600">
                               グループに投稿する
                             </div>
                             {groups.map((group) => (
@@ -195,7 +195,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     href={`/drafts/new?group=${group.id}`}
                                     className={clsx(
                                       active ? 'bg-gray-100' : '',
-                                      'flex items-center gap-2 px-4 py-2 text-sm font-noto-sans-jp font-semibold text-gray-600'
+                                      'flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600'
                                     )}
                                   >
                                     <img
@@ -221,7 +221,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         key={item.name}
                         href={item.href}
                         className={clsx(
-                          'inline-flex items-end border-b-2 px-1 pt-1 text-sm font-noto-sans-jp font-semibold',
+                          'inline-flex items-end border-b-2 px-1 pt-1 text-sm font-semibold',
                           item.current
                             ? 'border-indigo-500 text-gray-900'
                             : 'border-transparent text-gray-500 hover:text-gray-700'

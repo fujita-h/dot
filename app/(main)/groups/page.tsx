@@ -20,7 +20,7 @@ export default async function Page() {
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Groups</div>
-          <div className="text-gray-600 font-noto-sans-jp">グループ</div>
+          <div className="text-gray-600">グループ</div>
         </div>
         <div>
           <CreateGroupButton />
@@ -29,7 +29,7 @@ export default async function Page() {
       <div className="mt-6 flex">
         <div className="w-80 min-w-[320px]"></div>
         <div className="flex-1">
-          <p className="text-base font-noto-sans-jp">最近投稿のあったグループ</p>
+          <p className="text-base">最近投稿のあったグループ</p>
           <CardList groups={groups} />
         </div>
       </div>

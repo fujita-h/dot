@@ -79,7 +79,7 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">メンバー</div>
+            <div className="text-base font-semibold text-gray-800">メンバー</div>
             <div className="mt-2 ml-3 flex gap-1">
               {group.Members.map((member) => (
                 <div key={member.userId} className="flex items-center">
@@ -98,10 +98,10 @@ export default async function Page({ params, searchParams }: Props) {
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
+              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
             </div>
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">ノート</div>
+              <div className="text-base font-semibold text-gray-800">ノート</div>
               <StackList notes={notes} />
               <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
                 <SimplePagination page={page} lastPage={lastPage} />

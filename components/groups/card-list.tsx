@@ -23,7 +23,7 @@ export function CardList({ groups }: { groups: Group[] }) {
               <div className="flex-1">
                 <Link href={`/groups/${group.handle}`} className="hover:underline">
                   <span className="absolute inset-x-0 -top-px bottom-0" />
-                  <p className="text-lg font-noto-sans-jp font-semibold text-gray-900">{group.name}</p>
+                  <p className="text-lg font-semibold text-gray-900">{group.name}</p>
                 </Link>
                 {group.about && <p className="mt-3 text-sm text-gray-500">{group.about}</p>}
               </div>
