@@ -160,6 +160,7 @@ export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
     });
 }
 
+// if you change this function, you should change getTimelineNotesCount too
 export function getTimelineNotesWithUserGroupTopics(userId: string, take?: number, skip?: number) {
   return prisma.note.findMany({
     where: {
@@ -188,5 +189,29 @@ export function getTimelineNotesWithUserGroupTopics(userId: string, take?: numbe
     },
     take,
     skip,
+  });
+}
+
+// if you change this function, you should change getTimelineNotesWithUserGroupTopics too
+export function getTimelineNotesCount(userId: string) {
+  return prisma.note.count({
+    where: {
+      AND: [
+        {
+          OR: [
+            { Group: null },
+            { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
+          ],
+        },
+        {
+          OR: [
+            { User: { FollowingUsers: { some: { fromUserId: userId } } } },
+            { Group: { FollowedUsers: { some: { userId } } } },
+            { Topics: { some: { Topic: { FollowedUsers: { some: { userId } } } } } },
+          ],
+        },
+      ],
+    },
   });
 }
