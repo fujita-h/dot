@@ -153,7 +153,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-auto min-w-[240px] max-w-[420px] origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-auto min-w-[240px] max-w-[420px] origin-top-right divide-y divide-gray-200 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
                           <div className="py-1">
                             <Menu.Item>
                               {({ active }) => (
@@ -164,22 +164,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     'block px-4 py-2 text-sm font-semibold text-gray-600'
                                   )}
                                 >
-                                  投稿する
-                                </a>
-                              )}
-                            </Menu.Item>
-                          </div>
-                          <div className="py-1">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <a
-                                  href="/drafts/new"
-                                  className={clsx(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm font-semibold text-gray-600'
-                                  )}
-                                >
-                                  下書き
+                                  全体に投稿する
                                 </a>
                               )}
                             </Menu.Item>
@@ -195,12 +180,12 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     href={`/drafts/new?group=${group.id}`}
                                     className={clsx(
                                       active ? 'bg-gray-100' : '',
-                                      'flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600'
+                                      'flex items-center gap-2 pl-6 pr-4 py-[0.375rem] text-sm font-semibold text-gray-600'
                                     )}
                                   >
                                     <img
                                       src={`/api/groups/${group.id}/icon`}
-                                      className="w-5 h-5 rounded-sm border border-gray-100"
+                                      className="w-6 h-6 rounded-sm border border-gray-100"
                                       alt="group-icon"
                                     />
                                     <div className="truncate">{group.name}</div>
