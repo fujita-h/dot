@@ -26,6 +26,7 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
     });
 }
 
+// if you change this function, you should change getNotesCount too
 export function getNotesWithUserGroupTopics(requestUserId: string, take?: number, skip?: number) {
   return prisma.note
     .findMany({
@@ -52,6 +53,26 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
     });
 }
 
+// if you change this function, you should change getNotesWithUserGroupTopics too
+export function getNotesCount(requestUserId: string) {
+  return prisma.note
+    .count({
+      where: {
+        userId: requestUserId,
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
+        ],
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
+// if you change this function, you should change getCommentedNotesCount too
 export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take?: number, skip?: number) {
   return prisma.note
     .findMany({
@@ -63,13 +84,32 @@ export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
-      orderBy: { releasedAt: 'desc' }, // ToDo: Sort by user's latest comment date
+      orderBy: { releasedAt: 'desc' }, // ToDo: Sort by user's latest comment date. (maybe required to get data from prisma.comment)
       take,
       skip,
       include: {
         User: true,
         Group: true,
         Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
+// if you change this function, you should change getCommentedNotesWithUserGroupTopics too
+export function getCommentedNotesCount(requestUserId: string) {
+  return prisma.note
+    .count({
+      where: {
+        Comments: { some: { userId: requestUserId } },
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
+        ],
       },
     })
     .catch((e) => {
