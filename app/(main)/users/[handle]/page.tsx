@@ -19,7 +19,7 @@ import { redirect } from 'next/navigation';
 import { SimplePagination } from '@/components/paginations/simple';
 import qs from 'qs';
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 type Props = {
   params: { handle: string };
@@ -70,7 +70,7 @@ export default async function Page({ params, searchParams }: Props) {
       getNotesCount(userId).catch((e) => 0),
     ]);
   const notesFunc = tab === 'comments' ? getCommentedNotesFunc : getNotesFunc;
-  const [notes, count] = await notesFunc(user.id);
+  const [notes, count] = await notesFunc(user.id, ITEMS_PER_PAGE, skip);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage && lastPage > 0) {
     const params = new URLSearchParams(urlSearchParams);
