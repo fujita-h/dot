@@ -57,7 +57,7 @@ export default function CommentEditor({
         openOnClick: false,
       }),
       PlaceholderExtension.configure({
-        placeholder: 'Write comment here...',
+        placeholder: 'ここからコメントを書き始めます...',
       }),
       UnderlineExtension,
     ],
@@ -65,8 +65,10 @@ export default function CommentEditor({
 
   return (
     <div>
-      <EditorContent editor={editor} />
-      <div className="mt-2 flex justify-end">
+      <div className="border rounded-lg p-2">
+        <EditorContent editor={editor} />
+      </div>
+      <div className="mt-3 flex justify-end">
         <button
           type="button"
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -77,7 +79,7 @@ export default function CommentEditor({
             }
           }}
         >
-          Post
+          コメントを投稿
         </button>
       </div>
     </div>
