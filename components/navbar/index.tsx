@@ -221,7 +221,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         key={item.name}
                         href={item.href}
                         className={clsx(
-                          'inline-flex items-end border-b-2 px-1 pt-1 text-sm font-semibold',
+                          'inline-flex items-end border-b-[3px] px-1 pt-1 text-base font-semibold',
                           item.current
                             ? 'border-indigo-500 text-gray-900'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
