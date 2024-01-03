@@ -24,6 +24,12 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import TableExtension from '@tiptap/extension-table';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableCellExtension from '@tiptap/extension-table-cell';
+import { createColGroup } from '@/libs/tiptap/utilities/createColGroup';
+import { DOMOutputSpec } from '@tiptap/pm/model';
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
@@ -81,6 +87,29 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
         },
       }),
       LinkExtension,
+      TableExtension.extend({
+        renderHTML({ node, HTMLAttributes }) {
+          const { colgroup, tableWidth, tableMinWidth } = createColGroup(node, this.options.cellMinWidth);
+
+          const table: DOMOutputSpec = [
+            'div',
+            { class: 'table-container' },
+            [
+              'table',
+              mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+                style: tableWidth ? `width: ${tableWidth}` : `minWidth: ${tableMinWidth}`,
+              }),
+              colgroup,
+              ['tbody', 0],
+            ],
+          ];
+
+          return table;
+        },
+      }),
+      TableRowExtension,
+      TableHeaderExtension,
+      TableCellExtension,
     ],
     content: JSON.parse(jsonString),
     editable: false,

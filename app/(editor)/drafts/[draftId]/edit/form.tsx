@@ -30,6 +30,10 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import TableExtension from '@tiptap/extension-table';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableCellExtension from '@tiptap/extension-table-cell';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import { TextSelection } from '@tiptap/pm/state';
@@ -107,6 +111,12 @@ export function Form({
       DropcursorExtension,
       GapcursorExtension,
       HistoryExtension,
+      TableExtension.configure({
+        resizable: true,
+      }),
+      TableRowExtension,
+      TableHeaderExtension,
+      TableCellExtension,
       ImageExtension,
       UploadImageExtension.configure({
         uploadImageFunc: uploadFiles,
