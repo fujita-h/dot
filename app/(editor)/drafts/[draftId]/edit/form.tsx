@@ -365,37 +365,12 @@ function EditorForm({
               }}
             >
               <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 ml-2 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
-                <ButtonSelectText
-                  editor={editor}
-                  id="bubbleMenuButton-textMenu"
-                  prevButtonId={undefined}
-                  nextButtonId="bubbleMenuButton-bold"
-                />
+                <ButtonSelectText editor={editor} id="bm-textMenu" prevButtonId={undefined} nextButtonId="bm-bold" />
                 <div className="border-l-2 border-gray-400/30 ml-1 pl-1"></div>
-                <ButtonBold
-                  editor={editor}
-                  id="bubbleMenuButton-bold"
-                  prevButtonId="bubbleMenuButton-textMenu"
-                  nextButtonId="bubbleMenuButton-italic"
-                />
-                <ButtonItalic
-                  editor={editor}
-                  id="bubbleMenuButton-italic"
-                  prevButtonId="bubbleMenuButton-bold"
-                  nextButtonId="bubbleMenuButton-underline"
-                />
-                <ButtonUnderline
-                  editor={editor}
-                  id="bubbleMenuButton-underline"
-                  prevButtonId="bubbleMenuButton-italic"
-                  nextButtonId="bubbleMenuButton-strike"
-                />
-                <ButtonStrike
-                  editor={editor}
-                  id="bubbleMenuButton-strike"
-                  prevButtonId="bubbleMenuButton-underline"
-                  nextButtonId={undefined}
-                />
+                <ButtonBold editor={editor} id="bm-bold" prevButtonId="bm-textMenu" nextButtonId="bm-italic" />
+                <ButtonItalic editor={editor} id="bm-italic" prevButtonId="bm-bold" nextButtonId="bm-underline" />
+                <ButtonUnderline editor={editor} id="bm-underline" prevButtonId="bm-italic" nextButtonId="bm-strike" />
+                <ButtonStrike editor={editor} id="bm-strike" prevButtonId="bm-underline" nextButtonId={undefined} />
               </div>
             </BubbleMenu>
           )}
@@ -419,49 +394,44 @@ function EditorForm({
               <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 ml-2 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
                 <ButtonParagraph
                   editor={editor}
-                  id="newLineFloatingMenuButton-paragraph"
+                  id="fm-paragraph"
                   prevButtonId={undefined}
-                  nextButtonId="newLineFloatingMenuButton-heading1"
+                  nextButtonId="fm-heading1"
                 />
                 <div className="border-l-2 border-gray-400/30 ml-1 pl-1"></div>
                 <ButtonHeading1
                   editor={editor}
-                  id="newLineFloatingMenuButton-heading1"
-                  prevButtonId="newLineFloatingMenuButton-paragraph"
-                  nextButtonId="newLineFloatingMenuButton-heading2"
+                  id="fm-heading1"
+                  prevButtonId="fm-paragraph"
+                  nextButtonId="fm-heading2"
                 />
                 <ButtonHeading2
                   editor={editor}
-                  id="newLineFloatingMenuButton-heading2"
-                  prevButtonId="newLineFloatingMenuButton-heading1"
-                  nextButtonId="newLineFloatingMenuButton-heading3"
+                  id="fm-heading2"
+                  prevButtonId="fm-heading1"
+                  nextButtonId="fm-heading3"
                 />
                 <ButtonHeading3
                   editor={editor}
-                  id="newLineFloatingMenuButton-heading3"
-                  prevButtonId="newLineFloatingMenuButton-heading2"
-                  nextButtonId="newLineFloatingMenuButton-bulletList"
+                  id="fm-heading3"
+                  prevButtonId="fm-heading2"
+                  nextButtonId="fm-bulletList"
                 />
                 <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
                 <ButtonBulletList
                   editor={editor}
-                  id="newLineFloatingMenuButton-bulletList"
-                  prevButtonId="newLineFloatingMenuButton-heading3"
-                  nextButtonId="newLineFloatingMenuButton-orderedList"
+                  id="fm-bulletList"
+                  prevButtonId="fm-heading3"
+                  nextButtonId="fm-orderedList"
                 />
                 <ButtonOrderedList
                   editor={editor}
-                  id="newLineFloatingMenuButton-orderedList"
-                  prevButtonId="newLineFloatingMenuButton-bulletList"
-                  nextButtonId="newLineFloatingMenuButton-table"
+                  id="fm-orderedList"
+                  prevButtonId="fm-bulletList"
+                  nextButtonId="fm-table"
                 />
                 <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-                <ButtonTable
-                  editor={editor}
-                  id="newLineFloatingMenuButton-table"
-                  prevButtonId="newLineFloatingMenuButton-orderedList"
-                  nextButtonId={undefined}
-                />
+                <ButtonTable editor={editor} id="fm-table" prevButtonId="fm-orderedList" nextButtonId={undefined} />
               </div>
             </FloatingMenu>
           )}
