@@ -72,25 +72,6 @@
 #note-viewer a:hover {
   text-decoration: underline;
 }
-#note-viewer table {
-  font-size: 1.0rem;
-  line-height: 2.0;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  border: 1px solid #ddd;
-}
-#note-viewer table th {
-  font-weight: bold;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-#note-viewer table td {
-  padding: 0.3rem 0.8rem; 
-  border: 1px solid #ddd;
-}
 #note-viewer ul {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
@@ -136,7 +117,13 @@
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
 }
+#draft-editor img + p {
+  margin-top: 0rem;
+}
+
 #note-viewer a.note-image-anchor + p {
   margin-top: 0rem;
 }
@@ -146,7 +133,8 @@
 }
 #note-viewer .tiptap table {
   border-collapse: collapse;
-  margin: 0;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
   overflow: hidden;
   table-layout: fixed;
   width: 100%;

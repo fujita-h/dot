@@ -175,6 +175,8 @@
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
 }
 #draft-editor img.ProseMirror-selectednode {
   box-shadow: 0 0 0 3px #aaa;
@@ -199,7 +201,8 @@
 /* Table */
 #draft-editor .tiptap table {
   border-collapse: collapse;
-  margin: 0;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
   overflow: hidden;
   table-layout: fixed;
   width: 100%;
