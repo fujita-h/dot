@@ -305,19 +305,42 @@ function EditorForm({
         </div>
       </div>
       <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
-        {/* <div className="bg-slate-100 sticky top-0 p-2 rounded-t-md z-20">
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleBold().run()}
-              className={editor?.isActive('bold') ? 'is-active' : ''}
-            >
-              <MdFormatBold />
-            </button>
-          </div> */}
         {editor && (
           <div className="bg-gray-100 sticky top-0 left-0 z-10 pt-2">
             <div className="bg-white p-2 border rounded-t-md border-gray-300">
-              <div>Table Bar</div>
+              <div className="flex text-2xl">
+                <ButtonSelectText
+                  editor={editor}
+                  id="button-textMenu"
+                  prevButtonId={undefined}
+                  nextButtonId="button-bold"
+                />
+                <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
+                <ButtonBold
+                  editor={editor}
+                  id="button-bold"
+                  prevButtonId="button-textMenu"
+                  nextButtonId="button-italic"
+                />
+                <ButtonItalic
+                  editor={editor}
+                  id="button-italic"
+                  prevButtonId="button-bold"
+                  nextButtonId="button-underline"
+                />
+                <ButtonUnderline
+                  editor={editor}
+                  id="button-underline"
+                  prevButtonId="button-italic"
+                  nextButtonId="button-strike"
+                />
+                <ButtonStrike
+                  editor={editor}
+                  id="button-strike"
+                  prevButtonId="button-underline"
+                  nextButtonId={undefined}
+                />
+              </div>
             </div>
           </div>
         )}
