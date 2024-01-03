@@ -6,7 +6,7 @@ import { Editor } from '@tiptap/react';
 import clsx from 'clsx';
 import { Fragment } from 'react';
 import { BsTextParagraph } from 'react-icons/bs';
-import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
+import { LuHeading1, LuHeading2, LuHeading3, LuTable } from 'react-icons/lu';
 import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
 
 export function ButtonSelectText({
@@ -201,6 +201,30 @@ export function ButtonSelectText({
                     <PiListNumbersFill />
                   </span>
                   <span className="mx-2 text-base whitespace-nowrap">Ordered List</span>
+                </button>
+              )}
+            </Menu.Item>
+          </div>
+          <div>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  type="button"
+                  className={clsx(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'group flex items-center px-1 my-1 py-1 rounded-md'
+                  )}
+                  onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+                >
+                  <span
+                    className={clsx(
+                      editor.isActive('orderedList') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                      'text-xl font-semibold p-1 rounded-md'
+                    )}
+                  >
+                    <LuTable />
+                  </span>
+                  <span className="mx-2 text-base whitespace-nowrap">Table</span>
                 </button>
               )}
             </Menu.Item>
