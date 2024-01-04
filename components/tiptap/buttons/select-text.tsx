@@ -216,28 +216,6 @@ export function ButtonSelectText({
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
-                  onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
-                >
-                  <span
-                    className={clsx(
-                      editor.isActive('orderedList') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
-                      'text-xl font-semibold p-1 rounded-md'
-                    )}
-                  >
-                    <LuTable />
-                  </span>
-                  <span className="mx-2 text-base whitespace-nowrap">Table</span>
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  type="button"
-                  className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'group flex items-center px-1 my-1 py-1 rounded-md'
-                  )}
                   onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                 >
                   <span
