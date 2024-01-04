@@ -19,4 +19,5 @@
 | `SESSION_MAX_AGE`                   | Maximum session time (in seconds). Default is `86400`.                                                                                | No       | 86400                                      |
 | `LOCALE `                           | Locale to use for the app. A string with a BCP 47 language tag or an `Intl.Locale instance`. Default is `ja-JP`.                      | No       | ja-JP                                      |
 | `TIMEZONE`                          | Timezone to use for the app. The time zone names of the IANA time zone database. Default is `Asia/Tokyo`.                             | No       | Asia/Tokyo                                 |
+| `USER_ROLE_FOR_GROUP_CREATION`      | User role required to create a group. Default is empty string (`""`). Empty string (`""`) means that anyone can create a group.       | No       | Group.Create                               |
 | `USER_ROLE_FOR_TOPIC_CREATION`      | User role required to create a topic. Default is empty string (`""`). Empty string (`""`) means that anyone can create a topic.       | No       | Topic.Create                               |

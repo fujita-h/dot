@@ -3,12 +3,13 @@ import { Error404, Error500 } from '@/components/error';
 import { CardList } from '@/components/groups/card-list';
 import { SimplePagination } from '@/components/paginations/simple';
 import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
 import { getGroupsCount, getGroupsWithRecentNotesCountHEAVY } from '@/libs/prisma/group';
 import { redirect } from 'next/navigation';
 import { CreateGroupButton } from './form';
 
 const ITEMS_PER_PAGE = 10;
+const USER_ROLE_FOR_GROUP_CREATION = process.env.USER_ROLE_FOR_GROUP_CREATION || '';
 
 export default async function Page({
   searchParams,
@@ -20,6 +21,9 @@ export default async function Page({
   if (status === 401) return <SignInForm />;
   if (status === 500) return <Error500 />;
   if (status === 404 || !userId) return <Error404 />;
+
+  const roles = await getRolesFromSession(session);
+  const isAllowedToCreateGroup = !USER_ROLE_FOR_GROUP_CREATION || roles.includes(USER_ROLE_FOR_GROUP_CREATION);
 
   const _page = Number(searchParams.page);
   const page = _page === undefined || _page === null || Number.isNaN(_page) || _page < 1 ? 1 : Math.floor(_page);
@@ -44,9 +48,7 @@ export default async function Page({
           <div className="text-2xl font-bold">Groups</div>
           <div className="text-gray-600">グループ</div>
         </div>
-        <div>
-          <CreateGroupButton />
-        </div>
+        <div>{isAllowedToCreateGroup && <CreateGroupButton />}</div>
       </div>
       <div className="mt-6 flex">
         <div className="w-80 min-w-[320px]"></div>
