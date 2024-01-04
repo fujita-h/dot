@@ -48,6 +48,7 @@ import {
   ButtonStrike,
   ButtonTable,
   ButtonUnderline,
+  ButtonCodeBlock,
 } from '@/components/tiptap/buttons';
 import { EditorNavbar } from '@/components/navbar';
 import { TopicItem, TopicInput } from '@/components/topics/input';
@@ -434,7 +435,9 @@ function EditorForm({
                   nextButtonId="fm-table"
                 />
                 <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-                <ButtonTable editor={editor} id="fm-table" prevButtonId="fm-orderedList" nextButtonId={undefined} />
+                <ButtonTable editor={editor} id="fm-table" prevButtonId="fm-orderedList" nextButtonId="fm-codeBlock" />
+                <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
+                <ButtonCodeBlock editor={editor} id="fm-codeBlock" prevButtonId="fm-table" nextButtonId={undefined} />
               </div>
             </FloatingMenu>
           )}

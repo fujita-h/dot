@@ -1,6 +1,7 @@
 export { ButtonBold } from './bold';
 export { ButtonBulletList } from './bullet-list';
 export { ButtonCode } from './code';
+export { ButtonCodeBlock } from './code-block';
 export { ButtonHeading1, ButtonHeading2, ButtonHeading3 } from './heading';
 export { ButtonItalic } from './italic';
 export { ButtonOrderedList } from './ordered-list';
