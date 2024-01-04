@@ -15,9 +15,9 @@ export async function FollowingUsers({ userId }: { userId: string }) {
           <Link key={user.id} href={`/users/${user.handle}`}>
             <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/users/${user.id}/icon`} className="w-5 h-5 rounded-full" alt="user icon" />
+                <img src={`/api/users/${user.id}/icon`} className="w-5 h-5 rounded-full bg-white" alt="user icon" />
               </div>
-              <div className="flex-none text-sm text-gray-900 truncate">{user.name}</div>
+              <div className="flex-none text-base text-gray-900 truncate">{user.name}</div>
             </div>
           </Link>
         </div>
@@ -38,9 +38,9 @@ export async function FollowingGroups({ userId }: { userId: string }) {
           <Link key={group.id} href={`/groups/${group.handle}`}>
             <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/groups/${group.id}/icon`} className="w-5 h-5 rounded-md" alt="group icon" />
+                <img src={`/api/groups/${group.id}/icon`} className="w-5 h-5 rounded-md bg-white" alt="group icon" />
               </div>
-              <div className="flex-none text-sm text-gray-900 truncate">{group.name}</div>
+              <div className="flex-none text-base text-gray-900 truncate">{group.name}</div>
             </div>
           </Link>
         </div>
@@ -61,9 +61,9 @@ export async function FollowingTopics({ userId }: { userId: string }) {
           <Link key={topic.id} href={`/topics/${topic.handle}`}>
             <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/topics/${topic.id}/icon`} className="w-5 h-5 rounded-md" alt="topic icon" />
+                <img src={`/api/topics/${topic.id}/icon`} className="w-5 h-5 rounded-md bg-white" alt="topic icon" />
               </div>
-              <div className="flex-none text-sm text-gray-900 truncate">{topic.name}</div>
+              <div className="flex-none text-base text-gray-900 truncate">{topic.name}</div>
             </div>
           </Link>
         </div>

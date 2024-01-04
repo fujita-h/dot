@@ -5,11 +5,21 @@ import { SimpleTab } from '@/components/tabs/simple-tab';
 import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
-import { getCommentedNotesWithUserGroupTopics, getNotesWithUserGroupTopics } from '@/libs/prisma/note';
+import {
+  getCommentedNotesCount,
+  getCommentedNotesWithUserGroupTopics,
+  getNotesCount,
+  getNotesWithUserGroupTopics,
+} from '@/libs/prisma/note';
 import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
 import clsx from 'clsx';
 import { Metadata } from 'next';
 import { FollowToggleButton } from './form';
+import { redirect } from 'next/navigation';
+import { SimplePagination } from '@/components/paginations/simple';
+import qs from 'qs';
+
+const ITEMS_PER_PAGE = 20;
 
 type Props = {
   params: { handle: string };
@@ -35,6 +45,8 @@ export default async function Page({ params, searchParams }: Props) {
   if (status === 500) return <Error500 />;
   if (status === 404 || !sessionUserId) return <Error404 />;
 
+  const urlSearchParams = new URLSearchParams(qs.stringify(searchParams));
+
   const user = await getUserWithFollowedFromHandle(params.handle).catch((e) => null);
   if (!user) return <Error404 />;
 
@@ -42,8 +54,29 @@ export default async function Page({ params, searchParams }: Props) {
 
   const tab = searchParams.tab;
   const currentTab = tab === 'comments' ? 'comments' : 'posts';
-  const notesFunc = tab === 'comments' ? getCommentedNotesWithUserGroupTopics : getNotesWithUserGroupTopics;
-  const notes = await notesFunc(user.id);
+
+  const _page = Number(searchParams.page);
+  const page = _page === undefined || _page === null || Number.isNaN(_page) || _page < 1 ? 1 : Math.floor(_page);
+  const skip = (page - 1) * ITEMS_PER_PAGE;
+
+  const getCommentedNotesFunc = (userId: string, take?: number, skip?: number) =>
+    Promise.all([
+      getCommentedNotesWithUserGroupTopics(userId, take, skip).catch((e) => []),
+      getCommentedNotesCount(userId).catch((e) => 0),
+    ]);
+  const getNotesFunc = (userId: string, take?: number, skip?: number) =>
+    Promise.all([
+      getNotesWithUserGroupTopics(userId, take, skip).catch((e) => []),
+      getNotesCount(userId).catch((e) => 0),
+    ]);
+  const notesFunc = tab === 'comments' ? getCommentedNotesFunc : getNotesFunc;
+  const [notes, count] = await notesFunc(user.id, ITEMS_PER_PAGE, skip);
+  const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
+  if (page > lastPage && lastPage > 0) {
+    const params = new URLSearchParams(urlSearchParams);
+    params.set('page', lastPage.toString());
+    redirect(`?${params.toString()}`);
+  }
 
   return (
     <div className="space-y-4">
@@ -90,19 +123,19 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">所属グループ</div>
+            <div className="text-base font-semibold text-gray-800">所属グループ</div>
           </div>
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">フォロー中のグループ</div>
+            <div className="text-base font-semibold text-gray-800">フォロー中のグループ</div>
           </div>
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">フォロー中のトピック</div>
+            <div className="text-base font-semibold text-gray-800">フォロー中のトピック</div>
           </div>
         </div>
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
+              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
             </div>
             <div className="bg-white rounded-md p-2">
               <div className="my-3">
@@ -115,6 +148,9 @@ export default async function Page({ params, searchParams }: Props) {
               </div>
               <div>
                 <StackList notes={notes} />
+                <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
+                  <SimplePagination page={page} lastPage={lastPage} searchParams={urlSearchParams} />
+                </div>
               </div>
             </div>
           </div>

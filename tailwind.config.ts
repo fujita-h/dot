@@ -9,7 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        'noto-sans-jp': ['var(--font-inter)', 'var(--font-noto-sans-jp)'],
+        'default': ['var(--font-inter)', 'var(--font-noto-sans-jp)'],
+        'inter': ['var(--font-inter)'],
+        'noto-sans-jp': ['var(--font-noto-sans-jp)'],
         'source-code-pro': ['var(--font-source-code-pro)'],
       },
     },

@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import { FaBlog, FaLock } from 'react-icons/fa6';
 
 type Group = {
   id: string;
   handle: string;
   name: string;
   about: string;
+  type: string;
   _count: {
     Notes: number;
   };
@@ -23,9 +25,25 @@ export function CardList({ groups }: { groups: Group[] }) {
               <div className="flex-1">
                 <Link href={`/groups/${group.handle}`} className="hover:underline">
                   <span className="absolute inset-x-0 -top-px bottom-0" />
-                  <p className="text-lg font-noto-sans-jp font-semibold text-gray-900">{group.name}</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {group.name}
+                    {group.type === 'PRIVATE' && (
+                      <span className="inline-block ml-2 text-base font-normal text-yellow-500">
+                        <FaLock />
+                      </span>
+                    )}
+                    {group.type === 'BLOG' && (
+                      <span className="inline-block ml-2 text-base font-normal text-blue-500">
+                        <FaBlog />
+                      </span>
+                    )}
+                  </p>
                 </Link>
-                {group.about && <p className="mt-3 text-sm text-gray-500">{group.about}</p>}
+                {group.about && (
+                  <p className="mt-3 text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">
+                    {group.about}
+                  </p>
+                )}
               </div>
               <div className="hidden sm:flex flex-none  flex-col justify-center text-center">
                 <div>{group._count.Notes}</div>

@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={clsx(
           // default fonts
-          inter.className,
+          'font-default',
           // optional fonts
           inter.variable,
           notoSansJP.variable,

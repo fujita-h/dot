@@ -153,8 +153,8 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   </div>
                 </div>
               </div>
-              <div className="order-1 flex-1">
-                <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5">
+              <div className="order-1 flex-1 overflow-hidden">
+                <div className="bg-white rounded-md ring-1 ring-gray-200 p-4 lg:p-5 overflow-x-auto">
                   <div id="note-viewer">
                     <NoteViewer jsonString={blobBody} />
                   </div>
@@ -166,7 +166,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   </div>
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
-                    <div id="comment-editor" className="p-4">
+                    <div id="comment-editor" className="px-4 pt-2 pb-4">
                       <CommentEditor noteId={note.id} />
                     </div>
                   </div>

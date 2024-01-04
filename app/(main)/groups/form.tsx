@@ -7,10 +7,11 @@ import clsx from 'clsx';
 import { Fragment, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, createGroupAction } from './action';
+import { GroupType } from '@prisma/client';
 
 const groupTypes = [
-  { name: 'public', value: 'PUBLIC', description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
-  { name: 'private', value: 'PRIVATE', description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
+  { name: 'blog', value: GroupType.BLOG, description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
+  { name: 'private', value: GroupType.PRIVATE, description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
 ];
 
 export function CreateGroupButton() {
@@ -22,7 +23,7 @@ export function CreateGroupButton() {
         className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
         onClick={() => setOpen(true)}
       >
-        Create Group
+        新しいグループを作成する
       </button>
       <CreateGroupModal open={open} setOpen={setOpen} />
     </>
@@ -98,10 +99,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                       <div className="">
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                           <div className="col-span-full">
-                            <label
-                              htmlFor="name"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                               名前
                             </label>
                             <div className="mt-1">
@@ -116,10 +114,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </div>
                           </div>
                           <div className="col-span-full">
-                            <label
-                              htmlFor="handle"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="handle" className="block text-sm font-medium leading-6 text-gray-900">
                               ハンドル
                             </label>
                             <div className="mt-1">
@@ -137,10 +132,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </p>
                           </div>
                           <div className="col-span-full">
-                            <label
-                              htmlFor="about"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
                               概要
                             </label>
                             <div className="mt-1">
@@ -154,9 +146,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             </div>
                           </div>
                           <div className="col-span-full">
-                            <label className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900">
-                              タイプ
-                            </label>
+                            <label className="block text-sm font-medium leading-6 text-gray-900">タイプ</label>
                             <input type="hidden" name="type" value={typeSelected.value} />
                             <RadioGroup value={typeSelected} onChange={setTypeSelected}>
                               <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
@@ -212,9 +202,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                 ))}
                               </div>
                             </RadioGroup>
-                            <p className="mt-1 ml-2 text-xs font-noto-sans-jp text-gray-500">
-                              この設定は後から変えることが出来ません。
-                            </p>
+                            <p className="mt-1 ml-2 text-xs text-gray-500">この設定は後から変えることが出来ません。</p>
                           </div>
                         </div>
                       </div>

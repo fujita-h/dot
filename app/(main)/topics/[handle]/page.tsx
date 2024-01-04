@@ -49,7 +49,7 @@ export default async function Page({ params, searchParams }: Props) {
           <div className="flex justify-center">
             <div className="text-center">
               <img src={`/api/topics/${topic.id}/icon`} className="w-16 h-16 rounded-md bg-white" alt="topic icon" />
-              <div className="text-lg font-semibold text-gray-800 font-noto-sans-jp">{topic.name}</div>
+              <div className="text-lg font-semibold text-gray-800">{topic.name}</div>
             </div>
           </div>
           <div className="mt-6 flex justify-center">

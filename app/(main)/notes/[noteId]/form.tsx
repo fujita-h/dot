@@ -168,7 +168,7 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                         <p className="text-gray-800 my-4">ノートを削除しようとしています。この操作は取り消せません。</p>
 
                         <p className="text-gray-600 my-4">この操作について、以下の点に注意してください。</p>
-                        <ul className="text-gray-900 list-disc font-noto-sans-jp font-semibold ml-4">
+                        <ul className="text-gray-900 list-disc font-semibold ml-4">
                           <li className="my-1">このノートの下書きも同時に削除されます</li>
                         </ul>
                       </div>
@@ -178,7 +178,7 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-noto-sans-jp font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
+                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
                     onClick={async () => {
                       const res = await deleteNote(note.id)
                         .then((data) => ({ ...data, error: null }))
@@ -195,7 +195,7 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-noto-sans-jp font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
                   >
                     キャンセル

@@ -22,7 +22,7 @@ export default async function Page({ searchParams }: { searchParams: { id?: stri
       <div className="w-96">
         <div className="mb-8">
           <p className="text-3xl font-bold">Drafts</p>
-          <p className="text-base text-gray-500 font-noto-sans-jp">下書き一覧</p>
+          <p className="text-base text-gray-500">下書き一覧</p>
         </div>
         <List userId={userId} id={searchParams.id} page={page} />
       </div>

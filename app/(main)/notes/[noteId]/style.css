@@ -72,25 +72,6 @@
 #note-viewer a:hover {
   text-decoration: underline;
 }
-#note-viewer table {
-  font-size: 1.0rem;
-  line-height: 2.0;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  border: 1px solid #ddd;
-}
-#note-viewer table th {
-  font-weight: bold;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-#note-viewer table td {
-  padding: 0.3rem 0.8rem; 
-  border: 1px solid #ddd;
-}
 #note-viewer ul {
   margin-top: 1.0rem;
   margin-bottom: 1.0rem;
@@ -136,10 +117,48 @@
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
 }
+#draft-editor img + p {
+  margin-top: 0rem;
+}
+
 #note-viewer a.note-image-anchor + p {
   margin-top: 0rem;
 }
+/* Table */
+#note-viewer .tiptap .table-container {
+  overflow-x: auto;
+}
+#note-viewer .tiptap table {
+  border-collapse: collapse;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+}
+#note-viewer .tiptap table td, #note-viewer .tiptap table th {
+  border: 2px solid #ced4da;
+  box-sizing: border-box;
+  min-width: 1em;
+  padding: 3px 5px;
+  position: relative;
+  vertical-align: top;
+}
+#note-viewer .tiptap table td > *, #note-viewer .tiptap table th > * {
+  margin-bottom: 0;
+}
+#note-viewer .tiptap table th  {
+  background-color: #f1f3f5;
+  font-weight: bold;
+  text-align: left;
+}
+#note-viewer .tiptap table p {
+  margin: 0;
+}
+
 
 #comment-viewer {
   overflow-wrap: break-word;
@@ -271,7 +290,6 @@
 #comment-editor {
   font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
-  padding-left: 2.0rem;
   height: 100%;
 }
 #comment-editor h1 {
@@ -309,6 +327,9 @@
   line-height: 1.7;
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
+}
+#comment-editor p:first-child {
+  margin-top: 0rem;
 }
 #comment-editor code {
   font-family: var(--font-source-code-pro), var(--font-noto-sans-jp), Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
@@ -395,4 +416,16 @@
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+}
+
+/* Placeholder */
+#comment-editor .tiptap:not(.ProseMirror-focused) p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+#comment-editor .tiptap p.is-editor-empty:first-child {
+  margin-top: 0rem;
 }

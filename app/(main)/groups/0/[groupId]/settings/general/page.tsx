@@ -5,6 +5,7 @@ import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
 import { getGroupWithMembers } from '@/libs/prisma/group';
 import { Form } from './form';
+import { GroupType } from '@prisma/client';
 
 type Props = {
   params: { groupId: string };
@@ -22,7 +23,7 @@ export default async function Page({ params }: Props) {
   if (!group) return <Error404 />;
 
   if (
-    group.type === 'PRIVATE' &&
+    group.type === GroupType.PRIVATE &&
     !group.Members.find((member) => member.userId === userId && member.role === 'ADMIN')
   ) {
     return (

@@ -12,6 +12,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { FollowToggleButton, OtherMenuButton } from './form';
+import { GroupType } from '@prisma/client';
+import { FaBlog, FaLock } from 'react-icons/fa6';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -44,7 +46,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   const isFollowing = group.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
 
-  if (group.type === 'PRIVATE' && !group.Members.find((member) => member.userId === sessionUserId)) {
+  if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === sessionUserId)) {
     return (
       <div className="space-y-4">
         <Header group={group} isFollowing={false} />
@@ -78,7 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
-            <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">メンバー</div>
+            <div className="text-base font-semibold text-gray-800">メンバー</div>
             <div className="mt-2 ml-3 flex gap-1">
               {group.Members.map((member) => (
                 <div key={member.userId} className="flex items-center">
@@ -97,10 +99,10 @@ export default async function Page({ params, searchParams }: Props) {
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">固定されたノート</div>
+              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
             </div>
             <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800 font-noto-sans-jp">ノート</div>
+              <div className="text-base font-semibold text-gray-800">ノート</div>
               <StackList notes={notes} />
               <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
                 <SimplePagination page={page} lastPage={lastPage} />
@@ -113,7 +115,13 @@ export default async function Page({ params, searchParams }: Props) {
   );
 }
 
-function Header({ group, isFollowing }: { group: { id: string; name: string }; isFollowing: boolean }) {
+function Header({
+  group,
+  isFollowing,
+}: {
+  group: { id: string; name: string; about: string; type: string };
+  isFollowing: boolean;
+}) {
   return (
     <div className="bg-white rounded-md">
       <div className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}>
@@ -141,7 +149,19 @@ function Header({ group, isFollowing }: { group: { id: string; name: string }; i
         )}
       >
         <div className="flex justify-between gap-2">
-          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">{group.name}</div>
+          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">
+            {group.name}
+            {group.type === 'PRIVATE' && (
+              <span className="inline-block ml-4 text-2xl font-normal text-yellow-500">
+                <FaLock />
+              </span>
+            )}
+            {group.type === 'BLOG' && (
+              <span className="inline-block ml-4 text-2xl font-normal text-blue-500">
+                <FaBlog />
+              </span>
+            )}
+          </div>
           <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
             <div>
               <FollowToggleButton id={group.id} isFollowing={isFollowing} />
@@ -151,6 +171,11 @@ function Header({ group, isFollowing }: { group: { id: string; name: string }; i
             </div>
           </div>
         </div>
+        {group.about && (
+          <div className="mt-1 pb-3 px-3">
+            <p className="text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">{group.about}</p>
+          </div>
+        )}
       </div>
     </div>
   );

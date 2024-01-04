@@ -16,6 +16,8 @@ export interface ActionState {
   lastModified: number;
 }
 
+const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
+
 export async function addTopicAction(state: ActionState, formData: FormData): Promise<ActionState> {
   const session = await auth();
   const roles = await getRolesFromSession(session);
@@ -25,7 +27,7 @@ export async function addTopicAction(state: ActionState, formData: FormData): Pr
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
 
-  if (!roles.includes('Topic.Admin')) {
+  if (USER_ROLE_FOR_TOPIC_CREATION && !roles.includes(USER_ROLE_FOR_TOPIC_CREATION)) {
     return { status: 'error', target: null, message: 'Permission denied', lastModified: Date.now() };
   }
 

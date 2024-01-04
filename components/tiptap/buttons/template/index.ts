@@ -1,0 +1,1 @@
+export { ButtonTemplate } from './button';

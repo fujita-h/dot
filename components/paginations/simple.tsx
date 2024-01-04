@@ -24,9 +24,7 @@ export function SimplePagination({
       <div className="flex-1">
         {page > 1 && (
           <Link href={prevHref}>
-            <span className="text-sm font-noto-sans-jp font-semibold text-gray-500 hover:text-gray-700 hover:underline">
-              前へ
-            </span>
+            <span className="text-sm font-semibold text-gray-500 hover:text-gray-700 hover:underline">前へ</span>
           </Link>
         )}
       </div>
@@ -38,9 +36,7 @@ export function SimplePagination({
       <div className="flex-1 text-right">
         {page < lastPage && (
           <Link href={nextHref}>
-            <span className="text-sm font-noto-sans-jp font-semibold text-gray-500 hover:text-gray-700 hover:underline">
-              次へ
-            </span>
+            <span className="text-sm font-semibold text-gray-500 hover:text-gray-700 hover:underline">次へ</span>
           </Link>
         )}
       </div>

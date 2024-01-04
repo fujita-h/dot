@@ -14,7 +14,7 @@ export function AddTopicButton() {
     <>
       <button
         type="button"
-        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-noto-sans-jp font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
+        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
         onClick={() => setOpen(true)}
       >
         新しいトピックを作成する
@@ -92,10 +92,7 @@ export function AddTopicModal({ open, setOpen }: { open: boolean; setOpen: (open
                       <div className="">
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                           <div className="col-span-full">
-                            <label
-                              htmlFor="name"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                               名前
                             </label>
                             <div className="mt-1">
@@ -110,10 +107,7 @@ export function AddTopicModal({ open, setOpen }: { open: boolean; setOpen: (open
                             </div>
                           </div>
                           <div className="col-span-full">
-                            <label
-                              htmlFor="handle"
-                              className="block text-sm font-noto-sans-jp font-medium leading-6 text-gray-900"
-                            >
+                            <label htmlFor="handle" className="block text-sm font-medium leading-6 text-gray-900">
                               ハンドル
                             </label>
                             <div className="mt-1">

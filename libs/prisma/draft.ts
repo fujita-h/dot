@@ -75,6 +75,7 @@ export async function createDraft(
     });
 }
 
+// if you change this function, you should change getDraftsCount too
 export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: number) {
   return prisma.draft
     .findMany({
@@ -93,6 +94,7 @@ export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: nu
     });
 }
 
+// if you change this function, you should change getDraftsWithGroupTopic too
 export function getDraftsCount(userId: string) {
   return prisma.draft.count({ where: { userId: userId } }).catch((e) => {
     console.error(e);

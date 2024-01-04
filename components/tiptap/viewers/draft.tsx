@@ -22,6 +22,10 @@ import StrikeExtension from '@tiptap/extension-strike';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HistoryExtension from '@tiptap/extension-history';
+import TableExtension from '@tiptap/extension-table';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableCellExtension from '@tiptap/extension-table-cell';
 
 import '@/components/tiptap/tiptap.css';
 
@@ -51,6 +55,10 @@ export default function TipTapJsonDraftRenderer({ jsonString }: { jsonString: st
       LinkExtension.configure({
         openOnClick: false,
       }),
+      TableExtension,
+      TableRowExtension,
+      TableHeaderExtension,
+      TableCellExtension,
     ],
     editable: false,
   });
