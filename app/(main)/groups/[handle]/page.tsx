@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { FollowToggleButton, OtherMenuButton } from './form';
 import { GroupType } from '@prisma/client';
+import { FaBlog, FaLock } from 'react-icons/fa6';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -114,7 +115,7 @@ export default async function Page({ params, searchParams }: Props) {
   );
 }
 
-function Header({ group, isFollowing }: { group: { id: string; name: string }; isFollowing: boolean }) {
+function Header({ group, isFollowing }: { group: { id: string; name: string; type: string }; isFollowing: boolean }) {
   return (
     <div className="bg-white rounded-md">
       <div className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}>
@@ -142,7 +143,19 @@ function Header({ group, isFollowing }: { group: { id: string; name: string }; i
         )}
       >
         <div className="flex justify-between gap-2">
-          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">{group.name}</div>
+          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">
+            {group.name}
+            {group.type === 'PRIVATE' && (
+              <span className="inline-block ml-4 text-2xl font-normal text-yellow-500">
+                <FaLock />
+              </span>
+            )}
+            {group.type === 'BLOG' && (
+              <span className="inline-block ml-4 text-2xl font-normal text-blue-500">
+                <FaBlog />
+              </span>
+            )}
+          </div>
           <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
             <div>
               <FollowToggleButton id={group.id} isFollowing={isFollowing} />
