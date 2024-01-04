@@ -37,6 +37,7 @@ import { processAutoSave, processDraft, processPublish, textCompletion } from '.
 import {
   ButtonBold,
   ButtonBulletList,
+  ButtonCode,
   ButtonHeading1,
   ButtonHeading2,
   ButtonHeading3,
@@ -338,8 +339,9 @@ function EditorForm({
                   editor={editor}
                   id="button-strike"
                   prevButtonId="button-underline"
-                  nextButtonId={undefined}
+                  nextButtonId="utton-code"
                 />
+                <ButtonCode editor={editor} id="button-code" prevButtonId="button-strike" nextButtonId={undefined} />
               </div>
             </div>
           </div>
@@ -370,7 +372,8 @@ function EditorForm({
                 <ButtonBold editor={editor} id="bm-bold" prevButtonId="bm-textMenu" nextButtonId="bm-italic" />
                 <ButtonItalic editor={editor} id="bm-italic" prevButtonId="bm-bold" nextButtonId="bm-underline" />
                 <ButtonUnderline editor={editor} id="bm-underline" prevButtonId="bm-italic" nextButtonId="bm-strike" />
-                <ButtonStrike editor={editor} id="bm-strike" prevButtonId="bm-underline" nextButtonId={undefined} />
+                <ButtonStrike editor={editor} id="bm-strike" prevButtonId="bm-underline" nextButtonId="bm-code" />
+                <ButtonCode editor={editor} id="bm-code" prevButtonId="bm-strike" nextButtonId={undefined} />
               </div>
             </BubbleMenu>
           )}
