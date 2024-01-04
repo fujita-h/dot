@@ -39,7 +39,11 @@ export function CardList({ groups }: { groups: Group[] }) {
                     )}
                   </p>
                 </Link>
-                {group.about && <p className="mt-3 text-sm text-gray-500">{group.about}</p>}
+                {group.about && (
+                  <p className="mt-3 text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">
+                    {group.about}
+                  </p>
+                )}
               </div>
               <div className="hidden sm:flex flex-none  flex-col justify-center text-center">
                 <div>{group._count.Notes}</div>

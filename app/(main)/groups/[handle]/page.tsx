@@ -115,7 +115,13 @@ export default async function Page({ params, searchParams }: Props) {
   );
 }
 
-function Header({ group, isFollowing }: { group: { id: string; name: string; type: string }; isFollowing: boolean }) {
+function Header({
+  group,
+  isFollowing,
+}: {
+  group: { id: string; name: string; about: string; type: string };
+  isFollowing: boolean;
+}) {
   return (
     <div className="bg-white rounded-md">
       <div className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}>
@@ -165,6 +171,11 @@ function Header({ group, isFollowing }: { group: { id: string; name: string; typ
             </div>
           </div>
         </div>
+        {group.about && (
+          <div className="mt-1 pb-3 px-3">
+            <p className="text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">{group.about}</p>
+          </div>
+        )}
       </div>
     </div>
   );

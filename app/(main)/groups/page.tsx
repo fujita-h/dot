@@ -51,7 +51,7 @@ export default async function Page({
         <div>{isAllowedToCreateGroup && <CreateGroupButton />}</div>
       </div>
       <div className="mt-6 flex">
-        <div className="w-80 min-w-[320px]"></div>
+        {/* <div className="w-80 min-w-[320px]"></div> */}
         <div className="flex-1">
           <p className="text-base">最近投稿のあったグループ</p>
           <CardList groups={groups} />
