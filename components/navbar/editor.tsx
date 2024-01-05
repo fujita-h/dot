@@ -2,7 +2,7 @@
 
 import { SITE_NAME } from '@/libs/constants';
 import { Menu, Transition } from '@headlessui/react';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { useFormStatus } from 'react-dom';

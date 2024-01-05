@@ -4,7 +4,7 @@ import {
   ExclamationTriangleIcon,
   XCircleIcon,
 } from '@heroicons/react/20/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 

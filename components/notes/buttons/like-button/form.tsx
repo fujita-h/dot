@@ -1,7 +1,7 @@
 'use client';
 
 import { HeartIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { like, unLike } from './action';
 

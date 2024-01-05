@@ -1,7 +1,7 @@
 'use client';
 
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import throttle from 'lodash/throttle';
 import { useEffect, useState } from 'react';
 import { Link as Scroll } from 'react-scroll';

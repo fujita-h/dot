@@ -2,7 +2,7 @@
 
 import { Popover, Transition } from '@headlessui/react';
 import { ArchiveBoxIcon, FolderPlusIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { ChangeEvent, Fragment, useState } from 'react';
 import { stockDefault, stock, unStock, createLabel } from './action';
 import { set } from 'lodash';

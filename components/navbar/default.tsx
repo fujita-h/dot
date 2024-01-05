@@ -4,7 +4,7 @@ import { SITE_NAME } from '@/libs/constants';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Fragment, useRef } from 'react';

@@ -3,7 +3,7 @@
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DocumentDuplicateIcon, EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';

@@ -2,7 +2,7 @@
 
 import { Menu, Dialog, Transition } from '@headlessui/react';
 import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Fragment, useRef, useState } from 'react';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { deleteDraft } from './action';

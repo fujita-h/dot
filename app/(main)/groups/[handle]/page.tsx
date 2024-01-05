@@ -7,7 +7,7 @@ import { getUserIdFromSession } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getGroupFromHandle, getGroupWithMembersFollowedFromHandle } from '@/libs/prisma/group';
 import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';

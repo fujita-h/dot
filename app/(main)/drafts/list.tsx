@@ -1,7 +1,7 @@
 import { SimplePagination } from '@/components/paginations/simple';
 import { getDraftsCount, getDraftsWithGroupTopic } from '@/libs/prisma/draft';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 

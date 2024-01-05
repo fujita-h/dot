@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Inter } from 'next/font/google';
 import { SITE_NAME } from '@/libs/constants';
 const inter = Inter({ subsets: ['latin'] });

@@ -2,7 +2,7 @@
 
 import { Menu, Transition } from '@headlessui/react';
 import { Cog8ToothIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 import { setFollow } from './action';
