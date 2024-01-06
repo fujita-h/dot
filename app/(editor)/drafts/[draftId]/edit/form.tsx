@@ -1,57 +1,41 @@
 'use client';
 
+import { EditorNavbar } from '@/components/navbar';
 import { uploadFiles } from '@/components/tiptap/action';
-import ImageExtension from '@tiptap/extension-image';
-import LinkExtension from '@tiptap/extension-link';
-import PlaceholderExtension from '@tiptap/extension-placeholder';
-import UnderlineExtension from '@tiptap/extension-underline';
-import { BubbleMenu, Editor, EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
+import { BubbleMenuTable, BubbleMenuTextSelected, FloatingMenuNewLine, StickyMenu } from '@/components/tiptap/menus';
+import { TopicInput, TopicItem } from '@/components/topics/input';
+import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
+import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
+import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
+import CodeExtension from '@tiptap/extension-code';
 import CodeBlockExtension from '@tiptap/extension-code-block';
 import DocumentExtension from '@tiptap/extension-document';
+import DropcursorExtension from '@tiptap/extension-dropcursor';
+import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HardBreakExtension from '@tiptap/extension-hard-break';
 import HeadingExtension from '@tiptap/extension-heading';
+import HistoryExtension from '@tiptap/extension-history';
 import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
+import ImageExtension from '@tiptap/extension-image';
+import ItalicExtension from '@tiptap/extension-italic';
+import LinkExtension from '@tiptap/extension-link';
 import ListItemExtension from '@tiptap/extension-list-item';
 import OrderedListExtension from '@tiptap/extension-ordered-list';
 import ParagraphExtension from '@tiptap/extension-paragraph';
-import TextExtension from '@tiptap/extension-text';
-import BoldExtension from '@tiptap/extension-bold';
-import CodeExtension from '@tiptap/extension-code';
-import ItalicExtension from '@tiptap/extension-italic';
+import PlaceholderExtension from '@tiptap/extension-placeholder';
 import StrikeExtension from '@tiptap/extension-strike';
-import DropcursorExtension from '@tiptap/extension-dropcursor';
-import GapcursorExtension from '@tiptap/extension-gapcursor';
-import HistoryExtension from '@tiptap/extension-history';
 import TableExtension from '@tiptap/extension-table';
-import TableRowExtension from '@tiptap/extension-table-row';
-import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableCellExtension from '@tiptap/extension-table-cell';
-import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
-import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
-import { TextSelection } from '@tiptap/pm/state';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TextExtension from '@tiptap/extension-text';
+import UnderlineExtension from '@tiptap/extension-underline';
+import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
-import {
-  ButtonBold,
-  ButtonBulletList,
-  ButtonCode,
-  ButtonHeading1,
-  ButtonHeading2,
-  ButtonHeading3,
-  ButtonItalic,
-  ButtonOrderedList,
-  ButtonParagraph,
-  ButtonSelectText,
-  ButtonStrike,
-  ButtonTable,
-  ButtonUnderline,
-  ButtonCodeBlock,
-} from '@/components/tiptap/buttons';
-import { EditorNavbar } from '@/components/navbar';
-import { TopicItem, TopicInput } from '@/components/topics/input';
 
 import '@/components/tiptap/tiptap.css';
 import './style.css';
@@ -308,145 +292,18 @@ function EditorForm({
       </div>
       <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
         {editor && (
-          <div className="bg-gray-100 sticky top-0 left-0 z-10 pt-2">
-            <div className="bg-white p-2 border rounded-t-md border-gray-300">
-              <div className="flex text-2xl">
-                <ButtonSelectText
-                  editor={editor}
-                  id="button-textMenu"
-                  prevButtonId={undefined}
-                  nextButtonId="button-bold"
-                />
-                <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
-                <ButtonBold
-                  editor={editor}
-                  id="button-bold"
-                  prevButtonId="button-textMenu"
-                  nextButtonId="button-italic"
-                />
-                <ButtonItalic
-                  editor={editor}
-                  id="button-italic"
-                  prevButtonId="button-bold"
-                  nextButtonId="button-underline"
-                />
-                <ButtonUnderline
-                  editor={editor}
-                  id="button-underline"
-                  prevButtonId="button-italic"
-                  nextButtonId="button-strike"
-                />
-                <ButtonStrike
-                  editor={editor}
-                  id="button-strike"
-                  prevButtonId="button-underline"
-                  nextButtonId="utton-code"
-                />
-                <ButtonCode editor={editor} id="button-code" prevButtonId="button-strike" nextButtonId="button-table" />
-                <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
-                <ButtonTable editor={editor} id="button-table" prevButtonId="button-code" nextButtonId={undefined} />
+          <>
+            <StickyMenu editor={editor} />
+            <div className="px-2 pb-1">
+              <BubbleMenuTextSelected editor={editor} />
+              <BubbleMenuTable editor={editor} />
+              <FloatingMenuNewLine editor={editor} />
+              <div id="draft-editor">
+                <EditorContent editor={editor} />
               </div>
             </div>
-          </div>
+          </>
         )}
-
-        <div className="px-2 pb-1">
-          {editor && (
-            <BubbleMenu
-              tippyOptions={{ duration: 200, placement: 'top-start', maxWidth: 'none' }}
-              editor={editor}
-              shouldShow={({ editor, view, state, oldState, from, to }) => {
-                // original shouldShow function
-                const { doc, selection } = state;
-                const { empty } = selection;
-                const isEmptyTextBlock = !doc.textBetween(from, to).length && state.selection instanceof TextSelection;
-                const hasEditorFocus = view.hasFocus();
-                if (!hasEditorFocus || empty || isEmptyTextBlock || !editor.isEditable) {
-                  return false;
-                }
-                // custom shouldShow function
-                if (editor.isActive('image')) return false;
-                return true;
-              }}
-            >
-              <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 ml-2 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
-                <ButtonSelectText editor={editor} id="bm-textMenu" prevButtonId={undefined} nextButtonId="bm-bold" />
-                <div className="border-l-2 border-gray-400/30 ml-1 pl-1"></div>
-                <ButtonBold editor={editor} id="bm-bold" prevButtonId="bm-textMenu" nextButtonId="bm-italic" />
-                <ButtonItalic editor={editor} id="bm-italic" prevButtonId="bm-bold" nextButtonId="bm-underline" />
-                <ButtonUnderline editor={editor} id="bm-underline" prevButtonId="bm-italic" nextButtonId="bm-strike" />
-                <ButtonStrike editor={editor} id="bm-strike" prevButtonId="bm-underline" nextButtonId="bm-code" />
-                <ButtonCode editor={editor} id="bm-code" prevButtonId="bm-strike" nextButtonId={undefined} />
-              </div>
-            </BubbleMenu>
-          )}
-          {editor && (
-            <FloatingMenu
-              pluginKey="newLineFloatingMenu"
-              tippyOptions={{ duration: 200 }}
-              editor={editor}
-              shouldShow={({ editor, view, state, oldState }) => {
-                const { selection } = state;
-                const { $anchor, empty } = selection;
-                const isRootDepth = $anchor.depth === 1;
-                const isEmptyTextBlock =
-                  $anchor.parent.isTextblock && !$anchor.parent.type.spec.code && !$anchor.parent.textContent;
-                if (!view.hasFocus() || !empty || !isRootDepth || !isEmptyTextBlock || !editor?.isEditable) {
-                  return false;
-                }
-                return true;
-              }}
-            >
-              <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 ml-2 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
-                <ButtonParagraph
-                  editor={editor}
-                  id="fm-paragraph"
-                  prevButtonId={undefined}
-                  nextButtonId="fm-heading1"
-                />
-                <div className="border-l-2 border-gray-400/30 ml-1 pl-1"></div>
-                <ButtonHeading1
-                  editor={editor}
-                  id="fm-heading1"
-                  prevButtonId="fm-paragraph"
-                  nextButtonId="fm-heading2"
-                />
-                <ButtonHeading2
-                  editor={editor}
-                  id="fm-heading2"
-                  prevButtonId="fm-heading1"
-                  nextButtonId="fm-heading3"
-                />
-                <ButtonHeading3
-                  editor={editor}
-                  id="fm-heading3"
-                  prevButtonId="fm-heading2"
-                  nextButtonId="fm-bulletList"
-                />
-                <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-                <ButtonBulletList
-                  editor={editor}
-                  id="fm-bulletList"
-                  prevButtonId="fm-heading3"
-                  nextButtonId="fm-orderedList"
-                />
-                <ButtonOrderedList
-                  editor={editor}
-                  id="fm-orderedList"
-                  prevButtonId="fm-bulletList"
-                  nextButtonId="fm-table"
-                />
-                <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-                <ButtonTable editor={editor} id="fm-table" prevButtonId="fm-orderedList" nextButtonId="fm-codeBlock" />
-                <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-                <ButtonCodeBlock editor={editor} id="fm-codeBlock" prevButtonId="fm-table" nextButtonId={undefined} />
-              </div>
-            </FloatingMenu>
-          )}
-          <div id="draft-editor">
-            <EditorContent editor={editor} />
-          </div>
-        </div>
       </div>
     </div>
   );

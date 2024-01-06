@@ -8,5 +8,5 @@ export { ButtonOrderedList } from './ordered-list';
 export { ButtonParagraph } from './paragraph';
 export { ButtonSelectText } from './select-text';
 export { ButtonStrike } from './strike';
-export { ButtonTable } from './table';
+export * from './table';
 export { ButtonUnderline } from './underline';

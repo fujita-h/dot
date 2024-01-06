@@ -1,10 +1,10 @@
 'use client';
 
 import { Editor } from '@tiptap/react';
-import { ButtonTemplate } from './template';
-import { LuTable } from 'react-icons/lu';
+import { ButtonTemplate } from '../template';
+import { RiDeleteBin2Line } from 'react-icons/ri';
 
-export function ButtonTable({
+export function ButtonTableDelete({
   editor,
   id,
   prevButtonId,
@@ -18,12 +18,12 @@ export function ButtonTable({
   return (
     <ButtonTemplate
       id={id}
-      active={editor.isActive('table')}
-      onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+      active={false}
+      onClick={() => editor.chain().focus().deleteTable().run()}
       prevButtonId={prevButtonId}
       nextButtonId={nextButtonId}
     >
-      <LuTable />
+      <RiDeleteBin2Line />
     </ButtonTemplate>
   );
 }
