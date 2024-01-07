@@ -1,35 +1,36 @@
 'use client';
 
-import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import LinkExtension from '@tiptap/extension-link';
-import UnderlineExtension from '@tiptap/extension-underline';
-import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
+import { createColGroup } from '@/libs/tiptap/utilities/createColGroup';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
+import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
+import CodeExtension from '@tiptap/extension-code';
 import CodeBlockExtension from '@tiptap/extension-code-block';
 import DocumentExtension from '@tiptap/extension-document';
+import DropcursorExtension from '@tiptap/extension-dropcursor';
+import GapcursorExtension from '@tiptap/extension-gapcursor';
 import HardBreakExtension from '@tiptap/extension-hard-break';
 import HeadingExtension from '@tiptap/extension-heading';
+import HistoryExtension from '@tiptap/extension-history';
 import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
+import ItalicExtension from '@tiptap/extension-italic';
+import LinkExtension from '@tiptap/extension-link';
 import ListItemExtension from '@tiptap/extension-list-item';
 import OrderedListExtension from '@tiptap/extension-ordered-list';
 import ParagraphExtension from '@tiptap/extension-paragraph';
-import TextExtension from '@tiptap/extension-text';
-import BoldExtension from '@tiptap/extension-bold';
-import CodeExtension from '@tiptap/extension-code';
-import ItalicExtension from '@tiptap/extension-italic';
 import StrikeExtension from '@tiptap/extension-strike';
-import DropcursorExtension from '@tiptap/extension-dropcursor';
-import GapcursorExtension from '@tiptap/extension-gapcursor';
-import HistoryExtension from '@tiptap/extension-history';
 import TableExtension from '@tiptap/extension-table';
-import TableRowExtension from '@tiptap/extension-table-row';
-import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableCellExtension from '@tiptap/extension-table-cell';
-import { createColGroup } from '@/libs/tiptap/utilities/createColGroup';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TextExtension from '@tiptap/extension-text';
+import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
+import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
+
+import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({

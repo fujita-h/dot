@@ -1,18 +1,18 @@
 import { TextSelection } from '@tiptap/pm/state';
 import { CellSelection } from '@tiptap/pm/tables';
-import { Editor, BubbleMenu } from '@tiptap/react';
+import { BubbleMenu, Editor } from '@tiptap/react';
 import {
-  ButtonHeaderRow,
   ButtonHeaderCol,
-  ButtonTableRowAddBefore,
-  ButtonTableRowAddAfter,
-  ButtonTableRowDelete,
-  ButtonTableColAddBefore,
+  ButtonHeaderRow,
   ButtonTableColAddAfter,
+  ButtonTableColAddBefore,
   ButtonTableColDelete,
-  ButtonTableSplit,
-  ButtonTableMerge,
   ButtonTableDelete,
+  ButtonTableMerge,
+  ButtonTableRowAddAfter,
+  ButtonTableRowAddBefore,
+  ButtonTableRowDelete,
+  ButtonTableSplit,
 } from '../buttons';
 
 export function BubbleMenuTable({ editor }: { editor: Editor }) {

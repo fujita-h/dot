@@ -11,6 +11,7 @@ import {
 } from '@/components/tiptap/menus';
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
+import ImageExtension from '@/libs/tiptap/extensions/image';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
@@ -24,7 +25,6 @@ import HardBreakExtension from '@tiptap/extension-hard-break';
 import HeadingExtension from '@tiptap/extension-heading';
 import HistoryExtension from '@tiptap/extension-history';
 import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
-import ImageExtension from '@/libs/tiptap/extensions/image';
 import ItalicExtension from '@tiptap/extension-italic';
 import LinkExtension from '@tiptap/extension-link';
 import ListItemExtension from '@tiptap/extension-list-item';
