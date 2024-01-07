@@ -2,7 +2,7 @@
 
 import '@/components/tiptap/tiptap.css';
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
-import ImageExtension from '@tiptap/extension-image';
+import ImageExtension from '@/libs/tiptap/extensions/image';
 import LinkExtension from '@tiptap/extension-link';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
@@ -72,20 +72,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       GapcursorExtension,
       HistoryExtension,
       UnderlineExtension,
-      ImageExtension.extend({
-        renderHTML({ node, HTMLAttributes }) {
-          return [
-            'a',
-            {
-              href: node.attrs.src,
-              class: 'note-image-anchor',
-              target: '_blank',
-              rel: 'noopener noreferrer',
-            },
-            ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)],
-          ];
-        },
-      }),
+      ImageExtension,
       LinkExtension,
       TableExtension.extend({
         renderHTML({ node, HTMLAttributes }) {

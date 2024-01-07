@@ -1,7 +1,7 @@
 'use client';
 
 import '@/components/tiptap/tiptap.css';
-import ImageExtension from '@tiptap/extension-image';
+import ImageExtension from '@/libs/tiptap/extensions/image';
 import LinkExtension from '@tiptap/extension-link';
 import PlaceholderExtension from '@tiptap/extension-placeholder';
 import UnderlineExtension from '@tiptap/extension-underline';

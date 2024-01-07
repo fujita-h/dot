@@ -1,6 +1,6 @@
 'use client';
 
-import ImageExtension from '@tiptap/extension-image';
+import ImageExtension from '@/libs/tiptap/extensions/image';
 import LinkExtension from '@tiptap/extension-link';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';

@@ -1,3 +1,4 @@
+export { BubbleMenuImage } from './bubble-menu-image';
 export { BubbleMenuTable } from './bubble-menu-table';
 export { BubbleMenuTextSelected } from './bubble-menu-text-selected';
 export { FloatingMenuNewLine } from './floating-menu-new-line';

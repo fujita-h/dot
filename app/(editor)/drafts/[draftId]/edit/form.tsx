@@ -2,7 +2,13 @@
 
 import { EditorNavbar } from '@/components/navbar';
 import { uploadFiles } from '@/components/tiptap/action';
-import { BubbleMenuTable, BubbleMenuTextSelected, FloatingMenuNewLine, StickyMenu } from '@/components/tiptap/menus';
+import {
+  BubbleMenuImage,
+  BubbleMenuTable,
+  BubbleMenuTextSelected,
+  FloatingMenuNewLine,
+  StickyMenu,
+} from '@/components/tiptap/menus';
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
@@ -18,7 +24,7 @@ import HardBreakExtension from '@tiptap/extension-hard-break';
 import HeadingExtension from '@tiptap/extension-heading';
 import HistoryExtension from '@tiptap/extension-history';
 import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
-import ImageExtension from '@tiptap/extension-image';
+import ImageExtension from '@/libs/tiptap/extensions/image';
 import ItalicExtension from '@tiptap/extension-italic';
 import LinkExtension from '@tiptap/extension-link';
 import ListItemExtension from '@tiptap/extension-list-item';
@@ -297,6 +303,7 @@ function EditorForm({
             <div className="px-2 pb-1">
               <BubbleMenuTextSelected editor={editor} />
               <BubbleMenuTable editor={editor} />
+              <BubbleMenuImage editor={editor} />
               <FloatingMenuNewLine editor={editor} />
               <div id="draft-editor">
                 <EditorContent editor={editor} />
