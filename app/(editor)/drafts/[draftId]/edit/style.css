@@ -171,18 +171,25 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
 }
-#draft-editor img {
+
+/* Image */
+#draft-editor div.image-container {
+  max-width: 100%;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+#draft-editor div.image-container img {
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
-  margin-top: 1.2rem;
-  margin-bottom: 0.6rem;
 }
-#draft-editor div.ProseMirror-selectednode > img {
+#draft-editor div.ProseMirror-selectednode.image-container img {
   box-shadow: 0 0 0 4px #aaa;
 }
-#draft-editor img + p {
+#draft-editor div.image-container p.image-caption {
+  font-size: 0.9rem;
   margin-top: 0rem;
+  margin-bottom: 0rem;
 }
 
 /* Placeholder */
