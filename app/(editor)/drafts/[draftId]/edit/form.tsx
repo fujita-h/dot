@@ -297,6 +297,11 @@ function EditorForm({
         </div>
       </div>
       <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
+        {!editor && (
+          <div className="mt-2 px-2 py-16">
+            <div className="text-center text-2xl text-gray-400">Loading...</div>
+          </div>
+        )}
         {editor && (
           <>
             <StickyMenu editor={editor} />
