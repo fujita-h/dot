@@ -1,7 +1,6 @@
 import { Editor, BubbleMenu } from '@tiptap/react';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 export function BubbleMenuImage({ editor }: { editor: Editor }) {
-  const captionRef = useRef<HTMLInputElement>(null);
   const caption = (editor.getAttributes('image').caption as string) ?? '';
   const width = (editor.getAttributes('image').width as string) ?? '100';
 
@@ -44,7 +43,6 @@ export function BubbleMenuImage({ editor }: { editor: Editor }) {
           <div className="my-auto space-x-2">
             <input
               type="text"
-              ref={captionRef}
               className="w-80 rounded-md text-xs px-2 py-1 border-gray-300"
               value={captionText}
               onChange={(e) => {
@@ -55,11 +53,7 @@ export function BubbleMenuImage({ editor }: { editor: Editor }) {
               type="button"
               className="text-sm text-gray-900 hover:text-gray-500"
               onClick={() => {
-                editor
-                  .chain()
-                  .focus()
-                  .updateAttributes('image', { caption: captionRef.current?.value })
-                  .run();
+                editor.chain().focus().updateAttributes('image', { caption: captionText }).run();
               }}
             >
               save
