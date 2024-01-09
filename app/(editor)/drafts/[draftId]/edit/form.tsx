@@ -13,6 +13,7 @@ import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import ImageExtension from '@/libs/tiptap/extensions/image';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
+import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
@@ -107,6 +108,9 @@ export function Form({
       TableHeaderExtension,
       TableCellExtension,
       ImageExtension,
+      SelectionMarkerExtension.configure({
+        HTMLAttributes: { class: 'selection-marker' },
+      }),
       UploadImageExtension.configure({
         uploadImageFunc: uploadFiles,
       }),

@@ -1,7 +1,15 @@
 import { TextSelection } from '@tiptap/pm/state';
 import { CellSelection } from '@tiptap/pm/tables';
-import { Editor, BubbleMenu } from '@tiptap/react';
-import { ButtonSelectText, ButtonBold, ButtonItalic, ButtonUnderline, ButtonStrike, ButtonCode } from '../buttons';
+import { BubbleMenu, Editor } from '@tiptap/react';
+import {
+  ButtonBold,
+  ButtonCode,
+  ButtonItalic,
+  ButtonLink,
+  ButtonSelectText,
+  ButtonStrike,
+  ButtonUnderline,
+} from '../buttons';
 
 export function BubbleMenuTextSelected({ editor }: { editor: Editor }) {
   return (
@@ -34,7 +42,8 @@ export function BubbleMenuTextSelected({ editor }: { editor: Editor }) {
         <ButtonItalic editor={editor} id="bm-italic" prevButtonId="bm-bold" nextButtonId="bm-underline" />
         <ButtonUnderline editor={editor} id="bm-underline" prevButtonId="bm-italic" nextButtonId="bm-strike" />
         <ButtonStrike editor={editor} id="bm-strike" prevButtonId="bm-underline" nextButtonId="bm-code" />
-        <ButtonCode editor={editor} id="bm-code" prevButtonId="bm-strike" nextButtonId={undefined} />
+        <ButtonCode editor={editor} id="bm-code" prevButtonId="bm-strike" nextButtonId="bm-link" />
+        <ButtonLink editor={editor} id="bm-link" prevButtonId="bm-code" nextButtonId={undefined} />
       </div>
     </BubbleMenu>
   );

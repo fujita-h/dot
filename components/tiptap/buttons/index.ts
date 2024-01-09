@@ -4,6 +4,7 @@ export { ButtonCode } from './code';
 export { ButtonCodeBlock } from './code-block';
 export { ButtonHeading1, ButtonHeading2, ButtonHeading3 } from './heading';
 export { ButtonItalic } from './italic';
+export { ButtonLink } from './link';
 export { ButtonOrderedList } from './ordered-list';
 export { ButtonParagraph } from './paragraph';
 export { ButtonSelectText } from './select-text';
