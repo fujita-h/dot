@@ -5,7 +5,7 @@ import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Combobox } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { useState } from 'react';
 
 export interface TopicItem {

@@ -3,7 +3,7 @@
 import Alert from '@/components/alerts/simple';
 import { Dialog, RadioGroup, Transition } from '@headlessui/react';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Fragment, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, createGroupAction } from './action';

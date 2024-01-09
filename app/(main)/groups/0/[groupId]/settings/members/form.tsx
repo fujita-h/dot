@@ -3,7 +3,7 @@
 import { Combobox, Dialog, RadioGroup, Transition } from '@headlessui/react';
 import { ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ArrowPathIcon, ExclamationTriangleIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Fragment, useEffect, useState } from 'react';
 import { addMemberToGroup, removeMemberFromGroup, updateMemberRole } from './action';
 

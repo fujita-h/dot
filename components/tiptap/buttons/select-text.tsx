@@ -3,7 +3,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Editor } from '@tiptap/react';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Fragment } from 'react';
 import { BsTextParagraph } from 'react-icons/bs';
 import { LuHeading1, LuHeading2, LuHeading3, LuTable } from 'react-icons/lu';

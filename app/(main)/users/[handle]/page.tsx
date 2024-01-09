@@ -12,7 +12,7 @@ import {
   getNotesWithUserGroupTopics,
 } from '@/libs/prisma/note';
 import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { Metadata } from 'next';
 import { FollowToggleButton } from './form';
 import { redirect } from 'next/navigation';

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import type { Metadata } from 'next';
 import { SITE_NAME } from '@/libs/constants';
 import { Inter, Noto_Sans_JP, Source_Code_Pro } from 'next/font/google';

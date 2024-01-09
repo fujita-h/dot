@@ -70,6 +70,8 @@ const AzureOpenAIExtension = Extension.create({
 
             // if tab completion is disabled, skip it.
             if (!this.options.tabCompletion) return false;
+            // if table is active, tab key is used for table navigation. skip it.
+            if (this.editor.isActive('table')) return false;
             // if node is not target type, skip it.
             if (!this.options.types.includes(node.type.name)) return false;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { setFollow } from './action';
 
 export function FollowToggleButton({ id, isFollowing }: { id: string; isFollowing: boolean }) {

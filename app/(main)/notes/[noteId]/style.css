@@ -112,21 +112,25 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #ddd;
 }
-#note-viewer img {
+
+/* Image */
+#note-viewer div.image-container {
+  max-width: 100%;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+#note-viewer div.image-container img {
   display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
-  margin-top: 1.2rem;
-  margin-bottom: 0.6rem;
 }
-#draft-editor img + p {
+#note-viewer div.image-container p.image-caption {
+  font-size: 0.9rem;
   margin-top: 0rem;
+  margin-bottom: 0rem;
 }
 
-#note-viewer a.note-image-anchor + p {
-  margin-top: 0rem;
-}
 /* Table */
 #note-viewer .tiptap .table-container {
   overflow-x: auto;
