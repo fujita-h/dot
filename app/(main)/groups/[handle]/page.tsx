@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { FollowToggleButton, OtherMenuButton } from './form';
 import { GroupType } from '@prisma/client';
-import { FaBlog, FaLock } from 'react-icons/fa6';
+import { FaBlog, FaChessRook, FaLock } from 'react-icons/fa6';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -151,12 +151,17 @@ function Header({
         <div className="flex justify-between gap-2">
           <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">
             {group.name}
-            {group.type === 'PRIVATE' && (
+            {group.type === GroupType.PRIVATE && (
               <span className="inline-block ml-4 text-2xl font-normal text-yellow-500">
                 <FaLock />
               </span>
             )}
-            {group.type === 'BLOG' && (
+            {group.type === GroupType.COMMUNITY && (
+              <span className="inline-block ml-4 text-2xl font-normal text-green-500">
+                <FaChessRook />
+              </span>
+            )}
+            {group.type === GroupType.BLOG && (
               <span className="inline-block ml-4 text-2xl font-normal text-blue-500">
                 <FaBlog />
               </span>
