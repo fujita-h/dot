@@ -54,11 +54,21 @@ export function getStockedUsersCount(noteId: string) {
     });
 }
 
-export function getStockedNotesCount(userId: string) {
+export function getStockedNotesCount(authorizedRequestUserId: string) {
   return prisma.stock
     .findMany({
       select: { noteId: true },
-      where: { userId },
+      where: {
+        userId: authorizedRequestUserId,
+        Note: {
+          OR: [
+            { Group: null },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+            { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.COMMUNITY } },
+          ],
+        },
+      },
       distinct: ['noteId'],
     })
     .then((res) => res.length)
@@ -69,7 +79,7 @@ export function getStockedNotesCount(userId: string) {
 }
 
 export function getStockedNotesWithUserGroupTopicsByLabelId(
-  userId: string,
+  authorizedRequestUserId: string,
   labelId: string | undefined,
   take?: number,
   skip?: number
@@ -77,13 +87,14 @@ export function getStockedNotesWithUserGroupTopicsByLabelId(
   return prisma.stock
     .findMany({
       where: {
-        userId,
+        userId: authorizedRequestUserId,
         labelId,
         Note: {
           OR: [
             { Group: null },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
-            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
+            { Group: { type: GroupType.COMMUNITY } },
           ],
         },
       },

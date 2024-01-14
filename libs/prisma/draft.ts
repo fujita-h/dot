@@ -3,11 +3,30 @@
 import blob from '@/libs/azure/storeage-blob/instance';
 import prisma from '@/libs/prisma/instance';
 import { init as initCuid } from '@paralleldrive/cuid2';
+import { checkPostableGroup } from './group';
 
 const cuid = initCuid({ length: 24 });
 
+/**
+ * Creates a draft with the specified properties.
+ *
+ * @param authorizedRequestUserId - The ID of the user creating the draft. This userID must match the ID of the authorized user.
+ * @param options - The optional properties for the draft.
+ * @param options.groupId - The ID of the group the draft belongs to.
+ * @param options.relatedNoteId - The ID of the related note.
+ * @param options.title - The title of the draft.
+ * @param options.body - The body of the draft.
+ * @param options.canPostComment - Indicates whether the user can post comments on the draft.
+ * @param options.Topics - An array of topics associated with the draft.
+ * @param options.Topics[].Topic.id - The ID of the topic.
+ * @param options.Topics[].order - The order of the topic.
+ * @param options.userName - The username of the user.
+ * @param options.oid - The OID of the draft.
+ * @returns A promise that resolves to the created draft.
+ * @throws If the user cannot post to the group or an error occurs while creating the draft.
+ */
 export async function createDraft(
-  userId: string,
+  authorizedRequestUserId: string,
   {
     groupId,
     relatedNoteId,
@@ -28,18 +47,26 @@ export async function createDraft(
     oid?: string;
   } = {}
 ) {
+  //check if user can post to the group
+  if (groupId) {
+    const check = checkPostableGroup(authorizedRequestUserId, groupId);
+    if (!check) {
+      throw new Error('User cannot post to the group');
+    }
+  }
+
   const draftId = cuid();
   let blobName = undefined;
 
   if (body) {
     const metadata = {
-      userId: userId,
+      userId: authorizedRequestUserId,
       groupId: groupId || 'n/a',
       userName: userName ? encodeURI(userName) : 'n/a',
       oid: oid || '',
     };
     const tags = {
-      userId: userId,
+      userId: authorizedRequestUserId,
       groupId: groupId || 'n/a',
       oid: oid || 'n/a',
     };
@@ -58,7 +85,7 @@ export async function createDraft(
     .create({
       data: {
         id: draftId,
-        userId: userId,
+        userId: authorizedRequestUserId,
         groupId: groupId,
         relatedNoteId: relatedNoteId,
         title: title,

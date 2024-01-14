@@ -11,9 +11,9 @@ import clsx from 'clsx/lite';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { FollowToggleButton, OtherMenuButton } from './form';
+import { FollowToggleButton, JoinToggleButton, OtherMenuButton } from './form';
 import { GroupType } from '@prisma/client';
-import { FaBlog, FaLock } from 'react-icons/fa6';
+import { FaBlog, FaChessRook, FaLock } from 'react-icons/fa6';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -45,11 +45,12 @@ export default async function Page({ params, searchParams }: Props) {
   if (!group) return <Error404 />;
 
   const isFollowing = group.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
+  const isJoined = group.Members.find((member) => member.userId === sessionUserId) ? true : false;
 
   if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === sessionUserId)) {
     return (
       <div className="space-y-4">
-        <Header group={group} isFollowing={false} />
+        <Header group={group} isFollowing={false} isJoined={isJoined} />
         <div className="md:flex md:gap-1">
           <div className="mt-4 flex-1 items-center">
             <div>あなたにはこのグループを参照する権限がありません</div>
@@ -76,7 +77,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   return (
     <div className="space-y-4">
-      <Header group={group} isFollowing={isFollowing} />
+      <Header group={group} isFollowing={isFollowing} isJoined={isJoined} />
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2">
           <div>
@@ -118,9 +119,11 @@ export default async function Page({ params, searchParams }: Props) {
 function Header({
   group,
   isFollowing,
+  isJoined,
 }: {
   group: { id: string; name: string; about: string; type: string };
   isFollowing: boolean;
+  isJoined: boolean;
 }) {
   return (
     <div className="bg-white rounded-md">
@@ -151,18 +154,28 @@ function Header({
         <div className="flex justify-between gap-2">
           <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">
             {group.name}
-            {group.type === 'PRIVATE' && (
+            {group.type === GroupType.PRIVATE && (
               <span className="inline-block ml-4 text-2xl font-normal text-yellow-500">
                 <FaLock />
               </span>
             )}
-            {group.type === 'BLOG' && (
+            {group.type === GroupType.BLOG && (
               <span className="inline-block ml-4 text-2xl font-normal text-blue-500">
                 <FaBlog />
               </span>
             )}
+            {group.type === GroupType.COMMUNITY && (
+              <span className="inline-block ml-4 text-2xl font-normal text-green-500">
+                <FaChessRook />
+              </span>
+            )}
           </div>
           <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
+            {group.type === GroupType.COMMUNITY && (
+              <div>
+                <JoinToggleButton id={group.id} isJoined={isJoined} />
+              </div>
+            )}
             <div>
               <FollowToggleButton id={group.id} isFollowing={isFollowing} />
             </div>
