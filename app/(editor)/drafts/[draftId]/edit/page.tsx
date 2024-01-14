@@ -1,11 +1,12 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { Error404, Error500 } from '@/components/error';
+import { auth } from '@/libs/auth';
 import { getUserIdFromSession } from '@/libs/auth/utils';
+import blob from '@/libs/azure/storeage-blob/instance';
 import { getDraftWithGroupTopics } from '@/libs/prisma/draft';
 import { getTopics } from '@/libs/prisma/topic';
-import { auth } from '@/libs/auth';
+import { getUserSetting } from '@/libs/prisma/user-setting';
 import { Form } from './form';
-import blob from '@/libs/azure/storeage-blob/instance';
 
 export default async function Page({ params }: { params: { draftId: string } }) {
   const session = await auth();
@@ -15,7 +16,8 @@ export default async function Page({ params }: { params: { draftId: string } }) 
   if (status === 404 || !userId) return <Error404 />;
   if (!params.draftId) return <Error404 />;
 
-  const [draft, topicOptions] = await Promise.all([
+  const [setting, draft, topicOptions] = await Promise.all([
+    getUserSetting(userId).catch((e) => ({ editorShowNewLineFloatingMenu: true })),
     getDraftWithGroupTopics(userId, params.draftId).catch((e) => null),
     getTopics().catch((e) => []),
   ]);
@@ -32,6 +34,7 @@ export default async function Page({ params }: { params: { draftId: string } }) 
 
   return (
     <Form
+      setting={setting}
       draftId={draft.id}
       groupId={draft.groupId || undefined}
       relatedNoteId={draft.relatedNoteId || undefined}

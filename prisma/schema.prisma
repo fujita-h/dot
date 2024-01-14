@@ -49,11 +49,12 @@ model UserClaim {
 }
 
 model UserSetting {
-  id        String   @id @default(cuid())
-  userId    String   @unique @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                            String   @id @default(cuid())
+  userId                        String   @unique @map("user_id")
+  createdAt                     DateTime @default(now()) @map("created_at")
+  updatedAt                     DateTime @updatedAt @map("updated_at")
+  editorShowNewLineFloatingMenu Boolean  @default(true) @map("editor_show_floating_menu_new_line")
+  User                          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_setting")
 }

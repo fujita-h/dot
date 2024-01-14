@@ -12,8 +12,8 @@ import {
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
+import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
@@ -43,11 +43,13 @@ import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
+import type { UserSetting } from './types';
 
 import '@/components/tiptap/tiptap.css';
 import './style.css';
 
 export function Form({
+  setting,
   draftId,
   groupId,
   relatedNoteId,
@@ -56,6 +58,7 @@ export function Form({
   topics,
   topicOptions,
 }: {
+  setting: UserSetting;
   draftId: string;
   groupId: string | undefined;
   relatedNoteId: string | undefined;
@@ -190,6 +193,7 @@ export function Form({
         <input type="hidden" name="groupId" value={groupId} />
         <input type="hidden" name="relatedNoteId" value={relatedNoteId} />
         <EditorForm
+          setting={setting}
           title={titleState}
           topics={topicsState}
           topicOptions={topicOptions}
@@ -216,6 +220,7 @@ export function Form({
 }
 
 function EditorForm({
+  setting,
   title,
   topics,
   topicOptions,
@@ -223,6 +228,7 @@ function EditorForm({
   onTitleChange,
   onTopicsChange,
 }: {
+  setting: UserSetting;
   title: string;
   topics: TopicItem[];
   topicOptions: TopicItem[];
@@ -313,7 +319,7 @@ function EditorForm({
               <BubbleMenuTextSelected editor={editor} />
               <BubbleMenuTable editor={editor} />
               <BubbleMenuImage editor={editor} />
-              <FloatingMenuNewLine editor={editor} />
+              {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
               <div id="draft-editor">
                 <EditorContent editor={editor} />
               </div>
