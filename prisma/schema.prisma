@@ -114,6 +114,7 @@ model Group {
 enum GroupType {
   PRIVATE
   BLOG
+  COMMUNITY
 }
 
 model Membership {
