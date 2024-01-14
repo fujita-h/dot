@@ -33,14 +33,14 @@ export function CardList({ groups }: { groups: Group[] }) {
                         <FaLock />
                       </span>
                     )}
-                    {group.type === GroupType.COMMUNITY && (
-                      <span className="inline-block ml-2 text-base font-normal text-green-500">
-                        <FaChessRook />
-                      </span>
-                    )}
                     {group.type === GroupType.BLOG && (
                       <span className="inline-block ml-2 text-base font-normal text-blue-500">
                         <FaBlog />
+                      </span>
+                    )}
+                    {group.type === GroupType.COMMUNITY && (
+                      <span className="inline-block ml-2 text-base font-normal text-green-500">
+                        <FaChessRook />
                       </span>
                     )}
                   </p>

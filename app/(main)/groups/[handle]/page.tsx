@@ -156,14 +156,14 @@ function Header({
                 <FaLock />
               </span>
             )}
-            {group.type === GroupType.COMMUNITY && (
-              <span className="inline-block ml-4 text-2xl font-normal text-green-500">
-                <FaChessRook />
-              </span>
-            )}
             {group.type === GroupType.BLOG && (
               <span className="inline-block ml-4 text-2xl font-normal text-blue-500">
                 <FaBlog />
+              </span>
+            )}
+            {group.type === GroupType.COMMUNITY && (
+              <span className="inline-block ml-4 text-2xl font-normal text-green-500">
+                <FaChessRook />
               </span>
             )}
           </div>

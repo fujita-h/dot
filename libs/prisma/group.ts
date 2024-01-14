@@ -35,8 +35,8 @@ export function getReadableGroups(userId: string) {
       where: {
         OR: [
           { type: GroupType.PRIVATE, Members: { some: { userId } } },
-          { type: GroupType.COMMUNITY, Members: { some: { userId } } },
           { type: GroupType.BLOG },
+          { type: GroupType.COMMUNITY },
         ],
       },
       orderBy: { handle: 'asc' },
@@ -53,8 +53,8 @@ export function getPostableGroups(userId: string) {
       where: {
         OR: [
           { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
-          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
           { type: GroupType.BLOG, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
       orderBy: { handle: 'asc' },
@@ -72,8 +72,8 @@ export function checkPostableGroup(userId: string, groupId: string): Promise<boo
         id: groupId,
         OR: [
           { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
-          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
           { type: GroupType.BLOG, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
     })

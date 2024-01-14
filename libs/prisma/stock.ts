@@ -64,8 +64,8 @@ export function getStockedNotesCount(authorizedRequestUserId: string) {
           OR: [
             { Group: null },
             { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.COMMUNITY } },
           ],
         },
       },
@@ -93,8 +93,8 @@ export function getStockedNotesWithUserGroupTopicsByLabelId(
           OR: [
             { Group: null },
             { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.COMMUNITY } },
           ],
         },
       },

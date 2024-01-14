@@ -11,8 +11,8 @@ import { GroupType } from '@prisma/client';
 
 const groupTypes = [
   { name: 'private', value: GroupType.PRIVATE, description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
-  { name: 'community', value: GroupType.COMMUNITY, description: 'コミュニティの運営におすすめ', descItem: [''] },
   { name: 'blog', value: GroupType.BLOG, description: 'グループの情報を公開する用途におすすめ', descItem: [''] },
+  { name: 'community', value: GroupType.COMMUNITY, description: 'コミュニティの運営におすすめ', descItem: [''] },
 ];
 
 export function CreateGroupButton() {

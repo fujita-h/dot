@@ -11,8 +11,8 @@ export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUser
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
       include: {
@@ -36,8 +36,8 @@ export function getNotesWithUserGroupTopics(authorizedRequestUserId: string, tak
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -64,8 +64,8 @@ export function getNotesCount(authorizedRequestUserId: string) {
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
     })
@@ -84,8 +84,8 @@ export function getCommentedNotesWithUserGroupTopics(authorizedRequestUserId: st
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
       orderBy: { releasedAt: 'desc' }, // ToDo: Sort by user's latest comment date. (maybe required to get data from prisma.comment)
@@ -112,8 +112,8 @@ export function getCommentedNotesCount(authorizedRequestUserId: string) {
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
     })
@@ -137,8 +137,8 @@ export function getNotesWithUserGroupTopicsByGroupId(
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -169,8 +169,8 @@ export function getNotesWithUserGroupTopicsByTopicId(
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -197,8 +197,8 @@ export function getNotesCountByGroupId(groupId: string, authorizedRequestUserId:
         OR: [
           { Group: null },
           { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
         ],
       },
     })
@@ -217,8 +217,8 @@ export function getTimelineNotesWithUserGroupTopics(authorizedRequestUserId: str
           OR: [
             { Group: null },
             { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.COMMUNITY } },
           ],
         },
         {
@@ -250,8 +250,8 @@ export function getTimelineNotesCount(authorizedRequestUserId: string) {
           OR: [
             { Group: null },
             { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
-            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
+            { Group: { type: GroupType.COMMUNITY } },
           ],
         },
         {
