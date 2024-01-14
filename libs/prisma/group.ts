@@ -33,7 +33,11 @@ export function getReadableGroups(userId: string) {
   return prisma.group
     .findMany({
       where: {
-        OR: [{ type: GroupType.BLOG }, { type: GroupType.PRIVATE, Members: { some: { userId } } }],
+        OR: [
+          { type: GroupType.PRIVATE, Members: { some: { userId } } },
+          { type: GroupType.COMMUNITY, Members: { some: { userId } } },
+          { type: GroupType.BLOG },
+        ],
       },
       orderBy: { handle: 'asc' },
     })
@@ -48,8 +52,9 @@ export function getPostableGroups(userId: string) {
     .findMany({
       where: {
         OR: [
-          { type: GroupType.BLOG },
           { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.BLOG, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
       orderBy: { handle: 'asc' },
@@ -66,8 +71,9 @@ export function checkPostableGroup(userId: string, groupId: string): Promise<boo
       where: {
         id: groupId,
         OR: [
-          { type: GroupType.BLOG },
           { type: GroupType.PRIVATE, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.COMMUNITY, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
+          { type: GroupType.BLOG, Members: { some: { userId, role: { in: ['ADMIN', 'CONTRIBUTOR'] } } } },
         ],
       },
     })

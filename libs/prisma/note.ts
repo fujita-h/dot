@@ -3,15 +3,16 @@
 import prisma from '@/libs/prisma/instance';
 import { GroupType } from '@prisma/client';
 
-export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string) {
+export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUserId: string) {
   return prisma.note
     .findUnique({
       where: {
         id: noteId,
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       include: {
@@ -27,15 +28,16 @@ export function getNoteWithUserGroupTopics(noteId: string, requestUserId: string
 }
 
 // if you change this function, you should change getNotesCount too
-export function getNotesWithUserGroupTopics(requestUserId: string, take?: number, skip?: number) {
+export function getNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
   return prisma.note
     .findMany({
       where: {
-        userId: requestUserId,
+        userId: authorizedRequestUserId,
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -54,15 +56,16 @@ export function getNotesWithUserGroupTopics(requestUserId: string, take?: number
 }
 
 // if you change this function, you should change getNotesWithUserGroupTopics too
-export function getNotesCount(requestUserId: string) {
+export function getNotesCount(authorizedRequestUserId: string) {
   return prisma.note
     .count({
       where: {
-        userId: requestUserId,
+        userId: authorizedRequestUserId,
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
     })
@@ -73,15 +76,16 @@ export function getNotesCount(requestUserId: string) {
 }
 
 // if you change this function, you should change getCommentedNotesCount too
-export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take?: number, skip?: number) {
+export function getCommentedNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
   return prisma.note
     .findMany({
       where: {
-        Comments: { some: { userId: requestUserId } },
+        Comments: { some: { userId: authorizedRequestUserId } },
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' }, // ToDo: Sort by user's latest comment date. (maybe required to get data from prisma.comment)
@@ -100,15 +104,16 @@ export function getCommentedNotesWithUserGroupTopics(requestUserId: string, take
 }
 
 // if you change this function, you should change getCommentedNotesWithUserGroupTopics too
-export function getCommentedNotesCount(requestUserId: string) {
+export function getCommentedNotesCount(authorizedRequestUserId: string) {
   return prisma.note
     .count({
       where: {
-        Comments: { some: { userId: requestUserId } },
+        Comments: { some: { userId: authorizedRequestUserId } },
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
     })
@@ -121,7 +126,7 @@ export function getCommentedNotesCount(requestUserId: string) {
 // if you change this function, you should change getNotesCountByGroupId too
 export function getNotesWithUserGroupTopicsByGroupId(
   groupId: string,
-  requestUserId: string,
+  authorizedRequestUserId: string,
   take?: number,
   skip?: number
 ) {
@@ -131,8 +136,9 @@ export function getNotesWithUserGroupTopicsByGroupId(
         Group: { id: groupId },
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -152,7 +158,7 @@ export function getNotesWithUserGroupTopicsByGroupId(
 
 export function getNotesWithUserGroupTopicsByTopicId(
   topicId: string,
-  requestUserId: string,
+  authorizedRequestUserId: string,
   take?: number,
   skip?: number
 ) {
@@ -162,8 +168,9 @@ export function getNotesWithUserGroupTopicsByTopicId(
         Topics: { some: { topicId } },
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
       orderBy: { releasedAt: 'desc' },
@@ -182,15 +189,16 @@ export function getNotesWithUserGroupTopicsByTopicId(
 }
 
 // if you change this function, you should change getNotesWithUserGroupTopicsByGroupId too
-export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
+export function getNotesCountByGroupId(groupId: string, authorizedRequestUserId: string) {
   return prisma.note
     .count({
       where: {
         Group: { id: groupId },
         OR: [
           { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
           { Group: { type: GroupType.BLOG } },
-          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: requestUserId } } } },
         ],
       },
     })
@@ -201,22 +209,23 @@ export function getNotesCountByGroupId(groupId: string, requestUserId: string) {
 }
 
 // if you change this function, you should change getTimelineNotesCount too
-export function getTimelineNotesWithUserGroupTopics(userId: string, take?: number, skip?: number) {
+export function getTimelineNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
   return prisma.note.findMany({
     where: {
       AND: [
         {
           OR: [
             { Group: null },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
-            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
           ],
         },
         {
           OR: [
-            { User: { FollowingUsers: { some: { fromUserId: userId } } } },
-            { Group: { FollowedUsers: { some: { userId } } } },
-            { Topics: { some: { Topic: { FollowedUsers: { some: { userId } } } } } },
+            { User: { FollowingUsers: { some: { fromUserId: authorizedRequestUserId } } } },
+            { Group: { FollowedUsers: { some: { userId: authorizedRequestUserId } } } },
+            { Topics: { some: { Topic: { FollowedUsers: { some: { userId: authorizedRequestUserId } } } } } },
           ],
         },
       ],
@@ -233,22 +242,23 @@ export function getTimelineNotesWithUserGroupTopics(userId: string, take?: numbe
 }
 
 // if you change this function, you should change getTimelineNotesWithUserGroupTopics too
-export function getTimelineNotesCount(userId: string) {
+export function getTimelineNotesCount(authorizedRequestUserId: string) {
   return prisma.note.count({
     where: {
       AND: [
         {
           OR: [
             { Group: null },
+            { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+            { Group: { type: GroupType.COMMUNITY, Members: { some: { userId: authorizedRequestUserId } } } },
             { Group: { type: GroupType.BLOG } },
-            { Group: { type: GroupType.PRIVATE, Members: { some: { userId } } } },
           ],
         },
         {
           OR: [
-            { User: { FollowingUsers: { some: { fromUserId: userId } } } },
-            { Group: { FollowedUsers: { some: { userId } } } },
-            { Topics: { some: { Topic: { FollowedUsers: { some: { userId } } } } } },
+            { User: { FollowingUsers: { some: { fromUserId: authorizedRequestUserId } } } },
+            { Group: { FollowedUsers: { some: { userId: authorizedRequestUserId } } } },
+            { Topics: { some: { Topic: { FollowedUsers: { some: { userId: authorizedRequestUserId } } } } } },
           ],
         },
       ],
