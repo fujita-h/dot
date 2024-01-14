@@ -1,5 +1,6 @@
+import { GroupType } from '@prisma/client';
 import Link from 'next/link';
-import { FaBlog, FaLock } from 'react-icons/fa6';
+import { FaBlog, FaChessRook, FaLock } from 'react-icons/fa6';
 
 type Group = {
   id: string;
@@ -27,14 +28,19 @@ export function CardList({ groups }: { groups: Group[] }) {
                   <span className="absolute inset-x-0 -top-px bottom-0" />
                   <p className="text-lg font-semibold text-gray-900">
                     {group.name}
-                    {group.type === 'PRIVATE' && (
+                    {group.type === GroupType.PRIVATE && (
                       <span className="inline-block ml-2 text-base font-normal text-yellow-500">
                         <FaLock />
                       </span>
                     )}
-                    {group.type === 'BLOG' && (
+                    {group.type === GroupType.BLOG && (
                       <span className="inline-block ml-2 text-base font-normal text-blue-500">
                         <FaBlog />
+                      </span>
+                    )}
+                    {group.type === GroupType.COMMUNITY && (
+                      <span className="inline-block ml-2 text-base font-normal text-green-500">
+                        <FaChessRook />
                       </span>
                     )}
                   </p>

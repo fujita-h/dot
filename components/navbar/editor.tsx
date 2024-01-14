@@ -24,7 +24,7 @@ export function EditorNavbar({
   showAutoSavingMessage: boolean;
 }) {
   return (
-    <div className="border-b border-inset">
+    <div className="relative z-50 border-b border-inset">
       <div className="max-w-screen-2xl mx-auto px-8">
         <div className="flex h-14 justify-between">
           <div className="flex flex-shrink-0 items-center">
