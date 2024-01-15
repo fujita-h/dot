@@ -42,7 +42,7 @@ export default async function Page({
   }
 
   return (
-    <div>
+    <div className="p-2 md:p-4">
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Groups</div>
@@ -50,12 +50,12 @@ export default async function Page({
         </div>
         <div>{isAllowedToCreateGroup && <CreateGroupButton />}</div>
       </div>
-      <div className="mt-6 flex">
+      <div className="flex mt-6 md:mt-8">
         {/* <div className="w-80 min-w-[320px]"></div> */}
         <div className="flex-1">
           <p className="text-base">最近投稿のあったグループ</p>
           <CardList groups={groups} />
-          <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-300">
+          <div className="mt-3 pt-3 pb-3 px-4 border-t border-gray-300">
             <SimplePagination page={page} lastPage={lastPage} />
           </div>
         </div>
