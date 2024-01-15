@@ -84,7 +84,13 @@ export function Form({ topic }: { topic: Topic }) {
   return (
     <form action={formAction}>
       <input type="hidden" name="id" value={topic.id} />
-      <ToastContainer />
+      <ToastContainer
+        stacked={true}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        closeOnClick={true}
+        draggable={false}
+      />
       <div className="px-4 py-6 sm:p-8">
         <div className="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="col-span-full">
