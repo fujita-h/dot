@@ -8,6 +8,7 @@ import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
 import CodeBlockExtension from '@tiptap/extension-code-block';
+import CodeBlockLowlightExtension from '@tiptap/extension-code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
@@ -29,8 +30,12 @@ import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
+import { all, createLowlight } from 'lowlight';
 
 import '@/components/tiptap/tiptap.css';
+import 'highlight.js/styles/github.css';
+
+const lowlight = createLowlight(all);
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
@@ -38,6 +43,9 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       BlockquoteExtension,
       BulletListExtension,
       CodeBlockExtension,
+      CodeBlockLowlightExtension.configure({
+        lowlight,
+      }),
       DocumentExtension,
       HardBreakExtension,
       HeadingExtension.extend({

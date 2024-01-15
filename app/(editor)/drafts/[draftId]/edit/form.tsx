@@ -19,6 +19,7 @@ import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
 import CodeBlockExtension from '@tiptap/extension-code-block';
+import CodeBlockLowlightExtension from '@tiptap/extension-code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
@@ -40,13 +41,17 @@ import TableRowExtension from '@tiptap/extension-table-row';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
+import { all, createLowlight } from 'lowlight';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
 import type { UserSetting } from './types';
 
 import '@/components/tiptap/tiptap.css';
+import 'highlight.js/styles/github.css';
 import './style.css';
+
+const lowlight = createLowlight(all);
 
 export function Form({
   setting,
@@ -89,6 +94,9 @@ export function Form({
       BlockquoteExtension,
       BulletListExtension,
       CodeBlockExtension,
+      CodeBlockLowlightExtension.configure({
+        lowlight,
+      }),
       DocumentExtension,
       HardBreakExtension,
       HeadingExtension.configure({ levels: [1, 2, 3] }),
