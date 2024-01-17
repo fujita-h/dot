@@ -8,6 +8,7 @@ import {
   ButtonOrderedList,
   ButtonParagraph,
   ButtonTableInsert,
+  ButtonTaskList,
 } from '../buttons';
 
 export function FloatingMenuNewLine({ editor }: { editor: Editor }) {
@@ -36,9 +37,15 @@ export function FloatingMenuNewLine({ editor }: { editor: Editor }) {
         <ButtonHeading3 editor={editor} id="fm-heading3" prevButtonId="fm-heading2" nextButtonId="fm-bulletList" />
         <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
         <ButtonBulletList editor={editor} id="fm-bulletList" prevButtonId="fm-heading3" nextButtonId="fm-orderedList" />
-        <ButtonOrderedList editor={editor} id="fm-orderedList" prevButtonId="fm-bulletList" nextButtonId="fm-table" />
+        <ButtonOrderedList
+          editor={editor}
+          id="fm-orderedList"
+          prevButtonId="fm-bulletList"
+          nextButtonId="fm-taskList"
+        />
+        <ButtonTaskList editor={editor} id="fm-taskList" prevButtonId="fm-orderedList" nextButtonId="fm-table" />
         <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
-        <ButtonTableInsert editor={editor} id="fm-table" prevButtonId="fm-orderedList" nextButtonId="fm-codeBlock" />
+        <ButtonTableInsert editor={editor} id="fm-table" prevButtonId="fm-taskList" nextButtonId="fm-codeBlock" />
         <div className="border-l-2 border-gray-400/30 ml-2 pl-2"></div>
         <ButtonCodeBlock editor={editor} id="fm-codeBlock" prevButtonId="fm-table" nextButtonId={undefined} />
       </div>

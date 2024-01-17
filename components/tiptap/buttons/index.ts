@@ -10,4 +10,5 @@ export { ButtonParagraph } from './paragraph';
 export { ButtonSelectText } from './select-text';
 export { ButtonStrike } from './strike';
 export * from './table';
+export { ButtonTaskList } from './task-list';
 export { ButtonUnderline } from './underline';

@@ -9,6 +9,7 @@ import { BsTextParagraph } from 'react-icons/bs';
 import { LuHeading1, LuHeading2, LuHeading3, LuTable } from 'react-icons/lu';
 import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
 import { AiOutlineCode } from 'react-icons/ai';
+import { LuListChecks } from 'react-icons/lu';
 
 export function ButtonSelectText({
   editor,
@@ -42,12 +43,15 @@ export function ButtonSelectText({
             }
           }}
         >
-          {editor.isActive('paragraph') && !editor.isActive('listItem') && <BsTextParagraph />}
+          {editor.isActive('paragraph') && !editor.isActive('listItem') && !editor.isActive('taskItem') && (
+            <BsTextParagraph />
+          )}
           {editor.isActive('heading', { level: 1 }) && <LuHeading1 />}
           {editor.isActive('heading', { level: 2 }) && <LuHeading2 />}
           {editor.isActive('heading', { level: 3 }) && <LuHeading3 />}
           {editor.isActive('bulletList') && <PiListDashesFill />}
           {editor.isActive('orderedList') && <PiListNumbersFill />}
+          {editor.isActive('taskList') && <LuListChecks />}
           {editor.isActive('codeBlock') && <AiOutlineCode />}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
@@ -203,6 +207,28 @@ export function ButtonSelectText({
                     <PiListNumbersFill />
                   </span>
                   <span className="mx-2 text-base whitespace-nowrap">Ordered List</span>
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  type="button"
+                  className={clsx(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'group flex items-center px-1 my-1 py-1 rounded-md'
+                  )}
+                  onClick={() => editor.chain().focus().toggleTaskList().run()}
+                >
+                  <span
+                    className={clsx(
+                      editor.isActive('taskList') ? 'bg-indigo-500/30' : 'hover:bg-gray-200',
+                      'text-xl font-semibold p-1 rounded-md'
+                    )}
+                  >
+                    <LuListChecks />
+                  </span>
+                  <span className="mx-2 text-base whitespace-nowrap">Task List</span>
                 </button>
               )}
             </Menu.Item>

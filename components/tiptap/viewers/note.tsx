@@ -26,6 +26,8 @@ import TableExtension from '@tiptap/extension-table';
 import TableCellExtension from '@tiptap/extension-table-cell';
 import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableRowExtension from '@tiptap/extension-table-row';
+import TaskItemExtension from '@tiptap/extension-task-item';
+import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
@@ -66,6 +68,8 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
+      TaskListExtension,
+      TaskItemExtension.configure({ nested: true }),
       ParagraphExtension,
       TextExtension,
       BoldExtension,
