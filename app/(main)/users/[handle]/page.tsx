@@ -1,9 +1,9 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
+import { Error404 } from '@/components/error';
 import { StackList } from '@/components/notes/stack-list';
+import { SimplePagination } from '@/components/paginations/simple';
 import { SimpleTab } from '@/components/tabs/simple-tab';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import {
   getCommentedNotesCount,
@@ -14,10 +14,9 @@ import {
 import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
 import clsx from 'clsx/lite';
 import { Metadata } from 'next';
-import { FollowToggleButton } from './form';
 import { redirect } from 'next/navigation';
-import { SimplePagination } from '@/components/paginations/simple';
 import qs from 'qs';
+import { FollowToggleButton } from './form';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -27,30 +26,25 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session);
-  if (status === 401) return { title: `Sign In - ${SITE_NAME}` };
-  if (status === 500) return { title: `Server Error - ${SITE_NAME}` };
-  if (status === 404 || !sessionUserId) return { title: `Not Found - ${SITE_NAME}` };
+  const user = await getSessionUser();
+  if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
-  const user = await getUserFromHandle(params.handle).catch((e) => null);
-  if (!user) return { title: `Not Found - ${SITE_NAME}` };
-  return { title: `${user.name} - ${SITE_NAME}` };
+  const targetUser = await getUserFromHandle(params.handle).catch((e) => null);
+  if (!targetUser) return { title: `Not Found - ${SITE_NAME}` };
+
+  return { title: `${targetUser.name} - ${SITE_NAME}` };
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !sessionUserId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
   const urlSearchParams = new URLSearchParams(qs.stringify(searchParams));
 
-  const user = await getUserWithFollowedFromHandle(params.handle).catch((e) => null);
-  if (!user) return <Error404 />;
+  const targetUser = await getUserWithFollowedFromHandle(params.handle).catch((e) => null);
+  if (!targetUser) return <Error404 />;
 
-  const isFollowing = user.FollowedUsers.find((follow) => follow.fromUserId === sessionUserId) ? true : false;
+  const isFollowing = targetUser.FollowedUsers.find((follow) => follow.fromUserId === user.id) ? true : false;
 
   const tab = searchParams.tab;
   const currentTab = tab === 'comments' ? 'comments' : 'posts';

@@ -1,8 +1,7 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
+import { Error404 } from '@/components/error';
 import { StackList } from '@/components/notes/stack-list';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getNotesWithUserGroupTopicsByTopicId } from '@/libs/prisma/note';
 import { getTopicByHandle, getTopicWithFollowedByHandle } from '@/libs/prisma/topic';
@@ -15,29 +14,24 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session);
-  if (status === 401) return { title: `Sign In - ${SITE_NAME}` };
-  if (status === 500) return { title: `Server Error - ${SITE_NAME}` };
-  if (status === 404 || !sessionUserId) return { title: `Not Found - ${SITE_NAME}` };
+  const user = await getSessionUser();
+  if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
   const group = await getTopicByHandle(params.handle).catch((e) => null);
   if (!group) return { title: `Not Found - ${SITE_NAME}` };
+
   return { title: `${group.name} - ${SITE_NAME}` };
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !sessionUserId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
   const topic = await getTopicWithFollowedByHandle(params.handle);
   if (!topic) return <Error404 />;
 
-  const isFollowing = topic.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
-  const notes = await getNotesWithUserGroupTopicsByTopicId(topic.id, sessionUserId).catch((e) => []);
+  const isFollowing = topic.FollowedUsers.find((follow) => follow.userId === user.id) ? true : false;
+  const notes = await getNotesWithUserGroupTopicsByTopicId(topic.id, user.id).catch((e) => []);
 
   return (
     <div className="md:flex md:gap-2 md:m-2">

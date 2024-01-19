@@ -20,10 +20,8 @@ interface Group {
 interface User {
   id: string;
   handle: string;
-  name: string;
-  Claim: {
-    email: string;
-  } | null;
+  name: string | null;
+  email: string | null;
 }
 
 interface Role {
@@ -117,7 +115,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                           />
                           <div>
                             <div className="text-gray-500 text-xs">@{member.handle}</div>
-                            <div className="text-sm">{member.name}</div>
+                            <div className="text-sm">{member.name || 'No Name'}</div>
                           </div>
                         </div>
                       </td>
@@ -127,7 +125,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                           'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                         )}
                       >
-                        {member.Claim?.email}
+                        {member.email || 'No Email'}
                       </td>
                       <td
                         className={clsx(
@@ -192,7 +190,9 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
   }, [users]);
 
   const filteredUser =
-    query === '' ? [] : users?.filter((person) => person.name.toLowerCase().includes(query.toLowerCase())) || [];
+    query === ''
+      ? []
+      : users?.filter((person) => person.name && person.name.toLowerCase().includes(query.toLowerCase())) || [];
 
   return (
     <Transition.Root show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
@@ -299,8 +299,8 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                 </div>
                                 <div className="flex-1">
                                   <p className="text-sm leading-4 text-gray-500">@{activeUser.handle}</p>
-                                  <p className="font-semibold text-gray-900">{activeUser.name}</p>
-                                  <p className="text-sm leading-4 text-gray-500">{activeUser.Claim?.email}</p>
+                                  <p className="font-semibold text-gray-900">{activeUser.name || 'No Name'}</p>
+                                  <p className="text-sm leading-4 text-gray-500">{activeUser.email || 'No Email'}</p>
                                 </div>
                               </div>
                               <div className="flex flex-auto flex-col justify-between p-4">

@@ -1,22 +1,16 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
 import { TopicBadge } from '@/components/topics/badge';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession, getRolesFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getTopics } from '@/libs/prisma/topic';
 import { AddTopicButton } from './form';
 
 const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
 
 export default async function Page() {
-  const session = await auth();
-  const { status, userId } = await getUserIdFromSession(session);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
-  // Get user roles from session, and check if the user is allowed to create a topic
-  const roles = await getRolesFromSession(session);
+  const roles = user.roles || [];
   const isAllowedToCreateTopic = !USER_ROLE_FOR_TOPIC_CREATION || roles.includes(USER_ROLE_FOR_TOPIC_CREATION);
 
   const topics = await getTopics();

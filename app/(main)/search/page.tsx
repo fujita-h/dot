@@ -1,8 +1,6 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
 import { Note, StackList } from '@/components/notes/stack-list';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import es from '@/libs/elasticsearch/instance';
 import { getReadableGroups } from '@/libs/prisma/group';
 import { SearchForm } from './form';
@@ -12,13 +10,10 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
-  const groups = await getReadableGroups(userId)
+  const groups = await getReadableGroups(user.id)
     .then((groups) => groups.map((g) => g.id))
     .then((groupIds) => [...groupIds, 'NULL'])
     .catch((e) => []);

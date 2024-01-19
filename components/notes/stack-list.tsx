@@ -10,7 +10,7 @@ export type Note = {
   User: {
     id: string;
     handle: string;
-    name: string;
+    name: string | null;
   };
   Group: {
     id: string;

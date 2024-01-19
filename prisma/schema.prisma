@@ -10,14 +10,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// this model is used by NextAuth.js
+model Account {
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("account")
+}
+
+// this model is used by NextAuth.js
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+// this model is used by NextAuth.js
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_token")
+}
+
 model User {
+  // --- these fields are used by NextAuth.js
   id              String         @id @default(cuid())
-  handle          String         @unique
-  name            String
-  about           String         @db.Text
+  name            String?
+  email           String?        @unique
+  emailVerified   DateTime?      @map("email_verified")
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  // --- these fields are used by custom NextAuth.js fields by this app
+  aud             String?
+  tid             String?
+  oid             String?
+  roles           Json?
+  // --- these fields are used by this app
+  // 'uid' is used as an immutable ID that uniquely identifies the user of this app. It is mainly used as a parameter exposed in the URL.
+  // 'id' is managed by NextAuth.js. It is also used for relationships between tables.
+  uid             String         @unique @default(cuid())
+  // 'handle' is used as a unique ID that identifies the user of this app. Users can change it. It uses like a '@username' in Twitter.
+  handle          String         @unique @default(cuid())
+  about           String?        @db.Text
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
-  Claim           UserClaim?
   JoiendGroups    Membership[]
   Drafts          Draft[]
   Notes           Note[]
@@ -33,19 +88,6 @@ model User {
   StockLabels     StockLabel[]
 
   @@map("user")
-}
-
-model UserClaim {
-  id        String   @id @default(cuid())
-  userId    String   @unique @map("user_id")
-  oid       String   @unique
-  email     String
-  data      Json?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("user_claim")
 }
 
 model UserSetting {

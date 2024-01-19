@@ -1,19 +1,18 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
+import { Error404 } from '@/components/error';
 import { StackList } from '@/components/notes/stack-list';
 import { SimplePagination } from '@/components/paginations/simple';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getGroupFromHandle, getGroupWithMembersFollowedFromHandle } from '@/libs/prisma/group';
 import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
+import { GroupType } from '@prisma/client';
 import clsx from 'clsx/lite';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { FollowToggleButton, JoinToggleButton, OtherMenuButton } from './form';
-import { GroupType } from '@prisma/client';
 import { FaBlog, FaChessRook, FaLock } from 'react-icons/fa6';
+import { FollowToggleButton, JoinToggleButton, OtherMenuButton } from './form';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,31 +22,26 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session);
-  if (status === 401) return { title: `Sign In - ${SITE_NAME}` };
-  if (status === 500) return { title: `Server Error - ${SITE_NAME}` };
-  if (status === 404 || !sessionUserId) return { title: `Not Found - ${SITE_NAME}` };
+  const user = await getSessionUser();
+  if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
   const group = await getGroupFromHandle(params.handle).catch((e) => null);
   if (!group) return { title: `Not Found - ${SITE_NAME}` };
+
   return { title: `${group.name} - ${SITE_NAME}` };
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const session = await auth();
-  const { status, userId: sessionUserId } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !sessionUserId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
   const group = await getGroupWithMembersFollowedFromHandle(params.handle).catch((e) => null);
   if (!group) return <Error404 />;
 
-  const isFollowing = group.FollowedUsers.find((follow) => follow.userId === sessionUserId) ? true : false;
-  const isJoined = group.Members.find((member) => member.userId === sessionUserId) ? true : false;
+  const isFollowing = group.FollowedUsers.find((follow) => follow.userId === user.id) ? true : false;
+  const isJoined = group.Members.find((member) => member.userId === user.id) ? true : false;
 
-  if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === sessionUserId)) {
+  if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === user.id)) {
     return (
       <div className="space-y-4">
         <Header group={group} isFollowing={false} isJoined={isJoined} />
@@ -65,8 +59,8 @@ export default async function Page({ params, searchParams }: Props) {
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
   const [notes, count] = await Promise.all([
-    getNotesWithUserGroupTopicsByGroupId(group.id, sessionUserId, ITEMS_PER_PAGE, skip).catch((e) => []),
-    getNotesCountByGroupId(group.id, sessionUserId).catch((e) => 0),
+    getNotesWithUserGroupTopicsByGroupId(group.id, user.id, ITEMS_PER_PAGE, skip).catch((e) => []),
+    getNotesCountByGroupId(group.id, user.id).catch((e) => 0),
   ]);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage && lastPage > 0) {

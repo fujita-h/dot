@@ -1,14 +1,11 @@
-import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { auth } from '@/libs/auth';
-import { getUser } from '@/libs/prisma/user';
+import { Navbar } from '@/components/navbar';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getPostableGroups } from '@/libs/prisma/group';
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  const userId = session?.token?.userId || '';
-  const user = userId ? await getUser(userId).catch(() => null) : null;
-  const groups = userId ? await getPostableGroups(userId).catch(() => []) : [];
+  const user = await getSessionUser();
+  const groups = user?.id ? await getPostableGroups(user.id).catch(() => []) : [];
   return (
     <div className="min-h-screen bg-slate-100">
       <header>

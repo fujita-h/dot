@@ -1,13 +1,11 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import aoai from '@/libs/azure/openai/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
-import { getUserWithClaims } from '@/libs/prisma/user';
 import ImageExtension from '@/libs/tiptap/extensions/image';
 import { get_encoding } from '@dqbd/tiktoken';
 import { init as initCuid } from '@paralleldrive/cuid2';
@@ -49,11 +47,8 @@ export async function processAutoSave(
   topics?: string[],
   body?: string
 ) {
-  const session = await auth();
-  const { userId } = await getUserIdFromSession(session);
-  if (!userId) throw new Error('Unauthorized');
-  const user = await getUserWithClaims(userId);
-  if (!user) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   if (groupId) {
     const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
@@ -63,8 +58,8 @@ export async function processAutoSave(
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    userName: encodeURI(user.name) || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    userName: encodeURI(user.name || 'n/a'),
+    oid: user.oid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -74,7 +69,7 @@ export async function processAutoSave(
   const tags = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    oid: user.oid || 'n/a',
   };
 
   let blobName = undefined;
@@ -125,11 +120,8 @@ export async function processDraft(
   topics: string[],
   body?: string
 ) {
-  const session = await auth();
-  const { userId } = await getUserIdFromSession(session);
-  if (!userId) throw new Error('Unauthorized');
-  const user = await getUserWithClaims(userId);
-  if (!user) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   if (body === undefined) {
     throw new Error('body is undefined');
@@ -143,8 +135,8 @@ export async function processDraft(
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    userName: encodeURI(user.name) || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    userName: encodeURI(user.name || 'n/a'),
+    oid: user.oid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -154,7 +146,7 @@ export async function processDraft(
   const tags = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    oid: user.oid || 'n/a',
   };
 
   const blobName = `${draftId}/${cuid()}`;
@@ -197,11 +189,9 @@ export async function processPublish(
   topics: string[],
   body?: string
 ) {
-  const session = await auth();
-  const { userId } = await getUserIdFromSession(session);
-  if (!userId) throw new Error('Unauthorized');
-  const user = await getUserWithClaims(userId);
-  if (!user) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   if (body === undefined) {
     throw new Error('body is undefined');
@@ -215,8 +205,8 @@ export async function processPublish(
   const metadata = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    userName: encodeURI(user.name) || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    userName: encodeURI(user.name || 'n/a'),
+    oid: user.oid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -226,7 +216,7 @@ export async function processPublish(
   const tags = {
     userId: user.id,
     groupId: groupId || 'n/a',
-    oid: user.Claim?.oid || 'n/a',
+    oid: user.oid || 'n/a',
   };
 
   let bodyText: string = body;
@@ -337,7 +327,7 @@ export async function processPublish(
       const note = await tx.note.create({
         data: {
           id: noteId,
-          userId: user.id,
+          userId: userId,
           title: title,
           groupId: groupId,
           Topics: {

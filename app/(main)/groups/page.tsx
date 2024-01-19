@@ -1,9 +1,7 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
 import { CardList } from '@/components/groups/card-list';
 import { SimplePagination } from '@/components/paginations/simple';
-import { auth } from '@/libs/auth';
-import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getGroupsCount, getGroupsWithRecentNotesCountHEAVY } from '@/libs/prisma/group';
 import { redirect } from 'next/navigation';
 import { CreateGroupButton } from './form';
@@ -16,13 +14,10 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await auth();
-  const { status, userId } = await getUserIdFromSession(session);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
-  const roles = await getRolesFromSession(session);
+  const roles = user.roles || [];
   const isAllowedToCreateGroup = !USER_ROLE_FOR_GROUP_CREATION || roles.includes(USER_ROLE_FOR_GROUP_CREATION);
 
   const _page = Number(searchParams.page);

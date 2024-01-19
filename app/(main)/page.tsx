@@ -1,17 +1,12 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
 import { TrendingNotes } from '@/components/notes/trending';
 import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { Suspense } from 'react';
 
 export default async function Page() {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
   return (
     <div className="print:bg-white">
@@ -24,7 +19,7 @@ export default async function Page() {
                   <h3 className="text-sm font-semibold">フォロー中のユーザー</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
-                      <FollowingUsers userId={userId} />
+                      <FollowingUsers userId={user.id} />
                     </Suspense>
                   </div>
                 </div>
@@ -32,7 +27,7 @@ export default async function Page() {
                   <h3 className="text-sm font-semibold">フォロー中のグループ</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
-                      <FollowingGroups userId={userId} />
+                      <FollowingGroups userId={user.id} />
                     </Suspense>
                   </div>
                 </div>
@@ -40,7 +35,7 @@ export default async function Page() {
                   <h3 className="text-sm font-semibold">フォロー中のトピック</h3>
                   <div className="mt-1 mx-1 flex flex-col gap-0.5">
                     <Suspense fallback={<div>loading...</div>}>
-                      <FollowingTopics userId={userId} />
+                      <FollowingTopics userId={user.id} />
                     </Suspense>
                   </div>
                 </div>
@@ -48,7 +43,7 @@ export default async function Page() {
               <div className="flex-1">
                 <div className="flex flex-col gap-3">
                   <div className="bg-white rounded-md p-2">
-                    <TrendingNotes userId={userId} />
+                    <TrendingNotes userId={user.id} />
                   </div>
                 </div>
               </div>

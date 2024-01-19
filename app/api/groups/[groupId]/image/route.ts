@@ -1,18 +1,15 @@
-import { auth } from '@/libs/auth';
+import { getSessionUser } from '@/libs/auth/utils';
 import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createRectSvg } from '@/libs/image/rect';
-import { getUserId } from '@/libs/prisma/user';
-import { getUserIdFromSession } from '@/libs/auth/utils';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
 export async function GET(request: Request, { params }: { params: { groupId: string } }) {
   if (!params.groupId) {
     return new Response(null, { status: 404 });
   }
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200) {
-    return new Response(null, { status: status });
+  const user = await getSessionUser();
+  if (!user || !user.id) {
+    return new Response(null, { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);

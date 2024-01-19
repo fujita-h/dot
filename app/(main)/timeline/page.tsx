@@ -1,10 +1,8 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
 import { StackList } from '@/components/notes/stack-list';
 import { SimplePagination } from '@/components/paginations/simple';
 import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getTimelineNotesCount, getTimelineNotesWithUserGroupTopics } from '@/libs/prisma/note';
 import { Metadata } from 'next';
@@ -13,20 +11,22 @@ import { Suspense } from 'react';
 
 const ITEMS_PER_PAGE = 20;
 
-export const metadata: Metadata = {
-  title: `タイムライン - ${SITE_NAME}`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await getSessionUser();
+  if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
+
+  return { title: `タイムライン - ${SITE_NAME}` };
+}
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await auth();
-  const { status, userId } = await getUserIdFromSession(session);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
+
+  const userId = user.id;
 
   const _page = Number(searchParams.page);
   const page = _page === undefined || _page === null || Number.isNaN(_page) || _page < 1 ? 1 : Math.floor(_page);

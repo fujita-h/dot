@@ -1,2 +1,1 @@
-export { getRolesFromSession } from './get-roles';
-export { getUserIdFromSession } from './get-user-id';
+export { getSessionUser } from './get-session-user';
