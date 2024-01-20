@@ -48,7 +48,7 @@ export default async function Page({
   // ToDo: Which is better, to use _source or retrieve from DB?
   const notes: Note[] = esResults.hits.hits.map((hit: any) => {
     const source = hit._source;
-    const User = { id: source.userId, handle: source.User.handle, name: source.User.name };
+    const User = { id: source.userId, uid: source.User.uid, handle: source.User.handle, name: source.User.name };
     const Group = source.groupId ? { id: source.groupId, handle: source.Group.handle, name: source.Group.name } : null;
     return {
       id: hit._id,

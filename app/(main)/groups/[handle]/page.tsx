@@ -81,7 +81,7 @@ export default async function Page({ params, searchParams }: Props) {
                 <div key={member.userId} className="flex items-center">
                   <Link href={`/users/${member.User.handle}`}>
                     <img
-                      src={`/api/users/${member.userId}/icon`}
+                      src={`/api/users/${member.User.uid}/icon`}
                       className="w-9 h-9 rounded-full object-cover"
                       alt="user-icon"
                     />

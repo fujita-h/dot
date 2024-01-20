@@ -19,6 +19,7 @@ interface Group {
 
 interface User {
   id: string;
+  uid: string;
   handle: string;
   name: string | null;
   email: string | null;
@@ -110,7 +111,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                         <div className="flex items-center gap-3">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${member.id}/icon`}
+                            src={`/api/users/${member.uid}/icon`}
                             alt="user icon"
                           />
                           <div>
@@ -269,7 +270,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                   {({ active }) => (
                                     <>
                                       <img
-                                        src={`/api/users/${person.id}/icon`}
+                                        src={`/api/users/${person.uid}/icon`}
                                         alt=""
                                         className="h-6 w-6 flex-none rounded-full"
                                       />
@@ -292,7 +293,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                               <div className="flex items-center gap-6 py-3 px-6">
                                 <div className="flex-none">
                                   <img
-                                    src={`/api/users/${activeUser.id}/icon`}
+                                    src={`/api/users/${activeUser.uid}/icon`}
                                     alt=""
                                     className="mx-auto h-16 w-16 rounded-full"
                                   />
@@ -475,7 +476,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                         <div className="mt-4 mx-2 flex items-center gap-3 shadow-sm shadow-gray-300 rounded-md border border-gray-300 p-2">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${user?.id}/icon`}
+                            src={`/api/users/${user?.uid}/icon`}
                             alt="user icon"
                           />
                           <div>
@@ -636,7 +637,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                         <div className="mt-4 mx-2 flex items-center gap-3 shadow-sm shadow-gray-300 rounded-md border border-gray-300 p-2">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${user?.id}/icon`}
+                            src={`/api/users/${user?.uid}/icon`}
                             alt="user icon"
                           />
                           <div>

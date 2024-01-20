@@ -79,7 +79,7 @@ export default async function Page({ params, searchParams }: Props) {
           className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}
         >
           <img
-            src={`/api/users/${user.id}/image`}
+            src={`/api/users/${user.uid}/image`}
             className="absolute top-0 w-full h-full object-cover"
             alt="user image"
           />
@@ -91,7 +91,7 @@ export default async function Page({ params, searchParams }: Props) {
               'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]'
             )}
           >
-            <img src={`/api/users/${user.id}/icon`} className="w-full h-full rounded-full" alt="user-icon" />
+            <img src={`/api/users/${user.uid}/icon`} className="w-full h-full rounded-full" alt="user-icon" />
           </div>
         </div>
         <div

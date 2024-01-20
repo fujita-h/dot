@@ -127,7 +127,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                         <div className="mx-1 flex space-x-2 items-center">
                           <div>
                             <img
-                              src={`/api/users/${note.User.id}/icon`}
+                              src={`/api/users/${note.User.uid}/icon`}
                               className="w-10 h-10 rounded-full group-hover:opacity-80"
                               alt="user icon"
                             />
@@ -201,7 +201,7 @@ async function CommentList({ noteId }: { noteId: string }) {
           <div className="flex justify-between items-center">
             <div className="mx-1 flex space-x-3 items-center">
               <div>
-                <img src={`/api/users/${c.User.id}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
+                <img src={`/api/users/${c.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
               </div>
               <div>
                 <div className="text-sm text-gray-700">
@@ -266,7 +266,17 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
   // Get related notes
   const relatedNotes = await es
     .search('notes', {
-      _source: ['title', 'releasedAt', 'userId', 'groupId', 'User.handle', 'User.name', 'Group.handle', 'Group.name'],
+      _source: [
+        'title',
+        'releasedAt',
+        'userId',
+        'groupId',
+        'User.uid',
+        'User.handle',
+        'User.name',
+        'Group.handle',
+        'Group.name',
+      ],
       knn: {
         field: 'body_embed_ada_002',
         query_vector: embed,
@@ -284,7 +294,7 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
     .then((res) => {
       return res.hits.hits.map((hit: any) => {
         const source = hit._source;
-        const User = { id: source.userId, handle: source.User.handle, name: source.User.name };
+        const User = { id: source.userId, uid: source.User.uid, handle: source.User.handle, name: source.User.name };
         const Group = source.groupId
           ? { id: source.groupId, handle: source.Group.handle, name: source.Group.name }
           : null;
