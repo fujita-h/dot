@@ -4,8 +4,9 @@ import { SITE_NAME } from '@/libs/constants';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { SignOutModal } from './sign-out-modal';
 
 const userNavigation = [
   { name: 'プロフィール', href: '/profile' },
@@ -23,6 +24,8 @@ export function EditorNavbar({
   formPublishAction: () => void;
   showAutoSavingMessage: boolean;
 }) {
+  const [signOutModalOpen, setSignOutModalOpen] = useState(false);
+
   return (
     <div className="relative z-50 border-b border-inset">
       <div className="max-w-screen-2xl mx-auto px-8">
@@ -73,12 +76,26 @@ export function EditorNavbar({
                       )}
                     </Menu.Item>
                   ))}
+                  <Menu.Item>
+                    {({ active }) => (
+                      <span
+                        className={clsx(
+                          active ? 'bg-red-100' : '',
+                          'block px-4 py-2 text-sm font-semibold text-gray-600 hover:cursor-pointer'
+                        )}
+                        onClick={() => setSignOutModalOpen(true)}
+                      >
+                        サインアウト
+                      </span>
+                    )}
+                  </Menu.Item>
                 </Menu.Items>
               </Transition>
             </Menu>
           </div>
         </div>
       </div>
+      <SignOutModal open={signOutModalOpen} setOpen={setSignOutModalOpen} />
     </div>
   );
 }

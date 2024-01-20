@@ -3,11 +3,12 @@
 import { SITE_NAME } from '@/libs/constants';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState } from 'react';
+import { SignOutModal } from './sign-out-modal';
 
 const navigation = [
   { name: 'トレンド', href: '/', current: false, matchPath: /^\/$/ },
@@ -26,6 +27,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
   const pathname = usePathname();
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [signOutModalOpen, setSignOutModalOpen] = useState(false);
 
   navigation.forEach((item) => {
     item.current = item.matchPath.test(pathname);
@@ -119,22 +121,39 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white divide-y divide-gray-200 py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                          <div>
+                            {userNavigation.map((item) => (
+                              <Menu.Item key={item.name}>
+                                {({ active }) => (
+                                  <Link
+                                    href={item.href}
+                                    className={clsx(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm font-semibold text-gray-600'
+                                    )}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                            ))}
+                          </div>
+                          <div>
+                            <Menu.Item>
                               {({ active }) => (
-                                <Link
-                                  href={item.href}
+                                <span
                                   className={clsx(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm font-semibold text-gray-600'
+                                    active ? 'bg-red-100' : '',
+                                    'block px-4 py-2 text-sm font-semibold text-gray-600 hover:cursor-pointer'
                                   )}
+                                  onClick={() => setSignOutModalOpen(true)}
                                 >
-                                  {item.name}
-                                </Link>
+                                  サインアウト
+                                </span>
                               )}
                             </Menu.Item>
-                          ))}
+                          </div>
                         </Menu.Items>
                       </Transition>
                     </Menu>
@@ -264,7 +283,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                       </button> */}
                     </div>
                   </div>
-                  <div className="mt-3 space-y-1">
+                  <div className="mt-3">
                     {userNavigation.map((item) => (
                       <Link key={item.name} href={item.href}>
                         <Disclosure.Button
@@ -275,6 +294,15 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         </Disclosure.Button>
                       </Link>
                     ))}
+                    <span>
+                      <Disclosure.Button
+                        as="span"
+                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-red-100 hover:text-gray-800 hover:cursor-pointer"
+                        onClick={() => setSignOutModalOpen(true)}
+                      >
+                        サインアウト
+                      </Disclosure.Button>
+                    </span>
                   </div>
                 </div>
               </Disclosure.Panel>
@@ -282,6 +310,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
           )}
         </Disclosure>
       </div>
+      <SignOutModal open={signOutModalOpen} setOpen={setSignOutModalOpen} />
     </div>
   );
 }
