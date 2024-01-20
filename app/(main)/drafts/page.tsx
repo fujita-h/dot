@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { getSessionUser } from '@/libs/auth/utils';
 import { List } from './list';
 import { Preview } from './preview';

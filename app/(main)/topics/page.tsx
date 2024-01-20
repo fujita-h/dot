@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { TopicBadge } from '@/components/topics/badge';
 import { getSessionUser } from '@/libs/auth/utils';
 import { getTopics } from '@/libs/prisma/topic';

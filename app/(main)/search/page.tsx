@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { Note, StackList } from '@/components/notes/stack-list';
 import { getSessionUser } from '@/libs/auth/utils';
 import es from '@/libs/elasticsearch/instance';

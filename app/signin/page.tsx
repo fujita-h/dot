@@ -1,5 +1,5 @@
-import { AutoSignInForm } from '@/components/auth/auto-sign-in-form';
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { AutoSignInForm } from '@/components/auth';
+import { SignInForm } from '@/components/auth';
 import { getSessionUser } from '@/libs/auth/utils';
 
 export default async function Page() {

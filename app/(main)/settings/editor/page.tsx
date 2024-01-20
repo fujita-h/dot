@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { Error500 } from '@/components/error';
 import { SimpleTab } from '@/components/tabs/simple-tab';
 import { getSessionUser } from '@/libs/auth/utils';

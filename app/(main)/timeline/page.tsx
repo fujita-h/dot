@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { StackList } from '@/components/notes/stack-list';
 import { SimplePagination } from '@/components/paginations/simple';
 import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';

@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { TrendingNotes } from '@/components/notes/trending';
 import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';
 import { getSessionUser } from '@/libs/auth/utils';
