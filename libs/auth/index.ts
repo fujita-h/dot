@@ -77,11 +77,28 @@ export const {
       return baseUrl;
     },
     session: async ({ session, user }: { session: Session; user?: AdapterUser }) => {
-      return { ...session, user };
+      const adapterUser = getAdapterUser(user);
+      return { ...session, user: adapterUser };
     },
   },
 });
 
 function isRolesEqual(a: string[], b: string[]) {
   return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
+function getAdapterUser(user: any): AdapterUser {
+  return {
+    id: user.id,
+    uid: user.uid,
+    aud: user.aud,
+    tid: user.tid,
+    oid: user.oid,
+    handle: user.handle,
+    name: user.name,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    image: user.image,
+    roles: user.roles,
+  };
 }
