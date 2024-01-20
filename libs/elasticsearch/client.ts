@@ -21,8 +21,7 @@ export class EsClient {
     if (!exists) {
       const file = await fs.readFile(process.cwd() + '/libs/elasticsearch/mappings/_base.json', 'utf8');
       const body = JSON.parse(file);
-      console.log(body);
-      this.esClient.indices.create({ index, body });
+      await this.esClient.indices.create({ index, body });
     }
     const files = await fs.readdir(process.cwd() + '/libs/elasticsearch/mappings/');
     for (const f of files) {
