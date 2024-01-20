@@ -22,6 +22,7 @@ const cuid = initCuid({ length: 24 });
  * @param options.Topics[].order - The order of the topic.
  * @param options.userName - The username of the user.
  * @param options.oid - The OID of the draft.
+ * @param options.uid - The UID of the draft.
  * @returns A promise that resolves to the created draft.
  * @throws If the user cannot post to the group or an error occurs while creating the draft.
  */
@@ -36,6 +37,7 @@ export async function createDraft(
     Topics,
     userName,
     oid,
+    uid,
   }: {
     groupId?: string;
     relatedNoteId?: string;
@@ -45,6 +47,7 @@ export async function createDraft(
     Topics?: { Topic: { id: string }; order: number }[];
     userName?: string;
     oid?: string;
+    uid?: string;
   } = {}
 ) {
   //check if user can post to the group
@@ -64,11 +67,13 @@ export async function createDraft(
       groupId: groupId || 'n/a',
       userName: userName ? encodeURI(userName) : 'n/a',
       oid: oid || '',
+      uid: uid || '',
     };
     const tags = {
       userId: authorizedRequestUserId,
       groupId: groupId || 'n/a',
       oid: oid || 'n/a',
+      uid: uid || 'n/a',
     };
     blobName = `${draftId}/${cuid()}`;
     const blobUploadResult = await blob

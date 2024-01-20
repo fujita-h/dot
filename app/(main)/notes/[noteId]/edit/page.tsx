@@ -27,6 +27,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
     Topics: note.Topics,
     userName: user.name || '',
     oid: user.oid || '',
+    uid: user.id || '',
   }).catch((e) => null);
   if (!draft) {
     return <Error500 />;

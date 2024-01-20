@@ -19,11 +19,13 @@ export async function uploadFiles(fileParams: FileParam[]) {
         userId: userId,
         userName: encodeURI(user.name || 'n/a'),
         oid: user.oid || 'n/a',
+        uid: user.uid || 'n/a',
         fileName: encodeURI(fileParam.fileName),
       };
       const tags = {
         userId: userId,
         oid: user.oid || 'n/a',
+        uid: user.uid || 'n/a',
       };
       return fetch(fileParam.fileDataURL)
         .then((res) => res.blob())

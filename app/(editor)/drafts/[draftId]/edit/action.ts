@@ -60,6 +60,7 @@ export async function processAutoSave(
     groupId: groupId || 'n/a',
     userName: encodeURI(user.name || 'n/a'),
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -70,6 +71,7 @@ export async function processAutoSave(
     userId: user.id,
     groupId: groupId || 'n/a',
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   let blobName = undefined;
@@ -137,6 +139,7 @@ export async function processDraft(
     groupId: groupId || 'n/a',
     userName: encodeURI(user.name || 'n/a'),
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -147,6 +150,7 @@ export async function processDraft(
     userId: user.id,
     groupId: groupId || 'n/a',
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   const blobName = `${draftId}/${cuid()}`;
@@ -207,6 +211,7 @@ export async function processPublish(
     groupId: groupId || 'n/a',
     userName: encodeURI(user.name || 'n/a'),
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   // Each blob can have up to 10 blob index tags.
@@ -217,6 +222,7 @@ export async function processPublish(
     userId: user.id,
     groupId: groupId || 'n/a',
     oid: user.oid || 'n/a',
+    uid: user.uid || 'n/a',
   };
 
   let bodyText: string = body;
