@@ -1,6 +1,8 @@
 import { SignInForm } from '@/components/auth';
+import { FollowingGroups } from '@/components/groups/following';
 import { TrendingNotes } from '@/components/notes/trending';
-import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';
+import { FollowingTopics } from '@/components/topics/following';
+import { FollowingUsers } from '@/components/users/following';
 import { getSessionUser } from '@/libs/auth/utils';
 import { Suspense } from 'react';
 
