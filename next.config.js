@@ -2,8 +2,9 @@
 const nextConfig = {
   experimental: {
     instrumentationHook : true,
-    serverMinification: false, // temporary workaround for Next.js 14.0.4 issue
+    serverComponentsExternalPackages: ['@azure/storage-blob'],
   },
+  poweredByHeader: false,
   headers: async () => {
     return [
       {

@@ -16,7 +16,7 @@ export default async function Page() {
   const topics = await getTopics();
 
   return (
-    <div>
+    <div className="p-2 md:p-4">
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Topics</div>

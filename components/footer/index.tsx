@@ -1,5 +1,3 @@
-import { COMPANY_NAME } from '@/libs/constants';
-
 const navigation = {
   main: [
     { name: 'About', href: '#' },
@@ -47,9 +45,6 @@ export function Footer() {
             </a>
           ))}
         </div>
-        <p className="mt-10 text-center text-xs leading-5 text-gray-500">
-          &copy; 2023 {COMPANY_NAME} All rights reserved.
-        </p>
       </div>
     </footer>
   );

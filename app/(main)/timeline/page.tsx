@@ -1,7 +1,9 @@
 import { SignInForm } from '@/components/auth';
+import { FollowingGroups } from '@/components/groups/following';
 import { StackList } from '@/components/notes/stack-list';
 import { SimplePagination } from '@/components/paginations/simple';
-import { FollowingGroups, FollowingTopics, FollowingUsers } from '@/components/topics/following';
+import { FollowingTopics } from '@/components/topics/following';
+import { FollowingUsers } from '@/components/users/following';
 import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getTimelineNotesCount, getTimelineNotesWithUserGroupTopics } from '@/libs/prisma/note';

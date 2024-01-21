@@ -26,7 +26,7 @@ export function CardList({ groups }: { groups: Group[] }) {
               <div className="flex-1">
                 <Link href={`/groups/${group.handle}`} className="hover:underline">
                   <span className="absolute inset-x-0 -top-px bottom-0" />
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-lg leading-5 font-semibold text-gray-900">
                     {group.name}
                     {group.type === GroupType.PRIVATE && (
                       <span className="inline-block ml-2 text-base font-normal text-yellow-500">
@@ -46,7 +46,7 @@ export function CardList({ groups }: { groups: Group[] }) {
                   </p>
                 </Link>
                 {group.about && (
-                  <p className="mt-3 text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">
+                  <p className="ml-1 text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">
                     {group.about}
                   </p>
                 )}

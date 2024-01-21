@@ -1,8 +1,12 @@
 import { SignInForm } from '@/components/auth';
 import { Error404 } from '@/components/error';
+import { FollowingGroups } from '@/components/groups/following';
+import { JoinedGroups } from '@/components/groups/joined';
 import { StackList } from '@/components/notes/stack-list';
 import { SimplePagination } from '@/components/paginations/simple';
 import { SimpleTab } from '@/components/tabs/simple-tab';
+import { FollowingTopics } from '@/components/topics/following';
+import { FollowingUsers } from '@/components/users/following';
 import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import {
@@ -16,6 +20,7 @@ import clsx from 'clsx/lite';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import qs from 'qs';
+import { Suspense } from 'react';
 import { FollowToggleButton } from './form';
 
 const ITEMS_PER_PAGE = 20;
@@ -115,15 +120,38 @@ export default async function Page({ params, searchParams }: Props) {
         </div>
       </div>
       <div className="md:flex md:gap-1">
-        <div className="md:w-80 p-2">
-          <div>
-            <div className="text-base font-semibold text-gray-800">所属グループ</div>
+        <div className="md:w-80 p-2 space-y-6">
+          <div className="mx-2">
+            <h3 className="text-sm font-semibold">参加中のグループ</h3>
+            <div className="mt-1 mx-1 flex flex-col gap-0.5">
+              <Suspense fallback={<div>loading...</div>}>
+                <JoinedGroups userId={user.id} />
+              </Suspense>
+            </div>
           </div>
-          <div>
-            <div className="text-base font-semibold text-gray-800">フォロー中のグループ</div>
+          <div className="mx-2">
+            <h3 className="text-sm font-semibold">フォロー中のユーザー</h3>
+            <div className="mt-1 mx-1 flex flex-col gap-0.5">
+              <Suspense fallback={<div>loading...</div>}>
+                <FollowingUsers userId={user.id} />
+              </Suspense>
+            </div>
           </div>
-          <div>
-            <div className="text-base font-semibold text-gray-800">フォロー中のトピック</div>
+          <div className="mx-2">
+            <h3 className="text-sm font-semibold">フォロー中のグループ</h3>
+            <div className="mt-1 mx-1 flex flex-col gap-0.5">
+              <Suspense fallback={<div>loading...</div>}>
+                <FollowingGroups userId={user.id} />
+              </Suspense>
+            </div>
+          </div>
+          <div className="mx-2">
+            <h3 className="text-sm font-semibold">フォロー中のトピック</h3>
+            <div className="mt-1 mx-1 flex flex-col gap-0.5">
+              <Suspense fallback={<div>loading...</div>}>
+                <FollowingTopics userId={user.id} />
+              </Suspense>
+            </div>
           </div>
         </div>
         <div className="md:flex-1">
