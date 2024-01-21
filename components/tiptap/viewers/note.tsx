@@ -7,7 +7,6 @@ import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
-import CodeBlockExtension from '@tiptap/extension-code-block';
 import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
@@ -41,7 +40,6 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
     extensions: [
       BlockquoteExtension,
       BulletListExtension,
-      CodeBlockExtension,
       CodeBlockLowlightExtension,
       DocumentExtension,
       HardBreakExtension,
