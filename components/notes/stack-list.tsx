@@ -9,8 +9,9 @@ export type Note = {
   releasedAt: Date;
   User: {
     id: string;
+    uid: string;
     handle: string;
-    name: string;
+    name: string | null;
   };
   Group: {
     id: string;
@@ -40,7 +41,7 @@ export function StackList({ notes }: { notes: Note[] }) {
                       <div className="bg-white rounded-full w-5 h-5 p-[1px] flex justify-center items-center">
                         <Link href={`/users/${note.User.handle}`} className="group">
                           <img
-                            src={`/api/users/${note.User.id}/icon`}
+                            src={`/api/users/${note.User.uid}/icon`}
                             className="w-full h-full rounded-full group-hover:opacity-80"
                             alt="user image"
                           />
@@ -51,7 +52,7 @@ export function StackList({ notes }: { notes: Note[] }) {
                 ) : (
                   <Link href={`/users/${note.User.handle}`} className="group">
                     <img
-                      src={`/api/users/${note.User.id}/icon`}
+                      src={`/api/users/${note.User.uid}/icon`}
                       className="w-10 h-10 rounded-full group-hover:opacity-80"
                       alt="user image"
                     />

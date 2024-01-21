@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import prisma from '@/libs/prisma/instance';
@@ -11,9 +11,8 @@ import { revalidatePath } from 'next/cache';
 const cuid = initCuid();
 
 export async function deleteNote(noteId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   const note = await prisma.note.findUnique({
     where: {
@@ -21,7 +20,7 @@ export async function deleteNote(noteId: string) {
     },
   });
 
-  if (note?.userId !== userId) {
+  if (note?.userId !== user.id) {
     throw new Error('Unauthorized');
   }
 
@@ -42,8 +41,9 @@ export async function deleteNote(noteId: string) {
 
 export async function commentOnNote(noteId: string, comment: string) {
   const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   const metadata = {
     userId: userId,

@@ -1,7 +1,9 @@
+import { SessionKeeper } from '@/components/auth';
+import { SITE_NAME } from '@/libs/constants';
 import clsx from 'clsx/lite';
 import type { Metadata } from 'next';
-import { SITE_NAME } from '@/libs/constants';
 import { Inter, Noto_Sans_JP, Source_Code_Pro } from 'next/font/google';
+
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const sessionInterval = Number(process.env.SESSION_UPDATE_AGE) || undefined;
   return (
     <html lang="ja" className="overflow-y-scroll">
       <body
@@ -27,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         {children}
       </body>
+      <SessionKeeper interval={sessionInterval} />
     </html>
   );
 }

@@ -1,15 +1,14 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { GroupType, MembershipRole } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 export async function setFollow(groupId: string, follow: boolean): Promise<boolean> {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   const group = await prisma.group.findUnique({ where: { id: groupId }, include: { Members: true } });
   if (!group) throw new Error('Group not found');
@@ -37,9 +36,9 @@ export async function setFollow(groupId: string, follow: boolean): Promise<boole
 }
 
 export async function joinCommunity(groupId: string, join: boolean): Promise<boolean> {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   const group = await prisma.group.findUnique({ where: { id: groupId }, include: { Members: true } });
   if (!group) throw new Error('Group not found');

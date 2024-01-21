@@ -1,12 +1,11 @@
 'use server';
 
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
-import { auth } from '@/libs/auth';
-import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
 import { checkHandle } from '@/libs/utils/check-handle';
-import { redirect } from 'next/navigation';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { GroupType } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 const cuid = initCuid({ length: 24 });
 
@@ -20,13 +19,12 @@ export interface ActionState {
 const USER_ROLE_FOR_GROUP_CREATION = process.env.USER_ROLE_FOR_GROUP_CREATION || '';
 
 export async function createGroupAction(state: ActionState, formData: FormData): Promise<ActionState> {
-  const session = await auth();
-  const roles = await getRolesFromSession(session);
-
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200 || !userId) {
+  const user = await getSessionUser();
+  if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
+
+  const roles = user.roles || [];
 
   if (USER_ROLE_FOR_GROUP_CREATION && !roles.includes(USER_ROLE_FOR_GROUP_CREATION)) {
     return { status: 'error', target: null, message: 'Permission denied', lastModified: Date.now() };
@@ -54,7 +52,7 @@ export async function createGroupAction(state: ActionState, formData: FormData):
         name: formData.get('name') as string,
         about: (formData.get('about') as string) || '',
         type: type,
-        Members: { create: { userId: userId, role: 'ADMIN' } },
+        Members: { create: { userId: user.id, role: 'ADMIN' } },
       },
     })
     .then((group) => {

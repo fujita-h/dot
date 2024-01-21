@@ -1,11 +1,12 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import prisma from '@/libs/prisma/instance';
 import { checkHandle } from '@/libs/utils/check-handle';
 import { revalidatePath } from 'next/cache';
+
+const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
 
 export interface ActionState {
   status: string | null;
@@ -15,15 +16,14 @@ export interface ActionState {
 }
 
 export async function UpdateTopicAction(state: ActionState, formData: FormData): Promise<ActionState> {
-  const session = await auth();
-  const roles = await getRolesFromSession(session);
-
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200 || !userId) {
+  const user = await getSessionUser();
+  if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
 
-  if (!roles.includes('Topic.Admin')) {
+  const roles = user?.roles || [];
+
+  if (USER_ROLE_FOR_TOPIC_CREATION && !roles.includes(USER_ROLE_FOR_TOPIC_CREATION)) {
     return { status: 'error', target: null, message: 'Permission denied', lastModified: Date.now() };
   }
 

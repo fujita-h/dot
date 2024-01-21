@@ -1,14 +1,13 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { getLiked, getLikedCount } from '@/libs/prisma/like';
 
 export async function like(noteId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   // create like if not exists
   await prisma.like.upsert({
@@ -27,9 +26,9 @@ export async function like(noteId: string) {
 }
 
 export async function unLike(noteId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   // delete like if exists
   await prisma.like.delete({

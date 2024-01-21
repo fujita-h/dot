@@ -19,11 +19,10 @@ interface Group {
 
 interface User {
   id: string;
+  uid: string;
   handle: string;
-  name: string;
-  Claim: {
-    email: string;
-  } | null;
+  name: string | null;
+  email: string | null;
 }
 
 interface Role {
@@ -112,12 +111,12 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                         <div className="flex items-center gap-3">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${member.id}/icon`}
+                            src={`/api/users/${member.uid}/icon`}
                             alt="user icon"
                           />
                           <div>
                             <div className="text-gray-500 text-xs">@{member.handle}</div>
-                            <div className="text-sm">{member.name}</div>
+                            <div className="text-sm">{member.name || 'No Name'}</div>
                           </div>
                         </div>
                       </td>
@@ -127,7 +126,7 @@ export function Form({ group, users }: { group: Group; users: User[] }) {
                           'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                         )}
                       >
-                        {member.Claim?.email}
+                        {member.email || 'No Email'}
                       </td>
                       <td
                         className={clsx(
@@ -192,7 +191,9 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
   }, [users]);
 
   const filteredUser =
-    query === '' ? [] : users?.filter((person) => person.name.toLowerCase().includes(query.toLowerCase())) || [];
+    query === ''
+      ? []
+      : users?.filter((person) => person.name && person.name.toLowerCase().includes(query.toLowerCase())) || [];
 
   return (
     <Transition.Root show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
@@ -269,7 +270,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                   {({ active }) => (
                                     <>
                                       <img
-                                        src={`/api/users/${person.id}/icon`}
+                                        src={`/api/users/${person.uid}/icon`}
                                         alt=""
                                         className="h-6 w-6 flex-none rounded-full"
                                       />
@@ -292,15 +293,15 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                               <div className="flex items-center gap-6 py-3 px-6">
                                 <div className="flex-none">
                                   <img
-                                    src={`/api/users/${activeUser.id}/icon`}
+                                    src={`/api/users/${activeUser.uid}/icon`}
                                     alt=""
                                     className="mx-auto h-16 w-16 rounded-full"
                                   />
                                 </div>
                                 <div className="flex-1">
                                   <p className="text-sm leading-4 text-gray-500">@{activeUser.handle}</p>
-                                  <p className="font-semibold text-gray-900">{activeUser.name}</p>
-                                  <p className="text-sm leading-4 text-gray-500">{activeUser.Claim?.email}</p>
+                                  <p className="font-semibold text-gray-900">{activeUser.name || 'No Name'}</p>
+                                  <p className="text-sm leading-4 text-gray-500">{activeUser.email || 'No Email'}</p>
                                 </div>
                               </div>
                               <div className="flex flex-auto flex-col justify-between p-4">
@@ -475,7 +476,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                         <div className="mt-4 mx-2 flex items-center gap-3 shadow-sm shadow-gray-300 rounded-md border border-gray-300 p-2">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${user?.id}/icon`}
+                            src={`/api/users/${user?.uid}/icon`}
                             alt="user icon"
                           />
                           <div>
@@ -636,7 +637,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                         <div className="mt-4 mx-2 flex items-center gap-3 shadow-sm shadow-gray-300 rounded-md border border-gray-300 p-2">
                           <img
                             className="inline-flex w-8 h-8 rounded-full"
-                            src={`/api/users/${user?.id}/icon`}
+                            src={`/api/users/${user?.uid}/icon`}
                             alt="user icon"
                           />
                           <div>

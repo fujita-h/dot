@@ -1,14 +1,14 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { revalidatePath } from 'next/cache';
 
 export async function addMemberToGroup(groupId: string, userId: string, role: 'ADMIN' | 'CONTRIBUTOR' | 'READER') {
-  const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session, true);
-  if (!sessionUserId) throw new Error('Unauthorized');
+  const targetUserId = userId;
+
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -20,13 +20,13 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
     throw new Error('Group not found');
   }
 
-  if (group.Members.find((member) => member.userId === sessionUserId)?.role !== 'ADMIN') {
+  if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
     throw new Error('You must be the owner of the group to add a member');
   }
 
   const member = await prisma.membership.create({
     data: {
-      userId,
+      userId: targetUserId,
       groupId,
       role,
     },
@@ -36,9 +36,8 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
 }
 
 export async function updateMemberRole(groupId: string, userId: string, role: 'ADMIN' | 'CONTRIBUTOR' | 'READER') {
-  const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session, true);
-  if (!sessionUserId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -50,7 +49,7 @@ export async function updateMemberRole(groupId: string, userId: string, role: 'A
     throw new Error('Group not found');
   }
 
-  if (group.Members.find((member) => member.userId === sessionUserId)?.role !== 'ADMIN') {
+  if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
     throw new Error('You must be the owner of the group to add a member');
   }
 
@@ -70,9 +69,8 @@ export async function updateMemberRole(groupId: string, userId: string, role: 'A
 }
 
 export async function removeMemberFromGroup(groupId: string, userId: string) {
-  const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session, true);
-  if (!sessionUserId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -84,7 +82,7 @@ export async function removeMemberFromGroup(groupId: string, userId: string) {
     throw new Error('Group not found');
   }
 
-  if (group.Members.find((member) => member.userId === sessionUserId)?.role !== 'ADMIN') {
+  if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
     throw new Error('You must be the owner of the group to add a member');
   }
 

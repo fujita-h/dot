@@ -1,14 +1,12 @@
 'use server';
 
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteDraft(draftId: string): Promise<boolean> {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
 
   const draft = await prisma.draft.delete({ where: { id: draftId } }).catch((e) => {
     console.error(e);

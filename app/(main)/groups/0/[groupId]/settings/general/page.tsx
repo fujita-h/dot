@@ -1,11 +1,10 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
+import { SignInForm } from '@/components/auth';
+import { Error404 } from '@/components/error';
 import { SimpleTab } from '@/components/tabs/simple-tab';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getGroupWithMembers } from '@/libs/prisma/group';
-import { Form } from './form';
 import { GroupType } from '@prisma/client';
+import { Form } from './form';
 
 type Props = {
   params: { groupId: string };
@@ -13,18 +12,15 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
   const group = await getGroupWithMembers(params.groupId).catch((e) => null);
   if (!group) return <Error404 />;
 
   if (
     group.type === GroupType.PRIVATE &&
-    !group.Members.find((member) => member.userId === userId && member.role === 'ADMIN')
+    !group.Members.find((member) => member.userId === user.id && member.role === 'ADMIN')
   ) {
     return (
       <div className="space-y-4">
