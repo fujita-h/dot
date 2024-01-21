@@ -1,7 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { DEFAULT_STOCK_LABEL_NAME } from '@/libs/constants';
 import prisma from '@/libs/prisma/instance';
 import { getLabels, getStockedNoteLabels, getStockedUsersCount } from '@/libs/prisma/stock';
@@ -15,9 +14,9 @@ async function getReturnValues(userId: string, noteId: string) {
 }
 
 export async function stockDefault(noteId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   // create default label if not exists
   const defaultLabel = await prisma.stockLabel.upsert({
@@ -48,9 +47,9 @@ export async function stockDefault(noteId: string) {
 }
 
 export async function stock(noteId: string, labelId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   // create stock if not exists
   await prisma.stock.upsert({
@@ -67,9 +66,9 @@ export async function stock(noteId: string, labelId: string) {
 }
 
 export async function unStock(noteId: string, labelId: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   // delete stock if exists
   await prisma.stock.delete({ where: { userId_noteId_labelId: { userId, noteId, labelId } } });
@@ -82,9 +81,9 @@ export async function unStock(noteId: string, labelId: string) {
 }
 
 export async function createLabel(name: string) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (!userId) throw new Error('Unauthorized');
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
 
   await prisma.stockLabel.create({ data: { userId, name } });
   const labels = await getLabels(userId).catch((e) => []);

@@ -1,7 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { revalidatePath } from 'next/cache';
 
@@ -13,14 +12,14 @@ export interface ActionState {
 }
 
 export async function updateUserSettingAction(state: ActionState, formData: FormData): Promise<ActionState> {
-  const session = await auth();
-  const { status, userId: sessionUserId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200 || !sessionUserId) {
+  const user = await getSessionUser();
+  if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
+
   try {
     await prisma.userSetting.update({
-      where: { userId: sessionUserId },
+      where: { userId: user.id },
       data: {
         editorShowNewLineFloatingMenu: formData.get('editorShowNewLineFloatingMenu') === 'true',
       },

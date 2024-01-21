@@ -1,11 +1,10 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from '@/components/auth';
 import { Error404, Error500 } from '@/components/error';
 import { LikeButton } from '@/components/notes/buttons/like-button';
 import { StockButton } from '@/components/notes/buttons/stock-button';
 import { StackList } from '@/components/notes/stack-list';
 import { TopicBadge } from '@/components/topics/badge';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
@@ -21,13 +20,10 @@ const LOCALE = process.env.LOCALE || 'ja-JP';
 const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
 
 export default async function Page({ params }: { params: { noteId: string } }) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
-  const note = await getNoteWithUserGroupTopics(params.noteId, userId).catch((e) => null);
+  const note = await getNoteWithUserGroupTopics(params.noteId, user.id).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
 
   const blobBody = await blob
@@ -90,8 +86,8 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 <div></div>
                 <div className="sticky top-0">
                   <div className="pt-5 flex flex-col gap-4">
-                    <LikeButton userId={userId} noteId={note.id} />
-                    <StockButton userId={userId} noteId={note.id} />
+                    <LikeButton userId={user.id} noteId={note.id} />
+                    <StockButton userId={user.id} noteId={note.id} />
                     <div className="w-10 h-10 flex items-center justify-center">
                       <OtherMenuButton note={note} className="w-8 h-8 text-gray-700" />
                     </div>
@@ -131,7 +127,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                         <div className="mx-1 flex space-x-2 items-center">
                           <div>
                             <img
-                              src={`/api/users/${note.User.id}/icon`}
+                              src={`/api/users/${note.User.uid}/icon`}
                               className="w-10 h-10 rounded-full group-hover:opacity-80"
                               alt="user icon"
                             />
@@ -174,7 +170,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
                   <div className="text-lg font-bold text-gray-900 border-b px-4 pt-2 pb-1">関連記事</div>
                   <div className="p-4">
-                    <RelatedNoteList userId={userId} noteId={note.id} />
+                    <RelatedNoteList userId={user.id} noteId={note.id} />
                   </div>
                 </div>
               </div>
@@ -187,9 +183,14 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 }
 
 async function CommentList({ noteId }: { noteId: string }) {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200) return <></>;
+  const user = await getSessionUser();
+  if (!user || !user.id) {
+    return (
+      <div className="px-4 py-4">
+        <div className="text-base text-gray-700">コメントを書くにはログインしてください。</div>
+      </div>
+    );
+  }
 
   const comments = await getCommentsByNoteId(noteId).catch((e) => []);
 
@@ -200,7 +201,7 @@ async function CommentList({ noteId }: { noteId: string }) {
           <div className="flex justify-between items-center">
             <div className="mx-1 flex space-x-3 items-center">
               <div>
-                <img src={`/api/users/${c.User.id}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
+                <img src={`/api/users/${c.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
               </div>
               <div>
                 <div className="text-sm text-gray-700">
@@ -265,7 +266,17 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
   // Get related notes
   const relatedNotes = await es
     .search('notes', {
-      _source: ['title', 'releasedAt', 'userId', 'groupId', 'User.handle', 'User.name', 'Group.handle', 'Group.name'],
+      _source: [
+        'title',
+        'releasedAt',
+        'userId',
+        'groupId',
+        'User.uid',
+        'User.handle',
+        'User.name',
+        'Group.handle',
+        'Group.name',
+      ],
       knn: {
         field: 'body_embed_ada_002',
         query_vector: embed,
@@ -283,7 +294,7 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
     .then((res) => {
       return res.hits.hits.map((hit: any) => {
         const source = hit._source;
-        const User = { id: source.userId, handle: source.User.handle, name: source.User.name };
+        const User = { id: source.userId, uid: source.User.uid, handle: source.User.handle, name: source.User.name };
         const Group = source.groupId
           ? { id: source.groupId, handle: source.Group.handle, name: source.Group.name }
           : null;

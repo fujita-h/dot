@@ -8,6 +8,7 @@ import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
 import CodeBlockExtension from '@tiptap/extension-code-block';
+import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
@@ -25,12 +26,15 @@ import TableExtension from '@tiptap/extension-table';
 import TableCellExtension from '@tiptap/extension-table-cell';
 import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableRowExtension from '@tiptap/extension-table-row';
+import TaskItemExtension from '@tiptap/extension-task-item';
+import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 
 import '@/components/tiptap/tiptap.css';
+import 'highlight.js/styles/github.css';
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
   const editor = useEditor({
@@ -38,6 +42,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       BlockquoteExtension,
       BulletListExtension,
       CodeBlockExtension,
+      CodeBlockLowlightExtension,
       DocumentExtension,
       HardBreakExtension,
       HeadingExtension.extend({
@@ -63,6 +68,8 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
+      TaskListExtension,
+      TaskItemExtension.configure({ nested: true }),
       ParagraphExtension,
       TextExtension,
       BoldExtension,

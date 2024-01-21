@@ -1,11 +1,10 @@
 'use server';
 
-import prisma from '@/libs/prisma/instance';
+import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
-import { revalidatePath } from 'next/cache';
-import { auth } from '@/libs/auth';
-import { getUserIdFromSession } from '@/libs/auth/utils';
+import prisma from '@/libs/prisma/instance';
 import { checkHandle } from '@/libs/utils/check-handle';
+import { revalidatePath } from 'next/cache';
 
 export interface ActionState {
   status: string | null;
@@ -15,9 +14,8 @@ export interface ActionState {
 }
 
 export async function UpdateGroupAction(state: ActionState, formData: FormData): Promise<ActionState> {
-  const session = await auth();
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status !== 200 || !userId) {
+  const user = await getSessionUser();
+  if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
   }
 
@@ -28,7 +26,7 @@ export async function UpdateGroupAction(state: ActionState, formData: FormData):
   }
   // check group permission
   const group = await prisma.group.findUnique({
-    where: { id: groupId, Members: { some: { userId: userId, role: 'ADMIN' } } },
+    where: { id: groupId, Members: { some: { userId: user.id, role: 'ADMIN' } } },
   });
   if (!group) {
     return {

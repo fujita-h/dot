@@ -50,20 +50,6 @@ export function getUserWithFollowedFromHandle(handle: string) {
     });
 }
 
-export function getUserWithClaims(userId: string) {
-  return prisma.user
-    .findUnique({
-      where: { id: userId },
-      include: {
-        Claim: true,
-      },
-    })
-    .catch((e) => {
-      console.error(e);
-      throw new Error('Error occurred while fetching user');
-    });
-}
-
 export function getUserProfileAndSettings(userId: string) {
   return prisma.user
     .findUnique({
@@ -85,7 +71,6 @@ export function getUserProfileAndSettings(userId: string) {
 export function getUsersWithEmail(take?: number, skip?: number) {
   return prisma.user
     .findMany({
-      include: { Claim: { select: { email: true } } },
       take,
       skip,
     })

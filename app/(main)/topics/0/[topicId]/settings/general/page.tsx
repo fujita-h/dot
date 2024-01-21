@@ -1,9 +1,10 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
-import { auth } from '@/libs/auth';
-import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
+import { SignInForm } from '@/components/auth';
+import { Error404 } from '@/components/error';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getTopic } from '@/libs/prisma/topic';
 import { Form } from './form';
+
+const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
 
 type Props = {
   params: { topicId: string };
@@ -11,17 +12,14 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  const session = await auth();
-  const roles = await getRolesFromSession(session);
-  const { status, userId, error } = await getUserIdFromSession(session, true);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
+  const roles = user.roles || [];
 
   const topic = await getTopic(params.topicId).catch((e) => null);
   if (!topic) return <Error404 />;
 
-  if (!roles.includes('Topic.Admin')) {
+  if (USER_ROLE_FOR_TOPIC_CREATION && !roles.includes(USER_ROLE_FOR_TOPIC_CREATION)) {
     return (
       <div className="space-y-4">
         <div className="md:flex md:gap-1">

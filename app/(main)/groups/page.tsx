@@ -1,9 +1,7 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
-import { Error404, Error500 } from '@/components/error';
+import { SignInForm } from '@/components/auth';
 import { CardList } from '@/components/groups/card-list';
 import { SimplePagination } from '@/components/paginations/simple';
-import { auth } from '@/libs/auth';
-import { getRolesFromSession, getUserIdFromSession } from '@/libs/auth/utils';
+import { getSessionUser } from '@/libs/auth/utils';
 import { getGroupsCount, getGroupsWithRecentNotesCountHEAVY } from '@/libs/prisma/group';
 import { redirect } from 'next/navigation';
 import { CreateGroupButton } from './form';
@@ -16,13 +14,10 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await auth();
-  const { status, userId } = await getUserIdFromSession(session);
-  if (status === 401) return <SignInForm />;
-  if (status === 500) return <Error500 />;
-  if (status === 404 || !userId) return <Error404 />;
+  const user = await getSessionUser();
+  if (!user || !user.id) return <SignInForm />;
 
-  const roles = await getRolesFromSession(session);
+  const roles = user.roles || [];
   const isAllowedToCreateGroup = !USER_ROLE_FOR_GROUP_CREATION || roles.includes(USER_ROLE_FOR_GROUP_CREATION);
 
   const _page = Number(searchParams.page);
@@ -42,7 +37,7 @@ export default async function Page({
   }
 
   return (
-    <div>
+    <div className="p-2 md:p-4">
       <div className="flex justify-between items-center">
         <div>
           <div className="text-2xl font-bold">Groups</div>
@@ -50,12 +45,12 @@ export default async function Page({
         </div>
         <div>{isAllowedToCreateGroup && <CreateGroupButton />}</div>
       </div>
-      <div className="mt-6 flex">
+      <div className="flex mt-6 md:mt-8">
         {/* <div className="w-80 min-w-[320px]"></div> */}
         <div className="flex-1">
           <p className="text-base">最近投稿のあったグループ</p>
           <CardList groups={groups} />
-          <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-300">
+          <div className="mt-3 pt-3 pb-3 px-4 border-t border-gray-300">
             <SimplePagination page={page} lastPage={lastPage} />
           </div>
         </div>

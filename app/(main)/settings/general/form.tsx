@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { CameraIcon } from '@heroicons/react/24/outline';
 import { ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const initialActionState: ActionState = {
@@ -30,8 +31,8 @@ function SubmitButton() {
 
 interface Props {
   handle: string;
-  name: string;
-  about: string;
+  name: string | null;
+  about: string | null;
 }
 
 export function Form({ props }: { props: Props }) {
@@ -68,10 +69,10 @@ export function Form({ props }: { props: Props }) {
       handleInputRef.current.value = props.handle;
     }
     if (nameInputRef.current) {
-      nameInputRef.current.value = props.name;
+      nameInputRef.current.value = props.name || '';
     }
     if (aboutInputRef.current) {
-      aboutInputRef.current.value = props.about;
+      aboutInputRef.current.value = props.about || '';
     }
   };
 
@@ -111,7 +112,13 @@ export function Form({ props }: { props: Props }) {
 
   return (
     <form action={formAction}>
-      <ToastContainer />
+      <ToastContainer
+        stacked={true}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        closeOnClick={true}
+        draggable={false}
+      />
       <div className="px-4 py-6 sm:p-8">
         <div className="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="col-span-full">
@@ -214,7 +221,7 @@ export function Form({ props }: { props: Props }) {
                   id="name"
                   name="name"
                   ref={nameInputRef}
-                  defaultValue={props.name}
+                  defaultValue={props.name || ''}
                   className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   autoComplete="off"
                 />
@@ -231,7 +238,7 @@ export function Form({ props }: { props: Props }) {
                 id="about"
                 name="about"
                 ref={aboutInputRef}
-                defaultValue={props.about}
+                defaultValue={props.about || ''}
                 rows={3}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 autoComplete="off"

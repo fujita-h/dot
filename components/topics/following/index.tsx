@@ -15,7 +15,7 @@ export async function FollowingUsers({ userId }: { userId: string }) {
           <Link key={user.id} href={`/users/${user.handle}`}>
             <div className="flex items-center gap-2 px-3 py-1 hover:bg-white rounded-sm">
               <div className="flex-shrink-0">
-                <img src={`/api/users/${user.id}/icon`} className="w-5 h-5 rounded-full bg-white" alt="user icon" />
+                <img src={`/api/users/${user.uid}/icon`} className="w-5 h-5 rounded-full bg-white" alt="user icon" />
               </div>
               <div className="flex-none text-base text-gray-900 truncate">{user.name}</div>
             </div>
