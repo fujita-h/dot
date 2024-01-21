@@ -13,12 +13,22 @@ export default async function Page({
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 
+  const query = (searchParams.q as string) || '';
+
+  if (!query) {
+    return (
+      <div>
+        <div className="my-3">
+          <SearchForm q={query} />
+        </div>
+      </div>
+    );
+  }
+
   const groups = await getReadableGroups(user.id)
     .then((groups) => groups.map((g) => g.id))
     .then((groupIds) => [...groupIds, 'NULL'])
     .catch((e) => []);
-
-  const q = (searchParams.q as string) || '';
 
   const esResults = await es.search('notes', {
     _source: [
@@ -37,7 +47,7 @@ export default async function Page({
         must: [
           {
             simple_query_string: {
-              query: q,
+              query: query,
               fields: ['title^2', 'title.ngram', 'body^2', 'body.ngram'],
               default_operator: 'AND',
             },
@@ -72,13 +82,41 @@ export default async function Page({
   return (
     <div>
       <div className="my-3">
-        <SearchForm q={q} />
+        <SearchForm q={query} />
       </div>
-      {q && (
-        <div className="bg-white rounded-md p-2">
-          <StackList notes={notes} />
-        </div>
-      )}
+      <div>
+        {notes.length === 0 && <ResultEmpty query={query} />}
+        {notes.length > 0 && <Result query={query} notes={notes} />}
+      </div>
+    </div>
+  );
+}
+
+function ResultEmpty({ query }: { query: string }) {
+  return (
+    <div>
+      <div className="p-2 text-base">
+        <span className="text-gray-800 font-semibold">{query}</span>
+        <span className="text-gray-500"> の検索結果:</span>
+      </div>
+      <div className="bg-white rounded-md p-6 text-center">
+        <div className="text-2xl font-bold">No results</div>
+        <div className="text-gray-600">検索結果がありません</div>
+      </div>
+    </div>
+  );
+}
+
+function Result({ query, notes }: { query: string; notes: Note[] }) {
+  return (
+    <div>
+      <div className="p-2 text-base">
+        <span className="text-gray-800 font-semibold">{query}</span>
+        <span className="text-gray-500"> の検索結果:</span>
+      </div>
+      <div className="bg-white rounded-md p-2">
+        <StackList notes={notes} />
+      </div>
     </div>
   );
 }
