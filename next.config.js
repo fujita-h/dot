@@ -4,6 +4,7 @@ const nextConfig = {
     instrumentationHook : true,
     serverMinification: false, // temporary workaround for Next.js 14.0.4 issue
   },
+  poweredByHeader: false,
   headers: async () => {
     return [
       {
