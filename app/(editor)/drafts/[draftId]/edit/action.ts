@@ -304,7 +304,7 @@ export async function processPublish(
           bodyBlobName: blobName,
         },
         include: {
-          User: { select: { handle: true, name: true } },
+          User: { select: { uid: true, handle: true, name: true } },
           Group: { select: { handle: true, name: true, type: true } },
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
@@ -343,7 +343,7 @@ export async function processPublish(
           releasedAt: new Date(),
         },
         include: {
-          User: { select: { handle: true, name: true } },
+          User: { select: { uid: true, handle: true, name: true } },
           Group: { select: { handle: true, name: true, type: true } },
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },

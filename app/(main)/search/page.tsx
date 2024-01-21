@@ -21,7 +21,17 @@ export default async function Page({
   const q = (searchParams.q as string) || '';
 
   const esResults = await es.search('notes', {
-    _source: ['title', 'releasedAt', 'userId', 'groupId', 'User.handle', 'User.name', 'Group.handle', 'Group.name'],
+    _source: [
+      'title',
+      'releasedAt',
+      'userId',
+      'groupId',
+      'User.uid',
+      'User.handle',
+      'User.name',
+      'Group.handle',
+      'Group.name',
+    ],
     query: {
       bool: {
         must: [
