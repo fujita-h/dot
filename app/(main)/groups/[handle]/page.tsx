@@ -145,8 +145,8 @@ function Header({
           'min-h-[60px] md:min-h-[70px] lg:min-h-[80px] xl:min-h-[90px]'
         )}
       >
-        <div className="flex justify-between gap-2">
-          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4">
+        <div className="flex justify-between gap-2 items-center">
+          <div className="flex-1 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold">
             {group.name}
             {group.type === GroupType.PRIVATE && (
               <span className="inline-block ml-4 text-2xl font-normal text-yellow-500">
@@ -179,7 +179,7 @@ function Header({
           </div>
         </div>
         {group.about && (
-          <div className="mt-1 pb-3 px-3">
+          <div className="pb-3 pl-1">
             <p className="text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">{group.about}</p>
           </div>
         )}
