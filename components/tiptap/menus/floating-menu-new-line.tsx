@@ -15,7 +15,7 @@ export function FloatingMenuNewLine({ editor }: { editor: Editor }) {
   return (
     <FloatingMenu
       pluginKey="newLineFloatingMenu"
-      tippyOptions={{ duration: 200 }}
+      tippyOptions={{ duration: 200, maxWidth: 'none' }}
       editor={editor}
       shouldShow={({ editor, view, state, oldState }) => {
         const { selection } = state;
