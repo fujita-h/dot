@@ -99,10 +99,10 @@ export function Form({ topic }: { topic: Topic }) {
               プロフィールページで利用される背景とアイコン画像を設定します。ヘッダーや他のページでの反映には時間がかかる場合があります。
             </p>
 
-            <div className="relative mt-2 w-20 h-20">
+            <div className="relative mt-4 ml-2 w-28 h-28">
               <img
                 src={iconPreview ?? `/api/topics/${topic.id}/icon?no-cache=0`}
-                className="rounded-md"
+                className="rounded-md aspect-square object-cover border border-gray-300"
                 alt="topic-icon"
               />
               <div
