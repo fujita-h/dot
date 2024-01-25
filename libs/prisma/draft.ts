@@ -111,7 +111,10 @@ export async function createDraft(
 export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: number) {
   return prisma.draft
     .findMany({
-      where: { userId: userId },
+      where: {
+        userId: userId,
+        bodyBlobName: { not: null },
+      },
       orderBy: { updatedAt: 'desc' },
       take: take,
       skip: skip,
@@ -128,10 +131,17 @@ export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: nu
 
 // if you change this function, you should change getDraftsWithGroupTopic too
 export function getDraftsCount(userId: string) {
-  return prisma.draft.count({ where: { userId: userId } }).catch((e) => {
-    console.error(e);
-    throw new Error('Error occurred while fetching drafts');
-  });
+  return prisma.draft
+    .count({
+      where: {
+        userId: userId,
+        bodyBlobName: { not: null },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching drafts');
+    });
 }
 
 export function getDraft(userId: string, draftId: string) {
