@@ -15,16 +15,16 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
     getDraftsCount(userId),
   ]);
 
+  if (!drafts || drafts.length === 0) {
+    return <div>下書きがありません</div>;
+  }
+
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage) {
     const params = new URLSearchParams();
     params.set('page', lastPage.toString());
     if (id) params.set('id', id);
     redirect(`/drafts?${params.toString()}`);
-  }
-
-  if (!drafts || drafts.length === 0) {
-    return <div>下書きがありません</div>;
   }
 
   const searchParams = new URLSearchParams();
