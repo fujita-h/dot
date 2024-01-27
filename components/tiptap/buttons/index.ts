@@ -1,3 +1,4 @@
+export { ButtonBlockquote } from './blockquote';
 export { ButtonBold } from './bold';
 export { ButtonBulletList } from './bullet-list';
 export { ButtonCode } from './code';
