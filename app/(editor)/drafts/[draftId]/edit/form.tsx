@@ -249,7 +249,9 @@ function EditorForm({
       }
 
       // Collect focusable elements
-      const focusableElements = document.querySelectorAll('#draft-editor button');
+      const focusableElements = Array.from(document.querySelectorAll('#draft-editor button')).filter(
+        (element: any) => element.tabIndex >= 0 && !element.disabled && element.offsetParent != null
+      );
 
       // If there are no focusable elements, do nothing
       if (focusableElements.length === 0) {
