@@ -12,7 +12,7 @@ export function BubbleMenuImage({ editor }: { editor: Editor }) {
 
   return (
     <BubbleMenu
-      pluginKey="table-image"
+      pluginKey="image-bm"
       tippyOptions={{ duration: 200, placement: 'top-start', maxWidth: 'none' }}
       editor={editor}
       shouldShow={({ editor, view, state, oldState, from, to }) => {

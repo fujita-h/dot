@@ -1,6 +1,7 @@
 import { Editor } from '@tiptap/react';
 import {
   ButtonSelectText,
+  ButtonBlockquote,
   ButtonBold,
   ButtonItalic,
   ButtonUnderline,
@@ -27,7 +28,19 @@ export function StickyMenu({ editor }: { editor: Editor }) {
           <ButtonStrike editor={editor} id="button-strike" prevButtonId="button-underline" nextButtonId="utton-code" />
           <ButtonCode editor={editor} id="button-code" prevButtonId="button-strike" nextButtonId="button-table" />
           <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
-          <ButtonTableInsert editor={editor} id="button-table" prevButtonId="button-code" nextButtonId={undefined} />
+          <ButtonTableInsert
+            editor={editor}
+            id="button-table"
+            prevButtonId="button-code"
+            nextButtonId="button-blockquote"
+          />
+          <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
+          <ButtonBlockquote
+            editor={editor}
+            id="button-blockquote"
+            prevButtonId="button-table"
+            nextButtonId={undefined}
+          />
         </div>
       </div>
     </div>

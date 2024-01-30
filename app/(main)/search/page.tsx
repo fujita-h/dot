@@ -3,6 +3,7 @@ import { Note, StackList } from '@/components/notes/stack-list';
 import { getSessionUser } from '@/libs/auth/utils';
 import es from '@/libs/elasticsearch/instance';
 import { getReadableGroups } from '@/libs/prisma/group';
+import { Suspense } from 'react';
 import { SearchForm } from './form';
 
 export default async function Page({
@@ -25,45 +26,67 @@ export default async function Page({
     );
   }
 
-  const groups = await getReadableGroups(user.id)
+  return (
+    <div>
+      <div className="my-3">
+        <SearchForm q={query} />
+      </div>
+      <Suspense
+        key={JSON.stringify(query)}
+        fallback={
+          <div className="flex justify-center" aria-label="読み込み中">
+            <div className="mt-8 animate-spin h-10 w-10 border-[5px] border-indigo-500 rounded-full border-t-transparent"></div>
+          </div>
+        }
+      >
+        <ResultWrapper userId={user.id} query={query} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function ResultWrapper({ userId, query }: { userId: string; query: string }) {
+  const groups = await getReadableGroups(userId)
     .then((groups) => groups.map((g) => g.id))
     .then((groupIds) => [...groupIds, 'NULL'])
     .catch((e) => []);
-
-  const esResults = await es.search('notes', {
-    _source: [
-      'title',
-      'releasedAt',
-      'userId',
-      'groupId',
-      'User.uid',
-      'User.handle',
-      'User.name',
-      'Group.handle',
-      'Group.name',
-    ],
-    query: {
-      bool: {
-        must: [
-          {
-            simple_query_string: {
-              query: query,
-              fields: ['title^2', 'title.ngram', 'body^2', 'body.ngram'],
-              default_operator: 'AND',
+  const [esResults] = await Promise.all([
+    es.search('notes', {
+      _source: [
+        'title',
+        'releasedAt',
+        'userId',
+        'groupId',
+        'User.uid',
+        'User.handle',
+        'User.name',
+        'Group.handle',
+        'Group.name',
+      ],
+      query: {
+        bool: {
+          must: [
+            {
+              simple_query_string: {
+                query: query,
+                fields: ['title^2', 'title.ngram', 'body^2', 'body.ngram'],
+                default_operator: 'AND',
+              },
             },
-          },
-        ],
-        filter: [
-          {
-            bool: {
-              should: [{ terms: { groupId: groups } }],
-              minimum_should_match: 1,
+          ],
+          filter: [
+            {
+              bool: {
+                should: [{ terms: { groupId: groups } }],
+                minimum_should_match: 1,
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-  });
+    }),
+    sleep(500),
+  ]);
 
   // ToDo: Which is better, to use _source or retrieve from DB?
   const notes: Note[] = esResults.hits.hits.map((hit: any) => {
@@ -81,13 +104,8 @@ export default async function Page({
 
   return (
     <div>
-      <div className="my-3">
-        <SearchForm q={query} />
-      </div>
-      <div>
-        {notes.length === 0 && <ResultEmpty query={query} />}
-        {notes.length > 0 && <Result query={query} notes={notes} />}
-      </div>
+      {notes.length === 0 && <ResultEmpty query={query} />}
+      {notes.length > 0 && <Result query={query} notes={notes} />}
     </div>
   );
 }
@@ -119,4 +137,8 @@ function Result({ query, notes }: { query: string; notes: Note[] }) {
       </div>
     </div>
   );
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

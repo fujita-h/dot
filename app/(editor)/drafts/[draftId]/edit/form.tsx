@@ -4,6 +4,7 @@ import { EditorNavbar } from '@/components/navbar';
 import { uploadFiles } from '@/components/tiptap/action';
 import {
   BubbleMenuImage,
+  BubbleMenuLink,
   BubbleMenuTable,
   BubbleMenuTextSelected,
   FloatingMenuNewLine,
@@ -11,6 +12,7 @@ import {
 } from '@/components/tiptap/menus';
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
+import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import ImageExtension from '@/libs/tiptap/extensions/image';
 import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
@@ -18,7 +20,6 @@ import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
-import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
@@ -249,7 +250,9 @@ function EditorForm({
       }
 
       // Collect focusable elements
-      const focusableElements = document.querySelectorAll('#draft-editor button');
+      const focusableElements = Array.from(document.querySelectorAll('#draft-editor button')).filter(
+        (element: any) => element.tabIndex >= 0 && !element.disabled && element.offsetParent != null
+      );
 
       // If there are no focusable elements, do nothing
       if (focusableElements.length === 0) {
@@ -321,9 +324,10 @@ function EditorForm({
           <>
             <StickyMenu editor={editor} />
             <div className="px-2 pb-1">
-              <BubbleMenuTextSelected editor={editor} />
-              <BubbleMenuTable editor={editor} />
               <BubbleMenuImage editor={editor} />
+              <BubbleMenuLink editor={editor} />
+              <BubbleMenuTable editor={editor} />
+              <BubbleMenuTextSelected editor={editor} />
               {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
               <div id="draft-editor">
                 <EditorContent editor={editor} />
