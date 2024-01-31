@@ -26,44 +26,49 @@ import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: string }) {
-  const editor = useEditor({
-    extensions: [
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension.configure({ levels: [1, 2, 3] }),
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
-      ImageExtension.extend({
-        renderHTML({ node, HTMLAttributes }) {
-          return [
-            'a',
-            {
-              href: node.attrs.src,
-              target: '_blank',
-              rel: 'noopener noreferrer',
-            },
-            ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)],
-          ];
-        },
-      }),
-      LinkExtension,
-      UnderlineExtension,
-    ],
-    content: JSON.parse(jsonString),
-    editable: false,
-  });
-  return <EditorContent editor={editor} />;
+  try {
+    const editor = useEditor({
+      extensions: [
+        BlockquoteExtension,
+        BulletListExtension,
+        CodeBlockExtension,
+        DocumentExtension,
+        HardBreakExtension,
+        HeadingExtension.configure({ levels: [1, 2, 3] }),
+        HorizontalRuleExtension,
+        ListItemExtension,
+        OrderedListExtension,
+        ParagraphExtension,
+        TextExtension,
+        BoldExtension,
+        CodeExtension,
+        ItalicExtension,
+        StrikeExtension,
+        DropcursorExtension,
+        GapcursorExtension,
+        HistoryExtension,
+        ImageExtension.extend({
+          renderHTML({ node, HTMLAttributes }) {
+            return [
+              'a',
+              {
+                href: node.attrs.src,
+                target: '_blank',
+                rel: 'noopener noreferrer',
+              },
+              ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)],
+            ];
+          },
+        }),
+        LinkExtension,
+        UnderlineExtension,
+      ],
+      content: JSON.parse(jsonString),
+      editable: false,
+    });
+    return <EditorContent editor={editor} />;
+  } catch (e) {
+    console.error(e);
+    return <div>Failed to Parse TipTap JSON</div>;
+  }
 }

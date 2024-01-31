@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {
     instrumentationHook : true,
-    serverComponentsExternalPackages: ['@azure/storage-blob'],
+    serverComponentsExternalPackages: ['@azure/storage-blob', '@dqbd/tiktoken'],
   },
   poweredByHeader: false,
   headers: async () => {

@@ -2,7 +2,6 @@
 
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import { createColGroup } from '@/libs/tiptap/utilities/createColGroup';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
@@ -21,7 +20,7 @@ import ListItemExtension from '@tiptap/extension-list-item';
 import OrderedListExtension from '@tiptap/extension-ordered-list';
 import ParagraphExtension from '@tiptap/extension-paragraph';
 import StrikeExtension from '@tiptap/extension-strike';
-import TableExtension from '@tiptap/extension-table';
+import TableExtension, { createColGroup } from '@tiptap/extension-table';
 import TableCellExtension from '@tiptap/extension-table-cell';
 import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableRowExtension from '@tiptap/extension-table-row';
@@ -36,76 +35,81 @@ import '@/components/tiptap/tiptap.css';
 import 'highlight.js/styles/github.css';
 
 export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: string }) {
-  const editor = useEditor({
-    extensions: [
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockLowlightExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension.extend({
-        addAttributes() {
-          return {
-            ...this.parent?.(),
-            class: {
-              default: NOTE_HEADERS_CLASS_NAME,
-            },
-          };
-        },
-        renderHTML({ node, HTMLAttributes }) {
-          return [
-            'h' + node.attrs.level,
-            {
-              ...HTMLAttributes,
-              id: node.textContent, // ノードのテキスト内容をid属性として設定
-            },
-            0,
-          ];
-        },
-      }),
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      TaskListExtension,
-      TaskItemExtension.configure({ nested: true }),
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
-      UnderlineExtension,
-      ImageExtension,
-      LinkExtension,
-      TableExtension.extend({
-        renderHTML({ node, HTMLAttributes }) {
-          const { colgroup, tableWidth, tableMinWidth } = createColGroup(node, this.options.cellMinWidth);
+  try {
+    const editor = useEditor({
+      extensions: [
+        BlockquoteExtension,
+        BulletListExtension,
+        CodeBlockLowlightExtension,
+        DocumentExtension,
+        HardBreakExtension,
+        HeadingExtension.extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              class: {
+                default: NOTE_HEADERS_CLASS_NAME,
+              },
+            };
+          },
+          renderHTML({ node, HTMLAttributes }) {
+            return [
+              'h' + node.attrs.level,
+              {
+                ...HTMLAttributes,
+                id: node.textContent, // ノードのテキスト内容をid属性として設定
+              },
+              0,
+            ];
+          },
+        }),
+        HorizontalRuleExtension,
+        ListItemExtension,
+        OrderedListExtension,
+        TaskListExtension,
+        TaskItemExtension.configure({ nested: true }),
+        ParagraphExtension,
+        TextExtension,
+        BoldExtension,
+        CodeExtension,
+        ItalicExtension,
+        StrikeExtension,
+        DropcursorExtension,
+        GapcursorExtension,
+        HistoryExtension,
+        UnderlineExtension,
+        ImageExtension,
+        LinkExtension,
+        TableExtension.extend({
+          renderHTML({ node, HTMLAttributes }) {
+            const { colgroup, tableWidth, tableMinWidth } = createColGroup(node, this.options.cellMinWidth);
 
-          const table: DOMOutputSpec = [
-            'div',
-            { class: 'table-container' },
-            [
-              'table',
-              mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-                style: tableWidth ? `width: ${tableWidth}` : `minWidth: ${tableMinWidth}`,
-              }),
-              colgroup,
-              ['tbody', 0],
-            ],
-          ];
+            const table: DOMOutputSpec = [
+              'div',
+              { class: 'table-container' },
+              [
+                'table',
+                mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+                  style: tableWidth ? `width: ${tableWidth}` : `minWidth: ${tableMinWidth}`,
+                }),
+                colgroup,
+                ['tbody', 0],
+              ],
+            ];
 
-          return table;
-        },
-      }),
-      TableRowExtension,
-      TableHeaderExtension,
-      TableCellExtension,
-    ],
-    content: JSON.parse(jsonString),
-    editable: false,
-  });
-  return <EditorContent editor={editor} />;
+            return table;
+          },
+        }),
+        TableRowExtension,
+        TableHeaderExtension,
+        TableCellExtension,
+      ],
+      content: JSON.parse(jsonString),
+      editable: false,
+    });
+    return <EditorContent editor={editor} />;
+  } catch (e) {
+    console.error(e);
+    return <div>Failed to Parse TipTap JSON</div>;
+  }
 }

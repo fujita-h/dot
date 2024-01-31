@@ -30,42 +30,43 @@ import TableCellExtension from '@tiptap/extension-table-cell';
 import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonDraftRenderer({ jsonString }: { jsonString: string }) {
-  const editor = useEditor({
-    extensions: [
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension,
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
-      UnderlineExtension,
-      ImageExtension,
-      LinkExtension.configure({
-        openOnClick: false,
-      }),
-      TableExtension,
-      TableRowExtension,
-      TableHeaderExtension,
-      TableCellExtension,
-    ],
-    editable: false,
-  });
-
-  if (!editor) return <></>;
-
-  editor.commands.setContent(JSON.parse(jsonString));
-
-  return <EditorContent editor={editor} />;
+  try {
+    const editor = useEditor({
+      extensions: [
+        BlockquoteExtension,
+        BulletListExtension,
+        CodeBlockExtension,
+        DocumentExtension,
+        HardBreakExtension,
+        HeadingExtension,
+        HorizontalRuleExtension,
+        ListItemExtension,
+        OrderedListExtension,
+        ParagraphExtension,
+        TextExtension,
+        BoldExtension,
+        CodeExtension,
+        ItalicExtension,
+        StrikeExtension,
+        DropcursorExtension,
+        GapcursorExtension,
+        HistoryExtension,
+        UnderlineExtension,
+        ImageExtension,
+        LinkExtension.configure({
+          openOnClick: false,
+        }),
+        TableExtension,
+        TableRowExtension,
+        TableHeaderExtension,
+        TableCellExtension,
+      ],
+      editable: false,
+    });
+    editor?.commands.setContent(JSON.parse(jsonString));
+    return <EditorContent editor={editor} />;
+  } catch (e) {
+    console.error(e);
+    return <div>Failed to Parse TipTap JSON</div>;
+  }
 }

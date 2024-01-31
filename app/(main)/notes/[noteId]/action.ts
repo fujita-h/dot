@@ -1,10 +1,10 @@
 'use server';
 
-import { auth } from '@/libs/auth';
 import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import prisma from '@/libs/prisma/instance';
+import { generateTipTapText } from '@/libs/tiptap/text';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { revalidatePath } from 'next/cache';
 
@@ -40,7 +40,6 @@ export async function deleteNote(noteId: string) {
 }
 
 export async function commentOnNote(noteId: string, comment: string) {
-  const session = await auth();
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
@@ -53,6 +52,10 @@ export async function commentOnNote(noteId: string, comment: string) {
     userId: userId,
     noteId: noteId,
   };
+
+  // create TipTap text for check valid json
+  const bodyText = generateTipTapText(comment);
+
   const blobName = `${noteId}/${cuid()}`;
   const blobUploadResult = await blob
     .upload('comments', blobName, 'text/markdown', comment, metadata, tags)

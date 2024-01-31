@@ -6,36 +6,9 @@ import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
-import ImageExtension from '@/libs/tiptap/extensions/image';
+import { generateTipTapText } from '@/libs/tiptap/text';
 import { get_encoding } from '@dqbd/tiktoken';
 import { init as initCuid } from '@paralleldrive/cuid2';
-import { generateText } from '@tiptap/core';
-import BlockquoteExtension from '@tiptap/extension-blockquote';
-import BoldExtension from '@tiptap/extension-bold';
-import BulletListExtension from '@tiptap/extension-bullet-list';
-import CodeExtension from '@tiptap/extension-code';
-import CodeBlockExtension from '@tiptap/extension-code-block';
-import DocumentExtension from '@tiptap/extension-document';
-import DropcursorExtension from '@tiptap/extension-dropcursor';
-import GapcursorExtension from '@tiptap/extension-gapcursor';
-import HardBreakExtension from '@tiptap/extension-hard-break';
-import HeadingExtension from '@tiptap/extension-heading';
-import HistoryExtension from '@tiptap/extension-history';
-import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
-import ItalicExtension from '@tiptap/extension-italic';
-import LinkEntension from '@tiptap/extension-link';
-import ListItemExtension from '@tiptap/extension-list-item';
-import OrderedListExtension from '@tiptap/extension-ordered-list';
-import ParagraphExtension from '@tiptap/extension-paragraph';
-import StrikeExtension from '@tiptap/extension-strike';
-import TableExtension from '@tiptap/extension-table';
-import TableCellExtension from '@tiptap/extension-table-cell';
-import TableHeaderExtension from '@tiptap/extension-table-header';
-import TableRowExtension from '@tiptap/extension-table-row';
-import TaskItemExtension from '@tiptap/extension-task-item';
-import TaskListExtension from '@tiptap/extension-task-list';
-import TextExtension from '@tiptap/extension-text';
-import UnderlineExtension from '@tiptap/extension-underline';
 
 const cuid = initCuid({ length: 24 });
 
@@ -76,6 +49,9 @@ export async function processAutoSave(
 
   let blobName = undefined;
   if (body !== undefined) {
+    // create TipTap text for check valid json
+    const bodyText = generateTipTapText(body);
+
     blobName = `${draftId}/${cuid()}`;
     const blobUploadResult = await blob
       .upload('drafts', blobName, 'application/json', body, metadata, tags)
@@ -153,6 +129,9 @@ export async function processDraft(
     uid: user.uid || 'n/a',
   };
 
+  // create TipTap text for check valid json
+  const bodyText = generateTipTapText(body);
+
   const blobName = `${draftId}/${cuid()}`;
   const blobUploadResult = await blob
     .upload('drafts', blobName, 'application/json', body, metadata, tags)
@@ -225,40 +204,8 @@ export async function processPublish(
     uid: user.uid || 'n/a',
   };
 
-  let bodyText: string = body;
-  try {
-    bodyText = generateText(JSON.parse(body), [
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension.configure({ levels: [1, 2, 3] }),
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      TaskListExtension,
-      TaskItemExtension.configure({ nested: true }),
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
-      TableExtension,
-      TableRowExtension,
-      TableHeaderExtension,
-      TableCellExtension,
-      ImageExtension,
-      UnderlineExtension,
-      LinkEntension,
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
+  // create TipTap text
+  const bodyText = generateTipTapText(body);
 
   // count body tokens, if it's over 8000, slice it
   const encoding = await get_encoding('cl100k_base');
@@ -268,19 +215,22 @@ export async function processPublish(
   encoding.free();
 
   // get embedding
-  const embed = await aoai
-    .getEmbedding(body_slice)
-    .then((res) => {
-      const data = res.data;
-      if (data.length === 0) {
-        return [] as number[];
-      }
-      return data[0].embedding;
-    })
-    .catch((err) => {
-      console.error(err);
-      return [] as number[];
-    });
+  let embed: number[] | undefined = undefined;
+  if (body_slice.length > 0) {
+    embed = await aoai
+      .getEmbedding(body_slice)
+      .then((res) => {
+        const data = res.data;
+        if (data.length === 0) {
+          return undefined;
+        }
+        return data[0].embedding;
+      })
+      .catch((err) => {
+        console.error(err);
+        return undefined;
+      });
+  }
 
   if (relatedNoteId) {
     // update note
@@ -363,6 +313,6 @@ export async function processPublish(
 
 export async function textCompletion(prompt: string) {
   const systemPrompt =
-    'ブログの記事の入力支援をして下さい。これまでに書かれた文章から、文章の続きを書いてください。\n---\n\n';
+    'ナレッジベースの作成をしています。途中まで書かれた以下の文章の続きを出力してください。\n---\n\n';
   return aoai.getCompletion(systemPrompt + prompt).then((res) => res.choices[0].text);
 }
