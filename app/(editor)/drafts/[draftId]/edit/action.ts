@@ -215,19 +215,22 @@ export async function processPublish(
   encoding.free();
 
   // get embedding
-  const embed = await aoai
-    .getEmbedding(body_slice)
-    .then((res) => {
-      const data = res.data;
-      if (data.length === 0) {
-        return [] as number[];
-      }
-      return data[0].embedding;
-    })
-    .catch((err) => {
-      console.error(err);
-      return [] as number[];
-    });
+  let embed: number[] | undefined = undefined;
+  if (body_slice.length > 0) {
+    embed = await aoai
+      .getEmbedding(body_slice)
+      .then((res) => {
+        const data = res.data;
+        if (data.length === 0) {
+          return undefined;
+        }
+        return data[0].embedding;
+      })
+      .catch((err) => {
+        console.error(err);
+        return undefined;
+      });
+  }
 
   if (relatedNoteId) {
     // update note
