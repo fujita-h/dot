@@ -1,6 +1,5 @@
 'use server';
 
-import { auth } from '@/libs/auth';
 import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
@@ -40,7 +39,6 @@ export async function deleteNote(noteId: string) {
 }
 
 export async function commentOnNote(noteId: string, comment: string) {
-  const session = await auth();
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
