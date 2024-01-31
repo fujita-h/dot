@@ -6,36 +6,9 @@ import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
-import ImageExtension from '@/libs/tiptap/extensions/image';
+import { generateTipTapText } from '@/libs/tiptap/text';
 import { get_encoding } from '@dqbd/tiktoken';
 import { init as initCuid } from '@paralleldrive/cuid2';
-import { generateText } from '@tiptap/core';
-import BlockquoteExtension from '@tiptap/extension-blockquote';
-import BoldExtension from '@tiptap/extension-bold';
-import BulletListExtension from '@tiptap/extension-bullet-list';
-import CodeExtension from '@tiptap/extension-code';
-import CodeBlockExtension from '@tiptap/extension-code-block';
-import DocumentExtension from '@tiptap/extension-document';
-import DropcursorExtension from '@tiptap/extension-dropcursor';
-import GapcursorExtension from '@tiptap/extension-gapcursor';
-import HardBreakExtension from '@tiptap/extension-hard-break';
-import HeadingExtension from '@tiptap/extension-heading';
-import HistoryExtension from '@tiptap/extension-history';
-import HorizontalRuleExtension from '@tiptap/extension-horizontal-rule';
-import ItalicExtension from '@tiptap/extension-italic';
-import LinkEntension from '@tiptap/extension-link';
-import ListItemExtension from '@tiptap/extension-list-item';
-import OrderedListExtension from '@tiptap/extension-ordered-list';
-import ParagraphExtension from '@tiptap/extension-paragraph';
-import StrikeExtension from '@tiptap/extension-strike';
-import TableExtension from '@tiptap/extension-table';
-import TableCellExtension from '@tiptap/extension-table-cell';
-import TableHeaderExtension from '@tiptap/extension-table-header';
-import TableRowExtension from '@tiptap/extension-table-row';
-import TaskItemExtension from '@tiptap/extension-task-item';
-import TaskListExtension from '@tiptap/extension-task-list';
-import TextExtension from '@tiptap/extension-text';
-import UnderlineExtension from '@tiptap/extension-underline';
 
 const cuid = initCuid({ length: 24 });
 
@@ -76,6 +49,9 @@ export async function processAutoSave(
 
   let blobName = undefined;
   if (body !== undefined) {
+    // create TipTap text for check valid json
+    const bodyText = generateTipTapText(body);
+
     blobName = `${draftId}/${cuid()}`;
     const blobUploadResult = await blob
       .upload('drafts', blobName, 'application/json', body, metadata, tags)
@@ -153,6 +129,9 @@ export async function processDraft(
     uid: user.uid || 'n/a',
   };
 
+  // create TipTap text for check valid json
+  const bodyText = generateTipTapText(body);
+
   const blobName = `${draftId}/${cuid()}`;
   const blobUploadResult = await blob
     .upload('drafts', blobName, 'application/json', body, metadata, tags)
@@ -225,40 +204,8 @@ export async function processPublish(
     uid: user.uid || 'n/a',
   };
 
-  let bodyText: string = body;
-  try {
-    bodyText = generateText(JSON.parse(body), [
-      BlockquoteExtension,
-      BulletListExtension,
-      CodeBlockExtension,
-      DocumentExtension,
-      HardBreakExtension,
-      HeadingExtension.configure({ levels: [1, 2, 3] }),
-      HorizontalRuleExtension,
-      ListItemExtension,
-      OrderedListExtension,
-      TaskListExtension,
-      TaskItemExtension.configure({ nested: true }),
-      ParagraphExtension,
-      TextExtension,
-      BoldExtension,
-      CodeExtension,
-      ItalicExtension,
-      StrikeExtension,
-      DropcursorExtension,
-      GapcursorExtension,
-      HistoryExtension,
-      TableExtension,
-      TableRowExtension,
-      TableHeaderExtension,
-      TableCellExtension,
-      ImageExtension,
-      UnderlineExtension,
-      LinkEntension,
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
+  // create TipTap text
+  const bodyText = generateTipTapText(body);
 
   // count body tokens, if it's over 8000, slice it
   const encoding = await get_encoding('cl100k_base');
