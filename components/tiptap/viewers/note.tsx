@@ -2,7 +2,6 @@
 
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import { createColGroup } from '@/libs/tiptap/utilities/createColGroup';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
@@ -21,7 +20,7 @@ import ListItemExtension from '@tiptap/extension-list-item';
 import OrderedListExtension from '@tiptap/extension-ordered-list';
 import ParagraphExtension from '@tiptap/extension-paragraph';
 import StrikeExtension from '@tiptap/extension-strike';
-import TableExtension from '@tiptap/extension-table';
+import TableExtension, { createColGroup } from '@tiptap/extension-table';
 import TableCellExtension from '@tiptap/extension-table-cell';
 import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableRowExtension from '@tiptap/extension-table-row';
