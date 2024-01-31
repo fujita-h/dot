@@ -310,6 +310,6 @@ export async function processPublish(
 
 export async function textCompletion(prompt: string) {
   const systemPrompt =
-    'ブログの記事の入力支援をして下さい。これまでに書かれた文章から、文章の続きを書いてください。\n---\n\n';
+    'ナレッジベースの作成をしています。途中まで書かれた以下の文章の続きを出力してください。\n---\n\n';
   return aoai.getCompletion(systemPrompt + prompt).then((res) => res.choices[0].text);
 }
