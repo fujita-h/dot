@@ -17,7 +17,7 @@ export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUser
       },
       include: {
         User: true,
-        Group: true,
+        Group: { include: { Members: true } },
         Topics: { include: { Topic: true }, orderBy: { order: 'asc' } },
       },
     })

@@ -7,16 +7,33 @@ import clsx from 'clsx/lite';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
-import { commentOnNote, deleteNote } from './action';
+import { RiPushpinFill } from 'react-icons/ri';
+import { commentOnNote, deleteNote, pinNoteToGroupProfile, pinNoteToUserProfile } from './action';
 
 const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), { ssr: false });
 const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), { ssr: false });
 const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), { ssr: false });
 const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), { ssr: false });
 
+interface User {
+  id: string;
+}
+
 interface Note {
   id: string;
   title: string;
+  User: {
+    id: string;
+  };
+  Group: {
+    id: string;
+    Members: {
+      userId: string;
+      role: string;
+    }[];
+  } | null;
+  isUserPinned: boolean;
+  isGroupPinned: boolean;
 }
 
 export function NoteViewer({ jsonString }: { jsonString: string }) {
@@ -35,8 +52,11 @@ export function ScrollToC({ body }: { body: string }) {
   return <DynamicScrollToc>{body}</DynamicScrollToc>;
 }
 
-export function OtherMenuButton({ note, className, isOwner }: { note: Note; className?: string; isOwner: boolean }) {
+export function OtherMenuButton({ userId, note, className }: { userId: string; note: Note; className?: string }) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const isOwner = note.User.id === userId;
+  const canPinGroup = note.Group?.Members.some((m) => m.userId === userId && m.role === 'ADMIN');
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -73,6 +93,44 @@ export function OtherMenuButton({ note, className, isOwner }: { note: Note; clas
                     />
                     Edit
                   </a>
+                )}
+              </Menu.Item>
+            )}
+            {isOwner && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    type="button"
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'w-full group flex items-center px-4 py-2 text-sm'
+                    )}
+                    onClick={() => pinNoteToUserProfile(note.id, !note.isUserPinned)}
+                  >
+                    <span className="mr-3 text-xl text-gray-400 group-hover:text-gray-500" aria-hidden="true">
+                      <RiPushpinFill />
+                    </span>
+                    {note.isUserPinned ? 'プロフィールから外す' : 'プロフィールに固定'}
+                  </button>
+                )}
+              </Menu.Item>
+            )}
+            {canPinGroup && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    type="button"
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'w-full group flex items-center px-4 py-2 text-sm'
+                    )}
+                    onClick={() => pinNoteToGroupProfile(note.id, !note.isGroupPinned)}
+                  >
+                    <span className="mr-3 text-xl text-gray-400 group-hover:text-gray-500" aria-hidden="true">
+                      <RiPushpinFill />
+                    </span>
+                    {note.isGroupPinned ? 'グループから外す' : 'グループに固定'}
+                  </button>
                 )}
               </Menu.Item>
             )}
