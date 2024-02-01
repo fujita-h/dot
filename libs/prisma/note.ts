@@ -17,13 +17,41 @@ export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUser
       },
       include: {
         User: true,
-        Group: true,
+        Group: { include: { Members: true } },
         Topics: { include: { Topic: true }, orderBy: { order: 'asc' } },
       },
     })
     .catch((e) => {
       console.error(e);
       throw new Error('Error occurred while fetching note');
+    });
+}
+
+export function getPinnedNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
+  return prisma.note
+    .findMany({
+      where: {
+        userId: authorizedRequestUserId,
+        isUserPinned: true,
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
+        ],
+      },
+      orderBy: { releasedAt: 'desc' },
+      take,
+      skip,
+      include: {
+        User: true,
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
     });
 }
 
@@ -115,6 +143,39 @@ export function getCommentedNotesCount(authorizedRequestUserId: string) {
           { Group: { type: GroupType.BLOG } },
           { Group: { type: GroupType.COMMUNITY } },
         ],
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
+export function getPinnedNotesWithUserGroupTopicsByGroupId(
+  groupId: string,
+  authorizedRequestUserId: string,
+  take?: number,
+  skip?: number
+) {
+  return prisma.note
+    .findMany({
+      where: {
+        Group: { id: groupId },
+        isGroupPinned: true,
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
+        ],
+      },
+      orderBy: { releasedAt: 'desc' },
+      take,
+      skip,
+      include: {
+        User: true,
+        Group: true,
+        Topics: { include: { Topic: true } },
       },
     })
     .catch((e) => {

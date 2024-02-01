@@ -5,7 +5,11 @@ import { SimplePagination } from '@/components/paginations/simple';
 import { getSessionUser } from '@/libs/auth/utils';
 import { SITE_NAME } from '@/libs/constants';
 import { getGroupFromHandle, getGroupWithMembersFollowedFromHandle } from '@/libs/prisma/group';
-import { getNotesCountByGroupId, getNotesWithUserGroupTopicsByGroupId } from '@/libs/prisma/note';
+import {
+  getNotesCountByGroupId,
+  getNotesWithUserGroupTopicsByGroupId,
+  getPinnedNotesWithUserGroupTopicsByGroupId,
+} from '@/libs/prisma/note';
 import { GroupType } from '@prisma/client';
 import clsx from 'clsx/lite';
 import { Metadata } from 'next';
@@ -57,7 +61,7 @@ export default async function Page({ params, searchParams }: Props) {
   const _page = Number(searchParams.page);
   const page = _page === undefined || _page === null || Number.isNaN(_page) || _page < 1 ? 1 : Math.floor(_page);
   const skip = (page - 1) * ITEMS_PER_PAGE;
-
+  const pinnedNotes = await getPinnedNotesWithUserGroupTopicsByGroupId(group.id, user.id).catch((e) => []);
   const [notes, count] = await Promise.all([
     getNotesWithUserGroupTopicsByGroupId(group.id, user.id, ITEMS_PER_PAGE, skip).catch((e) => []),
     getNotesCountByGroupId(group.id, user.id).catch((e) => 0),
@@ -95,6 +99,7 @@ export default async function Page({ params, searchParams }: Props) {
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
               <div className="text-base font-semibold text-gray-800">固定されたノート</div>
+              <StackList notes={pinnedNotes} />
             </div>
             <div className="bg-white rounded-md p-2">
               <div className="text-base font-semibold text-gray-800">ノート</div>

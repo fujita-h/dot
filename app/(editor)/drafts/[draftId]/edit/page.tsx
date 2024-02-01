@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: { draftId: string } }) 
     <Form
       setting={setting}
       draftId={draft.id}
-      groupId={draft.groupId || undefined}
+      group={draft.Group}
       relatedNoteId={draft.relatedNoteId || undefined}
       title={draft.title || ''}
       body={body}

@@ -6,6 +6,7 @@ import es from '@/libs/elasticsearch/instance';
 import prisma from '@/libs/prisma/instance';
 import { generateTipTapText } from '@/libs/tiptap/text';
 import { init as initCuid } from '@paralleldrive/cuid2';
+import { MembershipRole } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 const cuid = initCuid();
@@ -73,6 +74,57 @@ export async function commentOnNote(noteId: string, comment: string) {
       userId: userId,
       bodyBlobName: blobName,
       isEdited: false,
+    },
+  });
+  if (result) {
+    revalidatePath(`/notes/${noteId}`);
+  }
+  return result;
+}
+
+export async function pinNoteToUserProfile(noteId: string, pinned: boolean) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
+
+  const note = await prisma.note.findUnique({ where: { id: noteId } });
+  if (!note) throw new Error('Note not found');
+  if (note.userId !== userId) throw new Error('Unauthorized');
+
+  const result = await prisma.note.update({
+    where: {
+      id: noteId,
+    },
+    data: {
+      isUserPinned: pinned,
+    },
+  });
+  if (result) {
+    revalidatePath(`/notes/${noteId}`);
+  }
+  return result;
+}
+
+export async function pinNoteToGroupProfile(noteId: string, pinned: boolean) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
+
+  const note = await prisma.note.findUnique({ where: { id: noteId } });
+  if (!note) throw new Error('Note not found');
+  const groupId = note.groupId;
+  if (!groupId) throw new Error('Note not in group');
+  const group = await prisma.group.findUnique({ where: { id: groupId }, include: { Members: true } });
+  if (!group) throw new Error('Group not found');
+  const member = group.Members.find((member) => member.userId === userId && member.role === MembershipRole.ADMIN);
+  if (!member) throw new Error('Unauthorized');
+
+  const result = await prisma.note.update({
+    where: {
+      id: noteId,
+    },
+    data: {
+      isGroupPinned: pinned,
     },
   });
   if (result) {
