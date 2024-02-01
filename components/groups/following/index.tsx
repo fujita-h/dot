@@ -4,7 +4,7 @@ import Link from 'next/link';
 export async function FollowingGroups({ userId }: { userId: string }) {
   const groups = await getFollowingGroupsByUserId(userId).catch((e) => []);
   if (!groups || groups.length === 0) {
-    return <div className="text-xs ml-2">フォロー中のグループはありません</div>;
+    return <div className="text-xs ml-2">フォローしているグループはありません</div>;
   }
   return (
     <>

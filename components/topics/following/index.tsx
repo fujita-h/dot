@@ -4,7 +4,7 @@ import Link from 'next/link';
 export async function FollowingTopics({ userId }: { userId: string }) {
   const topics = await getFollowingTopicsByUserId(userId).catch((e) => []);
   if (!topics || topics.length === 0) {
-    return <div className="text-xs ml-2">フォロー中のトピックはありません</div>;
+    return <div className="text-xs ml-2">フォローしているトピックはありません</div>;
   }
   return (
     <>
