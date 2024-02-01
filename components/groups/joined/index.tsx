@@ -4,7 +4,7 @@ import Link from 'next/link';
 export async function JoinedGroups({ userId }: { userId: string }) {
   const groups = await getJoinedGroups(userId).catch((e) => []);
   if (!groups || groups.length === 0) {
-    return <div className="text-xs ml-2">参加中のグループはありません</div>;
+    return <div className="text-xs ml-2">参加しているグループはありません</div>;
   }
   return (
     <>

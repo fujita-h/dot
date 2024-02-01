@@ -26,6 +26,8 @@ export default async function Page({ params }: { params: { noteId: string } }) {
   const note = await getNoteWithUserGroupTopics(params.noteId, user.id).catch((e) => null);
   if (!note || !note.bodyBlobName) return <Error404 />;
 
+  const isOwner = note.userId === user.id;
+
   const blobBody = await blob
     .downloadToBuffer('notes', note.bodyBlobName)
     .then((res) => res.toString('utf-8'))
@@ -89,7 +91,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                     <LikeButton userId={user.id} noteId={note.id} />
                     <StockButton userId={user.id} noteId={note.id} />
                     <div className="w-10 h-10 flex items-center justify-center">
-                      <OtherMenuButton note={note} className="w-8 h-8 text-gray-700" />
+                      <OtherMenuButton note={note} className="w-8 h-8 text-gray-700" isOwner={isOwner} />
                     </div>
                   </div>
                 </div>

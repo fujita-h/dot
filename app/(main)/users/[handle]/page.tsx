@@ -69,7 +69,7 @@ export default async function Page({ params, searchParams }: Props) {
       getNotesCount(userId).catch((e) => 0),
     ]);
   const notesFunc = tab === 'comments' ? getCommentedNotesFunc : getNotesFunc;
-  const [notes, count] = await notesFunc(user.id, ITEMS_PER_PAGE, skip);
+  const [notes, count] = await notesFunc(targetUser.id, ITEMS_PER_PAGE, skip);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage && lastPage > 0) {
     const params = new URLSearchParams(urlSearchParams);
@@ -84,7 +84,7 @@ export default async function Page({ params, searchParams }: Props) {
           className={clsx('bg-white relative w-full', 'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]')}
         >
           <img
-            src={`/api/users/${user.uid}/image`}
+            src={`/api/users/${targetUser.uid}/image`}
             className="absolute top-0 w-full h-full object-cover"
             alt="user image"
           />
@@ -96,7 +96,7 @@ export default async function Page({ params, searchParams }: Props) {
               'h-[80px] sm:h-[100px] md:h-[120px] lg:h-[140px] xl:h-[160px]'
             )}
           >
-            <img src={`/api/users/${user.uid}/icon`} className="w-full h-full rounded-full" alt="user-icon" />
+            <img src={`/api/users/${targetUser.uid}/icon`} className="w-full h-full rounded-full" alt="user-icon" />
           </div>
         </div>
         <div
@@ -108,12 +108,12 @@ export default async function Page({ params, searchParams }: Props) {
         >
           <div className="flex justify-between gap-2">
             <div>
-              <div className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold truncate">{user.name}</div>
-              <div className="text-xs md:text-sm lg:text-base text-gray-500 truncate">@{user.handle}</div>
+              <div className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold truncate">{targetUser.name}</div>
+              <div className="text-xs md:text-sm lg:text-base text-gray-500 truncate">@{targetUser.handle}</div>
             </div>
             <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
               <div>
-                <FollowToggleButton id={user.id} isFollowing={isFollowing} />
+                <FollowToggleButton id={targetUser.id} isFollowing={isFollowing} />
               </div>
             </div>
           </div>
@@ -122,34 +122,34 @@ export default async function Page({ params, searchParams }: Props) {
       <div className="md:flex md:gap-1">
         <div className="md:w-80 p-2 space-y-6">
           <div className="mx-2">
-            <h3 className="text-sm font-semibold">参加中のグループ</h3>
+            <h3 className="text-sm font-semibold">参加しているグループ</h3>
             <div className="mt-1 mx-1 flex flex-col gap-0.5">
               <Suspense fallback={<div>loading...</div>}>
-                <JoinedGroups userId={user.id} />
+                <JoinedGroups userId={targetUser.id} />
               </Suspense>
             </div>
           </div>
           <div className="mx-2">
-            <h3 className="text-sm font-semibold">フォロー中のユーザー</h3>
+            <h3 className="text-sm font-semibold">フォローしているユーザー</h3>
             <div className="mt-1 mx-1 flex flex-col gap-0.5">
               <Suspense fallback={<div>loading...</div>}>
-                <FollowingUsers userId={user.id} />
+                <FollowingUsers userId={targetUser.id} />
               </Suspense>
             </div>
           </div>
           <div className="mx-2">
-            <h3 className="text-sm font-semibold">フォロー中のグループ</h3>
+            <h3 className="text-sm font-semibold">フォローしているグループ</h3>
             <div className="mt-1 mx-1 flex flex-col gap-0.5">
               <Suspense fallback={<div>loading...</div>}>
-                <FollowingGroups userId={user.id} />
+                <FollowingGroups userId={targetUser.id} />
               </Suspense>
             </div>
           </div>
           <div className="mx-2">
-            <h3 className="text-sm font-semibold">フォロー中のトピック</h3>
+            <h3 className="text-sm font-semibold">フォローしているトピック</h3>
             <div className="mt-1 mx-1 flex flex-col gap-0.5">
               <Suspense fallback={<div>loading...</div>}>
-                <FollowingTopics userId={user.id} />
+                <FollowingTopics userId={targetUser.id} />
               </Suspense>
             </div>
           </div>

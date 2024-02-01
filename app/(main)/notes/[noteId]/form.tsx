@@ -35,7 +35,7 @@ export function ScrollToC({ body }: { body: string }) {
   return <DynamicScrollToc>{body}</DynamicScrollToc>;
 }
 
-export function OtherMenuButton({ note, className }: { note: Note; className?: string }) {
+export function OtherMenuButton({ note, className, isOwner }: { note: Note; className?: string; isOwner: boolean }) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   return (
@@ -57,23 +57,25 @@ export function OtherMenuButton({ note, className }: { note: Note; className?: s
       >
         <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href={`/notes/${note.id}/edit`}
-                  className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'group flex items-center px-4 py-2 text-sm'
-                  )}
-                >
-                  <PencilSquareIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Edit
-                </a>
-              )}
-            </Menu.Item>
+            {isOwner && (
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    href={`/notes/${note.id}/edit`}
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'group flex items-center px-4 py-2 text-sm'
+                    )}
+                  >
+                    <PencilSquareIcon
+                      className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                    Edit
+                  </a>
+                )}
+              </Menu.Item>
+            )}
             <Menu.Item>
               {({ active }) => (
                 <a
@@ -92,23 +94,25 @@ export function OtherMenuButton({ note, className }: { note: Note; className?: s
               )}
             </Menu.Item>
           </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  type="button"
-                  className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'w-full group flex items-center px-4 py-2 text-sm'
-                  )}
-                  onClick={() => setOpenDeleteModal(true)}
-                >
-                  <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Delete
-                </button>
-              )}
-            </Menu.Item>
-          </div>
+          {isOwner && (
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    type="button"
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'w-full group flex items-center px-4 py-2 text-sm'
+                    )}
+                    onClick={() => setOpenDeleteModal(true)}
+                  >
+                    <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                    Delete
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+          )}
         </Menu.Items>
       </Transition>
     </Menu>
