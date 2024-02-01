@@ -14,6 +14,7 @@ import {
   getCommentedNotesWithUserGroupTopics,
   getNotesCount,
   getNotesWithUserGroupTopics,
+  getPinnedNotesWithUserGroupTopics,
 } from '@/libs/prisma/note';
 import { getUserFromHandle, getUserWithFollowedFromHandle } from '@/libs/prisma/user';
 import clsx from 'clsx/lite';
@@ -69,6 +70,7 @@ export default async function Page({ params, searchParams }: Props) {
       getNotesCount(userId).catch((e) => 0),
     ]);
   const notesFunc = tab === 'comments' ? getCommentedNotesFunc : getNotesFunc;
+  const pinnedNotes = await getPinnedNotesWithUserGroupTopics(targetUser.id).catch((e) => []);
   const [notes, count] = await notesFunc(targetUser.id, ITEMS_PER_PAGE, skip);
   const lastPage = Math.ceil(count / ITEMS_PER_PAGE);
   if (page > lastPage && lastPage > 0) {
@@ -158,6 +160,7 @@ export default async function Page({ params, searchParams }: Props) {
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
               <div className="text-base font-semibold text-gray-800">固定されたノート</div>
+              <StackList notes={pinnedNotes} />
             </div>
             <div className="bg-white rounded-md p-2">
               <div className="my-3">

@@ -27,6 +27,34 @@ export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUser
     });
 }
 
+export function getPinnedNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
+  return prisma.note
+    .findMany({
+      where: {
+        userId: authorizedRequestUserId,
+        isUserPinned: true,
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
+        ],
+      },
+      orderBy: { releasedAt: 'desc' },
+      take,
+      skip,
+      include: {
+        User: true,
+        Group: true,
+        Topics: { include: { Topic: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching notes');
+    });
+}
+
 // if you change this function, you should change getNotesCount too
 export function getNotesWithUserGroupTopics(authorizedRequestUserId: string, take?: number, skip?: number) {
   return prisma.note
