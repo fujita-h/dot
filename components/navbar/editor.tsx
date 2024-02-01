@@ -16,10 +16,12 @@ const userNavigation = [
 ];
 
 export function EditorNavbar({
+  group,
   formDraftAction,
   formPublishAction,
   showAutoSavingMessage,
 }: {
+  group?: { id: string; name: string } | null;
   formDraftAction: () => void;
   formPublishAction: () => void;
   showAutoSavingMessage: boolean;
@@ -40,7 +42,27 @@ export function EditorNavbar({
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <AutoSavingMessage show={showAutoSavingMessage} />
+            <div className="mr-4 max-w-60 h-full pt-3">
+              <div className="text-right text-sm leading-4">
+                {group ? (
+                  <div className="inline-flex gap-1 w-full">
+                    <img
+                      src={`/api/groups/${group.id}/icon`}
+                      width={16}
+                      height={16}
+                      className="rounded-md"
+                      alt="grou-icon"
+                    />
+                    <span className="text-gray-800 truncate">{group.name}</span>
+                  </div>
+                ) : (
+                  <span className="text-gray-800">For all users</span>
+                )}
+              </div>
+              <div className="text-right text-sm leading-4">
+                <AutoSavingMessage show={showAutoSavingMessage} />
+              </div>
+            </div>
             <DraftButton onClick={formDraftAction} />
             <PublishButton onClick={formPublishAction} />
             {/* Profile dropdown */}
@@ -111,7 +133,7 @@ function AutoSavingMessage({ show }: { show: boolean }) {
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <span className="px-1 text-sm font-medium text-indigo-500 animate-pulse">Auto-Saving...</span>
+      <span className="px-1 text-sm leading-4 font-medium text-indigo-500 animate-pulse">Auto-Saving...</span>
     </Transition>
   );
 }

@@ -46,7 +46,7 @@ import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
-import type { UserSetting } from './types';
+import type { Group, UserSetting } from './types';
 
 import '@/components/tiptap/tiptap.css';
 import 'highlight.js/styles/github.css';
@@ -55,7 +55,7 @@ import './style.css';
 export function Form({
   setting,
   draftId,
-  groupId,
+  group,
   relatedNoteId,
   title,
   body,
@@ -64,13 +64,14 @@ export function Form({
 }: {
   setting: UserSetting;
   draftId: string;
-  groupId: string | undefined;
+  group: Group | null;
   relatedNoteId: string | undefined;
   title: string;
   body: string;
   topics: TopicItem[];
   topicOptions: TopicItem[];
 }) {
+  const groupId = group?.id || undefined;
   const router = useRouter();
   const [titleState, setTitleState] = useState(title);
   const [topicsState, setTopicsState] = useState(topics);
@@ -164,6 +165,7 @@ export function Form({
   return (
     <form>
       <EditorNavbar
+        group={group}
         formDraftAction={async () => {
           setAutoSaveTimestamp(0);
           const result = await processDraft(
