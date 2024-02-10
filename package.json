@@ -6,6 +6,7 @@
     "dev": "next dev",
     "prebuild": "prisma generate",
     "build": "next build",
+    "prestart": "prisma migrate deploy",
     "start": "next start",
     "lint": "next lint"
   },
