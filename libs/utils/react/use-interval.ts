@@ -8,13 +8,11 @@ import { useEffect, useRef } from 'react';
  * @param runOnMount - Optional flag indicating whether the function should be executed immediately on mount.
  */
 export function useInterval(fn: () => void, interval: number, runOnMount = false) {
-  if (runOnMount) {
-    fn();
-  }
-
   const callbackRef = useRef<() => void>(fn);
   useEffect(() => {
     callbackRef.current = fn;
+    if (runOnMount) callbackRef.current();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fn]);
 
   useEffect(() => {
