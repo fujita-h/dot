@@ -4,14 +4,12 @@ const blobClientSingleton = () => {
   return new BlobClient();
 };
 
-type BlobClientSingleton = ReturnType<typeof blobClientSingleton>;
+declare global {
+  var blob: undefined | ReturnType<typeof blobClientSingleton>;
+}
 
-const globalForBlob = globalThis as unknown as {
-  blob: BlobClientSingleton | undefined;
-};
-
-const blob = globalForBlob.blob ?? blobClientSingleton();
+const blob = globalThis.blob ?? blobClientSingleton();
 
 export default blob;
 
-if (process.env.NODE_ENV !== 'production') globalForBlob.blob = blob;
+if (process.env.NODE_ENV !== 'production') globalThis.blob = blob;
