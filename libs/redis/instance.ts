@@ -6,14 +6,12 @@ const redidClientSingleton = () => {
   return new Redis(REDIS_URL);
 };
 
-type RedisClient = ReturnType<typeof redidClientSingleton>;
+declare global {
+  var redis: undefined | ReturnType<typeof redidClientSingleton>;
+}
 
-const globalForRedis = globalThis as unknown as {
-  redis: RedisClient | undefined;
-};
-
-const redis = globalForRedis.redis ?? redidClientSingleton();
+const redis = globalThis.redis ?? redidClientSingleton();
 
 export default redis;
 
-if (process.env.NODE_ENV !== 'production') globalForRedis.redis = redis;
+if (process.env.NODE_ENV !== 'production') globalThis.redis = redis;

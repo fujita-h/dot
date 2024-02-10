@@ -4,14 +4,12 @@ const esClientSingleton = () => {
   return new EsClient();
 };
 
-type EsClientSingleton = ReturnType<typeof esClientSingleton>;
+declare global {
+  var es: undefined | ReturnType<typeof esClientSingleton>;
+}
 
-const globalForEs = globalThis as unknown as {
-  es: EsClientSingleton | undefined;
-};
-
-const es = globalForEs.es ?? esClientSingleton();
+const es = globalThis.es ?? esClientSingleton();
 
 export default es;
 
-if (process.env.NODE_ENV !== 'production') globalForEs.es = es;
+if (process.env.NODE_ENV !== 'production') globalThis.es = es;
