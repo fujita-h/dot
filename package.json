@@ -11,7 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^1.1.0",
+    "@auth/prisma-adapter": "^1.3.3",
     "@azure/openai": "^1.0.0-beta.11",
     "@azure/storage-blob": "^12.17.0",
     "@dnd-kit/core": "^6.1.0",
@@ -58,7 +58,7 @@
     "lodash": "^4.17.21",
     "lowlight": "^3.1.0",
     "next": "14.1.0",
-    "next-auth": "^5.0.0-beta.5",
+    "next-auth": "^5.0.0-beta.9",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -85,8 +85,5 @@
     "prisma": "5.9.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
-  },
-  "overrides": {
-    "@auth/core": "0.21.0"
   }
 }
