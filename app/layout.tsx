@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const sessionInterval = Number(process.env.SESSION_UPDATE_AGE) || undefined;
+  const sessionInterval = Number(process.env.AUTH_SESSION_UPDATE_AGE) || undefined;
   return (
     <html lang="ja" className="overflow-y-scroll">
       <body

@@ -41,8 +41,8 @@ export const {
   ],
   session: {
     strategy: 'database',
-    maxAge: Number(process.env.SESSION_MAX_AGE) || 60 * 60 * 24, // 24 hours
-    updateAge: Number(process.env.SESSION_UPDATE_AGE) || 60 * 5, // 5 minutes
+    maxAge: Number(process.env.AUTH_SESSION_MAX_AGE) || 60 * 60 * 24, // 24 hours
+    updateAge: Number(process.env.AUTH_SESSION_UPDATE_AGE) || 60 * 5, // 5 minutes
     generateSessionToken: () => `${cuid()}.${cuid12()}.${cuid()}`,
   },
   events: {
