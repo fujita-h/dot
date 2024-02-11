@@ -22,6 +22,7 @@
     "@heroicons/react": "^2.1.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "5.9.1",
+    "@tiptap/core": "^2.2.2",
     "@tiptap/extension-blockquote": "^2.2.2",
     "@tiptap/extension-bold": "^2.2.2",
     "@tiptap/extension-bullet-list": "^2.2.2",
