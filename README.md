@@ -1,23 +1,100 @@
-# Environment variables
+# dot
 
-| Variable                            | Description                                                                                                                           | Required | Sample                                     |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------------------------|
-| `AZURE_AD_CLIENT_ID`                | Client (App) ID of Enrta ID                                                                                                           | Yes      |                                            |
-| `AZURE_AD_CLIENT_SECRET`            | Client secret of the app                                                                                                              | Yes      |                                            |
-| `AZURE_AD_TENANT_ID`                | Tenant ID of Enrta ID                                                                                                                 | Yes      |                                            |
-| `AZURE_STORAGE_CONNECTION_STRING`   | Connection string for Azure Blob Storage for the specific container                                                                   | Yes      | DefaultEndpointsProtocol=...               |
-| `AZURE_OPENAI_ENDPOINT`             | Endpoint of OpenAI API                                                                                                                | Yes      | https://<resource name>.openai.azure.com/  |
-| `AZURE_OPENAI_KEY`                  | Key of OpenAI API                                                                                                                     | Yes      |                                            |
-| `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` | Deployment name of embedding model of `text-embedding-ada-002`                                                                        | Yes      | text-embedding-ada-002                     |
-| `AZURE_OPENAI_COMPLETION_DEPLOYMENT`| Deployment name of completion model of `gpt-35-turbo-instruct`                                                                        | Yes      | gpt-35-turbo-instruct                      |
-| `DATABASE_URL`                      | See https://www.prisma.io/docs/reference/database-reference/connection-urls                                                           | Yes      | mysql://user:pass@host:port/database       |
-| `REDIS_URL`                         | Redis URL, see https://github.com/redis/ioredis                                                                                       | Yes      | reids://user:pass@host:port/db             |
-| `ELASTICSEARCH_URL`                 | Elasticsearch URL, see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html             | Yes      | http://user:pass@host:port                 |
-| `AUTH_SECRET`                       | See https://authjs.dev/getting-started/deployment#environment-variables                                                               | Yes      |                                            |
-| `AUTH_URL`                          | See https://next-auth.js.org/configuration/options                                                                                    | Yes      | https://example.com/api/auth               |
-| `AUTH_SESSION_MAX_AGE`              | Maximum session time (in seconds). Default is `86400`. See https://next-auth.js.org/configuration/options                             | No       | 86400                                      |
-| `AUTH_SESSION_UPDATE_AGE`           | Session update time (in seconds). Default is `300`. See https://next-auth.js.org/configuration/options                                | No       | 300                                        |
-| `LOCALE `                           | Locale to use for the app. A string with a BCP 47 language tag or an `Intl.Locale instance`. Default is `ja-JP`.                      | No       | ja-JP                                      |
-| `TIMEZONE`                          | Timezone to use for the app. The time zone names of the IANA time zone database. Default is `Asia/Tokyo`.                             | No       | Asia/Tokyo                                 |
-| `USER_ROLE_FOR_GROUP_CREATION`      | User role required to create a group. Default is empty string (`""`). Empty string (`""`) means that anyone can create a group.       | No       | Group.Create                               |
-| `USER_ROLE_FOR_TOPIC_CREATION`      | User role required to create a topic. Default is empty string (`""`). Empty string (`""`) means that anyone can create a topic.       | No       | Topic.Create                               |
+## Environment variables
+
+### `AZURE_AD_CLIENT_ID`
+Client (App) ID of Enrta ID
+- Required: Yes
+- Example: 
+
+### `AZURE_AD_CLIENT_SECRET`
+Client secret of the app
+- Required: Yes
+- Example: 
+
+### `AZURE_AD_TENANT_ID`
+Tenant ID of Enrta ID
+- Required: Yes
+- Example: 
+
+### `AZURE_STORAGE_CONNECTION_STRING`
+Connection string for Azure Blob Storage for the specific container
+- Required: Yes
+- Example: `DefaultEndpointsProtocol=...`
+
+### `AZURE_OPENAI_ENDPOINT`
+Endpoint of Azure OpenAI API
+- Required: Yes
+- Example: `https://<resource-name>.openai.azure.com/`
+
+### `AZURE_OPENAI_KEY`
+Key of Azure OpenAI API
+- Required: Yes
+- Example: 
+
+### `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
+Deployment name of embedding model of `text-embedding-ada-002`
+- Required: Yes
+- Example: `text-embedding-ada-002`
+
+### `AZURE_OPENAI_COMPLETION_DEPLOYMENT`
+Deployment name of completion model of `gpt-35-turbo-instruct`
+- Required: Yes
+- Example: `gpt-35-turbo-instruct`
+
+### `DATABASE_URL`
+See [Prisma Doc](https://www.prisma.io/docs/reference/database-reference/connection-urls)
+- Required: Yes
+- Example: `mysql://user:pass@host:port/database`
+
+### `REDIS_URL`
+Redis URL, see [ioredis README](https://github.com/redis/ioredis)
+- Required: Yes
+- Example: `reids://user:pass@host:port/db`
+
+### `ELASTICSEARCH_URL`
+Elasticsearch URL, see [Elasticsearch Guide](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html)
+- Required: Yes
+- Example: `http://user:pass@host:port`
+
+### `AUTH_SECRET`
+See [Auth.js Guide](https://authjs.dev/getting-started/deployment#environment-variables)  
+A random string used to encrypt cookies and tokens. It should be at least 32 characters long.
+On Linux systems, you can generate a suitable string using the command `openssl rand -base64 32`.
+- Required: Yes
+- Example: 
+
+### `AUTH_URL`
+See [NextAuth.js Doc](https://next-auth.js.org/configuration/options)
+- Required: Yes
+- Example: `https://example.com/api/auth`
+
+### `AUTH_SESSION_MAX_AGE`
+Maximum session time (in seconds). Default is `86400`. See [NextAuth.js Doc](https://next-auth.js.org/configuration/options)
+- Required: No
+- Default: `86400`
+
+### `AUTH_SESSION_UPDATE_AGE`
+Session update time (in seconds). Default is `300`. See [NextAuth.js Doc](https://next-auth.js.org/configuration/options)
+- Required: No
+- Default: `300`
+
+### `LOCALE`
+Locale to use for the app. A string with a BCP 47 language tag or an `Intl.Locale instance`. Default is `ja-JP`.
+- Required: No
+- Default: `ja-JP`
+
+### `TIMEZONE`
+Timezone to use for the app. The time zone names of the IANA time zone database. Default is `Asia/Tokyo`.
+- Required: No
+- Default: `Asia/Tokyo`
+
+### `USER_ROLE_FOR_GROUP_CREATION`
+User role required to create a group. Default is empty string (`""`). Empty string (`""`) means that anyone can create a group.
+- Required: No
+- Default: `""`
+
+### `USER_ROLE_FOR_TOPIC_CREATION`
+User role required to create a topic. Default is empty string (`""`). Empty string (`""`) means that anyone can create a topic.
+- Required: No
+- Default: `""`
