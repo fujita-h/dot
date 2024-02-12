@@ -3,6 +3,25 @@
 import prisma from '@/libs/prisma/instance';
 import { GroupType } from '@prisma/client';
 
+export function getNote(noteId: string, authorizedRequestUserId: string) {
+  return prisma.note
+    .findUnique({
+      where: {
+        id: noteId,
+        OR: [
+          { Group: null },
+          { Group: { type: GroupType.PRIVATE, Members: { some: { userId: authorizedRequestUserId } } } },
+          { Group: { type: GroupType.BLOG } },
+          { Group: { type: GroupType.COMMUNITY } },
+        ],
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching note');
+    });
+}
+
 export function getNoteWithUserGroupTopics(noteId: string, authorizedRequestUserId: string) {
   return prisma.note
     .findUnique({
