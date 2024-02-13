@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const user = await getSessionUser();
   if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
-  const group = await getTopicByHandle(params.handle).catch((e) => null);
-  if (!group) return { title: `Not Found - ${SITE_NAME}` };
+  const topic = await getTopicByHandle(params.handle).catch((e) => null);
+  if (!topic) return { title: `Not Found - ${SITE_NAME}` };
 
-  return { title: `${group.name} - ${SITE_NAME}` };
+  return { title: `${topic.name} - ${SITE_NAME}` };
 }
 
 export default async function Page({ params, searchParams }: Props) {

@@ -2,12 +2,15 @@ import prisma from '@/libs/prisma/instance';
 import { AdapterUser } from '@auth/core/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { init as initCuid } from '@paralleldrive/cuid2';
+import crypto from 'crypto';
 import NextAuth, { Session } from 'next-auth';
 import AzureAD from 'next-auth/providers/azure-ad';
 import { NextResponse } from 'next/server';
 
 const cuid = initCuid({ length: 24 });
-const cuid12 = initCuid({ length: 12 });
+
+// tips: length should be a multiple of 4. Because base64 encode 3 bytes to 4 characters.
+const randomString = (length: number) => crypto.randomBytes(length).toString('base64').substring(0, length);
 
 export const {
   handlers: { GET, POST },
@@ -37,13 +40,14 @@ export const {
           handle: '', // will be generated in callback
         };
       },
+      checks: ['pkce', 'state', 'nonce'],
     }),
   ],
   session: {
     strategy: 'database',
     maxAge: Number(process.env.AUTH_SESSION_MAX_AGE) || 60 * 60 * 24, // 24 hours
     updateAge: Number(process.env.AUTH_SESSION_UPDATE_AGE) || 60 * 5, // 5 minutes
-    generateSessionToken: () => `${cuid()}.${cuid12()}.${cuid()}`,
+    generateSessionToken: () => `${randomString(144)}`,
   },
   events: {
     signIn: async ({ user, account, profile, isNewUser }) => {

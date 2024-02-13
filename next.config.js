@@ -2,6 +2,9 @@
 const nextConfig = {
   experimental: {
     instrumentationHook : true,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
     serverComponentsExternalPackages: ['@azure/storage-blob', '@dqbd/tiktoken'],
   },
   poweredByHeader: false,
@@ -19,13 +22,17 @@ const nextConfig = {
             value: 'nosniff',
           },
           {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
             key: 'Referrer-Policy',
             value: 'same-origin',
           },
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+              "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-ancestors: 'none';",
           },
           {
             key: 'Strict-Transport-Security',

@@ -48,9 +48,9 @@ export default async function Page({ params, searchParams }: Props) {
   if (group.type === GroupType.PRIVATE && !group.Members.find((member) => member.userId === user.id)) {
     return (
       <div className="space-y-4">
-        <Header group={group} isFollowing={false} isJoined={isJoined} />
+        <Header group={group} isFollowing={false} isJoined={isJoined} forbbiden={true} />
         <div className="md:flex md:gap-1">
-          <div className="mt-4 flex-1 items-center">
+          <div className="mt-4 mx-2 flex-1 items-center">
             <div>あなたにはこのグループを参照する権限がありません</div>
           </div>
         </div>
@@ -119,10 +119,12 @@ function Header({
   group,
   isFollowing,
   isJoined,
+  forbbiden = false,
 }: {
   group: { id: string; name: string; about: string; type: string };
   isFollowing: boolean;
   isJoined: boolean;
+  forbbiden?: boolean;
 }) {
   return (
     <div className="bg-white rounded-md">
@@ -175,12 +177,16 @@ function Header({
                 <JoinToggleButton id={group.id} isJoined={isJoined} />
               </div>
             )}
-            <div>
-              <FollowToggleButton id={group.id} isFollowing={isFollowing} />
-            </div>
-            <div className="inline-flex items-center rounded-md bg-white text-sm font-semibold text-indigo-800 shadow-sm ring-1 ring-inset h-9 ring-gray-300 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              <OtherMenuButton id={group.id} />
-            </div>
+            {!forbbiden && (
+              <div>
+                <FollowToggleButton id={group.id} isFollowing={isFollowing} />
+              </div>
+            )}
+            {!forbbiden && (
+              <div className="inline-flex items-center rounded-md bg-white text-sm font-semibold text-indigo-800 shadow-sm ring-1 ring-inset h-9 ring-gray-300 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <OtherMenuButton id={group.id} />
+              </div>
+            )}
           </div>
         </div>
         {group.about && (

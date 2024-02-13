@@ -6,10 +6,11 @@ import { StackList } from '@/components/notes/stack-list';
 import { TopicBadge } from '@/components/topics/badge';
 import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
+import { SITE_NAME } from '@/libs/constants';
 import es from '@/libs/elasticsearch/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
 import { getReadableGroups } from '@/libs/prisma/group';
-import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
+import { getNote, getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
 import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
@@ -18,6 +19,16 @@ import './style.css';
 
 const LOCALE = process.env.LOCALE || 'ja-JP';
 const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+
+export async function generateMetadata({ params }: { params: { noteId: string } }) {
+  const user = await getSessionUser();
+  if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
+
+  const note = await getNote(params.noteId, user.id).catch((e) => null);
+  if (!note) return { title: `Not Found - ${SITE_NAME}` };
+
+  return { title: `${note.title} - ${SITE_NAME}` };
+}
 
 export default async function Page({ params }: { params: { noteId: string } }) {
   const user = await getSessionUser();
