@@ -40,6 +40,7 @@ export const {
           handle: '', // will be generated in callback
         };
       },
+      checks: ['pkce', 'state', 'nonce'],
     }),
   ],
   session: {
