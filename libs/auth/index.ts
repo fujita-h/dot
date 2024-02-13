@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 
 const cuid = initCuid({ length: 24 });
 
-// tips: length should be a multiple of 3 to avoid padding.
+// tips: length should be a multiple of 4. Because base64 encode 3 bytes to 4 characters.
 const randomString = (length: number) => crypto.randomBytes(length).toString('base64').substring(0, length);
 
 export const {
@@ -47,7 +47,7 @@ export const {
     strategy: 'database',
     maxAge: Number(process.env.AUTH_SESSION_MAX_AGE) || 60 * 60 * 24, // 24 hours
     updateAge: Number(process.env.AUTH_SESSION_UPDATE_AGE) || 60 * 5, // 5 minutes
-    generateSessionToken: () => `${randomString(128)}`,
+    generateSessionToken: () => `${randomString(144)}`,
   },
   events: {
     signIn: async ({ user, account, profile, isNewUser }) => {
