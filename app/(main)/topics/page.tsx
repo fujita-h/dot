@@ -1,10 +1,16 @@
 import { SignInForm } from '@/components/auth';
 import { TopicBadge } from '@/components/topics/badge';
 import { getSessionUser } from '@/libs/auth/utils';
+import { SITE_NAME } from '@/libs/constants';
 import { getTopics } from '@/libs/prisma/topic';
+import type { Metadata } from 'next';
 import { AddTopicButton } from './form';
 
 const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
+
+export const metadata: Metadata = {
+  title: `トピック - ${SITE_NAME}`,
+};
 
 export default async function Page() {
   const user = await getSessionUser();
