@@ -2,12 +2,18 @@ import { SignInForm } from '@/components/auth';
 import { CardList } from '@/components/groups/card-list';
 import { SimplePagination } from '@/components/paginations/simple';
 import { getSessionUser } from '@/libs/auth/utils';
+import { SITE_NAME } from '@/libs/constants';
 import { getGroupsCount, getGroupsWithRecentNotesCountHEAVY } from '@/libs/prisma/group';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { CreateGroupButton } from './form';
 
 const ITEMS_PER_PAGE = 10;
 const USER_ROLE_FOR_GROUP_CREATION = process.env.USER_ROLE_FOR_GROUP_CREATION || '';
+
+export const metadata: Metadata = {
+  title: `グループ - ${SITE_NAME}`,
+};
 
 export default async function Page({
   searchParams,
