@@ -2,6 +2,9 @@
 const nextConfig = {
   experimental: {
     instrumentationHook : true,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
     serverComponentsExternalPackages: ['@azure/storage-blob', '@dqbd/tiktoken'],
   },
   poweredByHeader: false,
