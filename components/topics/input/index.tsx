@@ -128,8 +128,15 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
     onChange(topic);
   };
 
-  const filteredOptions =
-    query === '' ? options : options.filter((option) => option.name.toLowerCase().includes(query.toLowerCase()));
+  let filteredOptions = options;
+  if (query !== '') {
+    filteredOptions = options.filter((option) => {
+      return (
+        option.name.toLowerCase().includes(query.toLowerCase()) ||
+        option.handle.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
 
   return (
     <Combobox as="div" value={selectedItem} onChange={handleChange}>
