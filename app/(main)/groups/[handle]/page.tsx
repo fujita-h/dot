@@ -97,10 +97,12 @@ export default async function Page({ params, searchParams }: Props) {
         </div>
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
-            <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
-              <StackList notes={pinnedNotes} />
-            </div>
+            {pinnedNotes.length > 0 && (
+              <div className="bg-white rounded-md p-2">
+                <div className="text-base font-semibold text-gray-800">固定されたノート</div>
+                <StackList notes={pinnedNotes} />
+              </div>
+            )}
             <div className="bg-white rounded-md p-2">
               <div className="text-base font-semibold text-gray-800">ノート</div>
               <StackList notes={notes} />
