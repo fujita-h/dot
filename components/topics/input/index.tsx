@@ -103,7 +103,7 @@ function SortableItem({ item, onDelete }: { item: TopicItem; onDelete: (value: T
             {...listeners}
           />
           <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-md" />
-          <div className="flex-1">{item.handle}</div>
+          <div className="flex-1">{item.name}</div>
         </div>
         <div
           className="text-gray-500 hover:text-red-700 hover:cursor-pointer"
