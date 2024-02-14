@@ -54,11 +54,18 @@ export default async function Page({
       <div className="flex mt-6 md:mt-8">
         {/* <div className="w-80 min-w-[320px]"></div> */}
         <div className="flex-1">
-          <p className="ml-1 text-base">最近投稿が多かった順</p>
-          <CardList groups={groups} />
-          <div className="mt-3 pt-3 pb-3 px-4 border-t border-gray-300">
-            <SimplePagination page={page} lastPage={lastPage} />
-          </div>
+          {groups.length === 0 && <div>グループがありません</div>}
+          {groups.length > 0 && (
+            <div>
+              <p className="ml-1 text-base">最近投稿が多かったグループ</p>
+              <CardList groups={groups} />
+            </div>
+          )}
+          {lastPage > 0 && (
+            <div className="mt-3 pt-3 pb-3 px-4 border-t border-gray-300">
+              <SimplePagination page={page} lastPage={lastPage} />
+            </div>
+          )}
         </div>
       </div>
     </div>

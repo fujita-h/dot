@@ -78,10 +78,13 @@ export default async function Page({
         <div className="flex-1">
           <div className="flex flex-col gap-3">
             <div className="bg-white rounded-md p-2">
-              <StackList notes={notes} />
-              <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
-                <SimplePagination page={page} lastPage={lastPage} />
-              </div>
+              {notes.length === 0 && <div className="m-4">表示するタイムラインがありません</div>}
+              {notes.length > 0 && <StackList notes={notes} />}
+              {lastPage > 0 && (
+                <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
+                  <SimplePagination page={page} lastPage={lastPage} />
+                </div>
+              )}
             </div>
           </div>
         </div>

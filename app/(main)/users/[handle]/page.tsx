@@ -158,10 +158,12 @@ export default async function Page({ params, searchParams }: Props) {
         </div>
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
-            <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
-              <StackList notes={pinnedNotes} />
-            </div>
+            {pinnedNotes.length > 0 && (
+              <div className="bg-white rounded-md p-2">
+                <div className="text-base font-semibold text-gray-800">固定されたノート</div>
+                <StackList notes={pinnedNotes} />
+              </div>
+            )}
             <div className="bg-white rounded-md p-2">
               <div className="my-3">
                 <SimpleTab
@@ -172,10 +174,13 @@ export default async function Page({ params, searchParams }: Props) {
                 />
               </div>
               <div>
-                <StackList notes={notes} />
-                <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
-                  <SimplePagination page={page} lastPage={lastPage} searchParams={urlSearchParams} />
-                </div>
+                {notes.length === 0 && <div className="m-4">ノートがありません</div>}
+                {notes.length > 0 && <StackList notes={notes} />}
+                {lastPage > 0 && (
+                  <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
+                    <SimplePagination page={page} lastPage={lastPage} searchParams={urlSearchParams} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -103,7 +103,7 @@ function SortableItem({ item, onDelete }: { item: TopicItem; onDelete: (value: T
             {...listeners}
           />
           <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-md" />
-          <div className="flex-1">{item.handle}</div>
+          <div className="flex-1">{item.name}</div>
         </div>
         <div
           className="text-gray-500 hover:text-red-700 hover:cursor-pointer"
@@ -128,8 +128,15 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
     onChange(topic);
   };
 
-  const filteredOptions =
-    query === '' ? options : options.filter((option) => option.name.toLowerCase().includes(query.toLowerCase()));
+  let filteredOptions = options;
+  if (query !== '') {
+    filteredOptions = options.filter((option) => {
+      return (
+        option.name.toLowerCase().includes(query.toLowerCase()) ||
+        option.handle.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
 
   return (
     <Combobox as="div" value={selectedItem} onChange={handleChange}>

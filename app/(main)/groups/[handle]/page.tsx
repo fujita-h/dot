@@ -97,16 +97,25 @@ export default async function Page({ params, searchParams }: Props) {
         </div>
         <div className="md:flex-1">
           <div className="flex flex-col gap-3">
-            <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800">固定されたノート</div>
-              <StackList notes={pinnedNotes} />
-            </div>
-            <div className="bg-white rounded-md p-2">
-              <div className="text-base font-semibold text-gray-800">ノート</div>
-              <StackList notes={notes} />
-              <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
-                <SimplePagination page={page} lastPage={lastPage} />
+            {pinnedNotes.length > 0 && (
+              <div className="bg-white rounded-md p-2">
+                <div className="text-base font-semibold text-gray-800">固定されたノート</div>
+                <StackList notes={pinnedNotes} />
               </div>
+            )}
+            <div className="bg-white rounded-md p-2">
+              {notes.length === 0 && <div className="m-4">このグループにはまだノートが投稿されていません</div>}
+              {notes.length > 0 && (
+                <div>
+                  <div className="text-base font-semibold text-gray-800">グループに投稿されたノート</div>
+                  <StackList notes={notes} />
+                </div>
+              )}
+              {lastPage > 0 && (
+                <div className="mt-3 pt-3 pb-3 mx-4 border-t border-gray-200">
+                  <SimplePagination page={page} lastPage={lastPage} />
+                </div>
+              )}
             </div>
           </div>
         </div>

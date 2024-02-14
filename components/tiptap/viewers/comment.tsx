@@ -60,7 +60,10 @@ export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: 
             ];
           },
         }),
-        LinkExtension,
+        LinkExtension.configure({
+          // this is a workaround for the issue that the link opens twice when clicking on it (#39)
+          openOnClick: false,
+        }),
         UnderlineExtension,
       ],
       content: JSON.parse(jsonString),
