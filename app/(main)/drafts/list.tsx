@@ -34,9 +34,11 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
 
   return (
     <div>
-      <div className="mb-3 px-1">
-        <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
-      </div>
+      {lastPage > 0 && (
+        <div className="mb-3 px-1">
+          <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
+        </div>
+      )}
       <ul role="list" className="grid grid-cols-1 gap-1">
         {drafts.map((draft) => {
           const params = new URLSearchParams();
@@ -84,9 +86,11 @@ export async function List({ userId, id, page }: { userId: string; id?: string; 
           );
         })}
       </ul>
-      <div className="mt-3 px-1">
-        <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
-      </div>
+      {lastPage > 0 && (
+        <div className="mt-3 px-1">
+          <SimplePagination page={page} lastPage={lastPage} searchParams={searchParams} />
+        </div>
+      )}
     </div>
   );
 }
