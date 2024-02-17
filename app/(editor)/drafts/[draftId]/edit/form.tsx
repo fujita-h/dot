@@ -13,10 +13,10 @@ import {
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
+import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
 import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
-import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';

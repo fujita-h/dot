@@ -1,12 +1,12 @@
 'use client';
 
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
+import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
+import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
-import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
