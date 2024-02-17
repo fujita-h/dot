@@ -42,7 +42,7 @@ export default async function Page() {
                   </div>
                 </div>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-col gap-3">
                   <div className="bg-white rounded-md p-2">
                     <TrendingNotes userId={user.id} />
