@@ -3,7 +3,10 @@
 import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import es from '@/libs/elasticsearch/instance';
+import { createDraft } from '@/libs/prisma/draft';
+import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
+import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { generateTipTapText } from '@/libs/tiptap/text';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import { MembershipRole } from '@prisma/client';
@@ -131,4 +134,35 @@ export async function pinNoteToGroupProfile(noteId: string, pinned: boolean) {
     revalidatePath(`/notes/${noteId}`);
   }
   return result;
+}
+
+export async function duplicateNoteToDraft(noteId: string, groupId?: string) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
+
+  const note = await getNoteWithUserGroupTopics(noteId, user.id).catch((e) => null);
+  if (!note) throw new Error('Note not found');
+
+  if (groupId) {
+    const isGroupPostable = await checkPostableGroup(userId, groupId).catch((e) => false);
+    if (!isGroupPostable) throw new Error('Unauthorized');
+  }
+
+  const body = await blob
+    .downloadToBuffer('notes', note.bodyBlobName)
+    .then((res) => res.toString('utf-8'))
+    .catch((e) => '');
+
+  const draft = await createDraft(userId, {
+    groupId: groupId || undefined,
+    title: note.title || '',
+    body: body || '',
+    Topics: note.Topics,
+    userName: user.name || '',
+    oid: user.oid || '',
+    uid: user.id || '',
+  }).catch((e) => null);
+
+  return draft;
 }

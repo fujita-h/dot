@@ -9,7 +9,7 @@ import blob from '@/libs/azure/storeage-blob/instance';
 import { SITE_NAME } from '@/libs/constants';
 import es from '@/libs/elasticsearch/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
-import { getReadableGroups } from '@/libs/prisma/group';
+import { getPostableGroups, getReadableGroups } from '@/libs/prisma/group';
 import { getNote, getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
@@ -43,6 +43,8 @@ export default async function Page({ params }: { params: { noteId: string } }) {
     .catch((e) => null);
 
   if (!blobBody) return <Error500 />;
+
+  const postableGroups = await getPostableGroups(user.id).catch((e) => []);
 
   await incrementAccess(note.id, note.groupId).catch((e) => null);
 
@@ -100,7 +102,12 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                     <LikeButton userId={user.id} noteId={note.id} />
                     <StockButton userId={user.id} noteId={note.id} />
                     <div className="w-10 h-10 flex items-center justify-center">
-                      <OtherMenuButton userId={user.id} note={note} className="w-8 h-8 text-gray-700" />
+                      <OtherMenuButton
+                        userId={user.id}
+                        note={note}
+                        postableGroups={postableGroups}
+                        className="w-8 h-8 text-gray-700"
+                      />
                     </div>
                   </div>
                 </div>
