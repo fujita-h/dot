@@ -1,6 +1,7 @@
 import { getSessionUser } from '@/libs/auth/utils';
 import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createDefaultGroupIconSvg } from '@/libs/image/icon';
+import { getGroup } from '@/libs/prisma/group';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
 export async function GET(request: Request, { params }: { params: { groupId: string } }) {
@@ -10,6 +11,10 @@ export async function GET(request: Request, { params }: { params: { groupId: str
   const user = await getSessionUser();
   if (!user || !user.id) {
     return new Response(null, { status: 401 });
+  }
+  const group = await getGroup(params.groupId);
+  if (!group) {
+    return new Response(null, { status: 404 });
   }
 
   const { searchParams } = new URL(request.url);

@@ -102,6 +102,13 @@ export function getGroupsWithRecentNotesCountHEAVY(days: number, take?: number, 
     });
 }
 
+export function getGroup(id: string) {
+  return prisma.group.findUnique({ where: { id } }).catch((e) => {
+    console.error(e);
+    throw new Error('Error occurred while fetching group');
+  });
+}
+
 export function getGroupWithMembers(id: string) {
   return prisma.group
     .findUnique({

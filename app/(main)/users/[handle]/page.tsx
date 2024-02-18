@@ -156,7 +156,7 @@ export default async function Page({ params, searchParams }: Props) {
             </div>
           </div>
         </div>
-        <div className="md:flex-1">
+        <div className="md:flex-1 min-w-0">
           <div className="flex flex-col gap-3">
             {pinnedNotes.length > 0 && (
               <div className="bg-white rounded-md p-2">
