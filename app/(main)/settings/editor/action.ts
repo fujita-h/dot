@@ -22,6 +22,7 @@ export async function updateUserSettingAction(state: ActionState, formData: Form
       where: { userId: user.id },
       data: {
         editorShowNewLineFloatingMenu: formData.get('editorShowNewLineFloatingMenu') === 'true',
+        editorAiCompletionPrompt: formData.get('editorAiCompletionPrompt') as string,
       },
     });
     revalidatePath('/settings/editor');
