@@ -3,9 +3,11 @@
 import { getSessionUser } from '@/libs/auth/utils';
 import aoai from '@/libs/azure/openai/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
+import { EDITOR_AI_COMPLETION_PROMPT } from '@/libs/constants';
 import es from '@/libs/elasticsearch/instance';
 import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
+import { getEditorAiCompletionPrompt } from '@/libs/prisma/user-setting';
 import { generateTipTapText } from '@/libs/tiptap/text';
 import { get_encoding } from '@dqbd/tiktoken';
 import { init as initCuid } from '@paralleldrive/cuid2';
@@ -311,8 +313,21 @@ export async function processPublish(
   }
 }
 
-export async function textCompletion(prompt: string) {
-  const systemPrompt =
-    'ナレッジベースの作成をしています。途中まで書かれた以下の文章の続きを出力してください。\n---\n\n';
-  return aoai.getCompletion(systemPrompt + prompt).then((res) => res.choices[0].text);
+export async function textCompletion(text: string) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+  const userId = user.id;
+
+  if (!text) return '';
+  // retun empty string if text is only space, tab, or newline.
+  if (text.replace(/\s/g, '') === '') return '';
+
+  const prompt = await getEditorAiCompletionPrompt(userId)
+    .then((res) => {
+      if (res?.editorAiCompletionPrompt) return res.editorAiCompletionPrompt;
+      return EDITOR_AI_COMPLETION_PROMPT;
+    })
+    .catch((err) => EDITOR_AI_COMPLETION_PROMPT);
+
+  return aoai.getCompletion(prompt + text).then((res) => res.choices[0].text);
 }
