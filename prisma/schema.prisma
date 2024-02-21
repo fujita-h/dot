@@ -96,6 +96,7 @@ model UserSetting {
   createdAt                     DateTime @default(now()) @map("created_at")
   updatedAt                     DateTime @updatedAt @map("updated_at")
   editorShowNewLineFloatingMenu Boolean  @default(true) @map("editor_show_floating_menu_new_line")
+  editorAiCompletionPrompt      String?  @map("editor_ai_completion_prompt") @db.Text
   User                          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_setting")
