@@ -85,9 +85,9 @@ export const {
       }
       return baseUrl;
     },
-    session: async ({ session, user }: { session: Session; user?: AdapterUser }) => {
-      const adapterUser = getAdapterUser(user);
-      return { ...session, user: adapterUser };
+    session: async ({ session, user: adapterUser }: { session: Session; user?: AdapterUser }) => {
+      const user = getAdapterUser(adapterUser);
+      return { ...session, user };
     },
   },
 });
