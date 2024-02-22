@@ -23,7 +23,7 @@ function SubmitButton() {
       aria-disabled={pending}
       className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
-      Save
+      保存
     </button>
   );
 }
@@ -123,7 +123,7 @@ export function Form({ group }: { group: Group }) {
       <div className="px-4 py-6 sm:p-8">
         <div className="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="col-span-full">
-            <label className="block text-base font-medium leading-6 text-gray-900">Images</label>
+            <label className="block text-base font-medium leading-6 text-gray-900">アイコンと画像</label>
             <p className="mt-1 ml-1 text-xs text-gray-500">
               プロフィールページで利用される背景とアイコン画像を設定します。ヘッダーや他のページでの反映には時間がかかる場合があります。
             </p>
@@ -194,8 +194,27 @@ export function Form({ group }: { group: Group }) {
           </div>
 
           <div className="sm:col-span-4">
+            <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
+              グループ名
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  ref={nameInputRef}
+                  defaultValue={group.name}
+                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:col-span-4">
             <label htmlFor="handle" className="block text-base font-medium leading-6 text-gray-900">
-              Handle
+              ハンドル
             </label>
             <div className="mt-2">
               <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
@@ -215,28 +234,9 @@ export function Form({ group }: { group: Group }) {
             </div>
           </div>
 
-          <div className="sm:col-span-4">
-            <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
-              Name
-            </label>
-            <div className="mt-2">
-              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  ref={nameInputRef}
-                  defaultValue={group.name}
-                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-          </div>
-
           <div className="col-span-full">
             <label htmlFor="about" className="block text-base font-medium leading-6 text-gray-900">
-              About
+              概要
             </label>
             <div className="mt-2">
               <textarea
@@ -255,7 +255,7 @@ export function Form({ group }: { group: Group }) {
       </div>
       <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
         <button type="button" onClick={handleCancel} className="text-sm font-semibold leading-6 text-gray-900">
-          Cancel
+          キャンセル
         </button>
         <SubmitButton />
       </div>
