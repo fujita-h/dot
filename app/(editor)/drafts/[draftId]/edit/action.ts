@@ -1,7 +1,8 @@
 'use server';
 
 import { getSessionUser } from '@/libs/auth/utils';
-import aoai from '@/libs/azure/openai/instance';
+import aoaiCompletion from '@/libs/azure/openai/completion/instance';
+import aoaiEmbedding from '@/libs/azure/openai/embedding/instance';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { EDITOR_AI_COMPLETION_PROMPT } from '@/libs/constants';
 import es from '@/libs/elasticsearch/instance';
@@ -219,7 +220,7 @@ export async function processPublish(
   // get embedding
   let embed: number[] | undefined = undefined;
   if (body_slice.length > 0) {
-    embed = await aoai
+    embed = await aoaiEmbedding
       .getEmbedding(body_slice)
       .then((res) => {
         const data = res.data;
@@ -329,5 +330,5 @@ export async function textCompletion(text: string) {
     })
     .catch((err) => EDITOR_AI_COMPLETION_PROMPT);
 
-  return aoai.getCompletion(prompt + text).then((res) => res.choices[0].text);
+  return aoaiCompletion.getCompletion(prompt + text).then((res) => res.choices[0].text);
 }
