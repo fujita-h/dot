@@ -58,7 +58,25 @@ export const {
           where: { id: user.id },
           data: { uid: newId, handle: newId },
         });
+      } else {
+        // if user already exists, update tokens by account info
+        if (account) {
+          await prisma.account.update({
+            where: {
+              provider_providerAccountId: { provider: account.provider, providerAccountId: account.providerAccountId },
+            },
+            data: {
+              token_type: account.tokenType?.toString(),
+              scope: account.scope?.toString(),
+              access_token: account.accessToken?.toString(),
+              refresh_token: account.refreshToken?.toString(),
+              id_token: account.idToken?.toString(),
+              expires_at: account.expires_at,
+            },
+          });
+        }
       }
+
       // check roles update
       const currentRoles = user.roles || [];
       const incomingRoles: string[] = (profile?.roles as string[]) || [];
