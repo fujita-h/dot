@@ -1,5 +1,14 @@
 # dot
 
+## Requirements
+
+- Node.js >= 18
+- MySQL >= 8.0
+- Elasticsearch >= 8.11 (for `dense_vector` with 4096 dimensions)
+- Redis >= 6.2
+- Azure Entra ID
+- Azure Blob Storage
+
 ## Environment variables
 
 ### `AZURE_AD_CLIENT_ID`
