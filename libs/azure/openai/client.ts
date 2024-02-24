@@ -1,34 +1,9 @@
-import { OpenAIClient as AzureOpenAIClient, AzureKeyCredential } from '@azure/openai';
+import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 
-export class OpenAIClient {
-  private client: AzureOpenAIClient;
+export class AzureOpenAIClient {
+  protected client: OpenAIClient;
 
-  constructor() {
-    const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
-    const AZURE_OPENAI_KEY = process.env.AZURE_OPENAI_KEY;
-    if (!AZURE_OPENAI_ENDPOINT) {
-      throw new Error('AZURE_OPENAI_ENDPOINT is not defined');
-    }
-    if (!AZURE_OPENAI_KEY) {
-      throw new Error('AZURE_OPENAI_KEY is not defined');
-    }
-
-    this.client = new AzureOpenAIClient(AZURE_OPENAI_ENDPOINT, new AzureKeyCredential(AZURE_OPENAI_KEY));
-  }
-
-  async getEmbedding(text: string) {
-    const deployment = process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT;
-    if (!deployment) {
-      throw new Error('AZURE_OPENAI_EMBEDDING_DEPLOYMENT is not defined');
-    }
-    return this.client.getEmbeddings(deployment, [text]);
-  }
-
-  async getCompletion(text: string, maxTokens = 100, temperature = 0.5, stop = ['\n']) {
-    const deployment = process.env.AZURE_OPENAI_COMPLETION_DEPLOYMENT;
-    if (!deployment) {
-      throw new Error('AZURE_OPENAI_SUGGESTIONS_DEPLOYMENT is not defined');
-    }
-    return this.client.getCompletions(deployment, [text], { maxTokens, temperature, stop });
+  constructor(endpoint: string, key: string) {
+    this.client = new OpenAIClient(endpoint, new AzureKeyCredential(key));
   }
 }

@@ -24,7 +24,7 @@ export class EsClient {
       await this.esClient.indices.create({ index, body });
     }
     const files = await fs.readdir(process.cwd() + '/libs/elasticsearch/mappings/');
-    for (const f of files) {
+    for (const f of files.sort()) {
       if (f.startsWith(`${index}.`) && f.endsWith('.json')) {
         const file = await fs.readFile(process.cwd() + `/libs/elasticsearch/mappings/${f}`, 'utf8');
         const body = JSON.parse(file);

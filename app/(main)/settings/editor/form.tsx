@@ -1,5 +1,6 @@
 'use client';
 
+import { EDITOR_AI_COMPLETION_PROMPT } from '@/libs/constants';
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -30,6 +31,7 @@ function SubmitButton() {
 
 interface Props {
   editorShowNewLineFloatingMenu: boolean;
+  editorAiCompletionPrompt: string | null;
 }
 
 export function Form({ props }: { props: Props }) {
@@ -78,6 +80,33 @@ export function Form({ props }: { props: Props }) {
                   </label>
                   <p id="checkbox-show-new-line-floating-menu-description" className="text-gray-500">
                     新しい行を追加するときに表示されるメニューを表示します。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-full">
+            <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
+              AIによる文章生成
+            </label>
+            <div className="mt-2 ml-4">
+              <div className="relative flex items-start">
+                <div className="flex-1 ml-3 text-sm leading-6">
+                  <label htmlFor="textarea-ai-completion-prompt" className="font-medium text-gray-900">
+                    文章生成プロンプトのカスタマイズ
+                  </label>
+                  <div className="mt-0.5">
+                    <textarea
+                      id="textarea-ai-completion-prompt"
+                      name="editorAiCompletionPrompt"
+                      rows={3}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      defaultValue={props.editorAiCompletionPrompt || ''}
+                      placeholder={EDITOR_AI_COMPLETION_PROMPT}
+                    />
+                  </div>
+                  <p className="text-gray-500">
+                    このプロンプトに続いて入力した文章が追加され、AIによる文章生成が行われます。
                   </p>
                 </div>
               </div>

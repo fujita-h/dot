@@ -20,3 +20,15 @@ function getUserSettingCreateIfNotExists(userId: string) {
       throw new Error('Error occurred while fetching user setting');
     });
 }
+
+export function getEditorAiCompletionPrompt(userId: string) {
+  return prisma.userSetting
+    .findUnique({
+      where: { userId },
+      select: { editorAiCompletionPrompt: true },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching user setting');
+    });
+}

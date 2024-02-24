@@ -93,7 +93,7 @@ export function AddTopicModal({ open, setOpen }: { open: boolean; setOpen: (open
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                           <div className="col-span-full">
                             <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                              名前
+                              トピック名
                             </label>
                             <div className="mt-1">
                               <input

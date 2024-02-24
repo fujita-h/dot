@@ -1,4 +1,4 @@
-import ImageExtension from '@/libs/tiptap/extensions/image';
+import ImageExtension from './extensions/image';
 import { generateText } from '@tiptap/core';
 import BlockquoteExtension from '@tiptap/extension-blockquote';
 import BoldExtension from '@tiptap/extension-bold';

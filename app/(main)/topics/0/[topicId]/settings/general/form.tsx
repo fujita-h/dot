@@ -94,7 +94,7 @@ export function Form({ topic }: { topic: Topic }) {
       <div className="px-4 py-6 sm:p-8">
         <div className="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="col-span-full">
-            <label className="block text-base font-medium leading-6 text-gray-900">Images</label>
+            <label className="block text-base font-medium leading-6 text-gray-900">アイコン</label>
             <p className="mt-1 ml-1 text-xs text-gray-500">
               プロフィールページで利用される背景とアイコン画像を設定します。ヘッダーや他のページでの反映には時間がかかる場合があります。
             </p>
@@ -132,8 +132,27 @@ export function Form({ topic }: { topic: Topic }) {
           </div>
 
           <div className="sm:col-span-4">
+            <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
+              トピック名
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  ref={nameInputRef}
+                  defaultValue={topic.name}
+                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:col-span-4">
             <label htmlFor="handle" className="block text-base font-medium leading-6 text-gray-900">
-              Handle
+              ハンドル
             </label>
             <div className="mt-2">
               <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
@@ -150,25 +169,6 @@ export function Form({ topic }: { topic: Topic }) {
               <p className="mt-1 ml-1 text-xs text-gray-500">
                 ハンドルはURLの一部になります。英字で始まり3文字以上である必要があります。利用可能は文字は英数字とハイフン(-)です。
               </p>
-            </div>
-          </div>
-
-          <div className="sm:col-span-4">
-            <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
-              Name
-            </label>
-            <div className="mt-2">
-              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  ref={nameInputRef}
-                  defaultValue={topic.name}
-                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  autoComplete="off"
-                />
-              </div>
             </div>
           </div>
         </div>

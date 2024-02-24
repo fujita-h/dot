@@ -92,7 +92,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                       </div>
                       <div>
                         <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-center text-gray-900">
-                          Create New Group
+                          新しいグループの作成
                         </Dialog.Title>
                       </div>
                     </div>
@@ -101,7 +101,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                           <div className="col-span-full">
                             <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                              名前
+                              グループ名
                             </label>
                             <div className="mt-1">
                               <input
@@ -203,7 +203,9 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                 ))}
                               </div>
                             </RadioGroup>
-                            <p className="mt-1 ml-2 text-xs text-gray-500">この設定は後から変えることが出来ません。</p>
+                            <p className="mt-1 ml-2 text-xs text-gray-500">
+                              タイプは後から変更できませんので、慎重に選択してください。
+                            </p>
                           </div>
                         </div>
                       </div>
