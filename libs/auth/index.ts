@@ -68,12 +68,6 @@ export const {
     },
   },
   callbacks: {
-    authorized: ({ request, auth }) => {
-      if (auth) {
-        return true;
-      }
-      return NextResponse.rewrite(new URL('/signin', request.url));
-    },
     redirect: ({ url, baseUrl }) => {
       // Allows relative callback URLs
       if (url.startsWith('/')) {
