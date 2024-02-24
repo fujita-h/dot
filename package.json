@@ -8,7 +8,8 @@
     "build": "next build",
     "prestart": "prisma migrate deploy",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cli:es:full-sync": "ts-node tools/cli/es/full-sync.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "1.3.3",
