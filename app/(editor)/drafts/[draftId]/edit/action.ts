@@ -234,6 +234,9 @@ export async function processPublish(
         return undefined;
       });
   }
+  const embed_3072 = embed ? fixArraySize(embed, 3072) : undefined;
+  const embed_1536 = embed ? fixArraySize(embed, 1536) : undefined;
+  const embed_768 = embed ? fixArraySize(embed, 768) : undefined;
 
   if (relatedNoteId) {
     // update note
@@ -262,7 +265,14 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
-      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
+      await es.create('notes', note.id, {
+        ...note,
+        body: bodyText,
+        body_embed_model_deployment: aoaiEmbedding.deployment,
+        body_embed_768: embed_768,
+        body_embed_1536: embed_1536,
+        body_embed_3072: embed_3072,
+      });
       await tx.draft.delete({ where: { id: draftId } });
       return note;
     });
@@ -301,7 +311,14 @@ export async function processPublish(
           Topics: { select: { topicId: true, Topic: { select: { handle: true, name: true } }, order: true } },
         },
       });
-      await es.create('notes', note.id, { ...note, body: bodyText, body_embed_ada_002: embed });
+      await es.create('notes', note.id, {
+        ...note,
+        body: bodyText,
+        body_embed_model_deployment: aoaiEmbedding.deployment,
+        body_embed_768: embed_768,
+        body_embed_1536: embed_1536,
+        body_embed_3072: embed_3072,
+      });
       await tx.draft.delete({ where: { id: draftId } });
       return note;
     });
@@ -331,4 +348,23 @@ export async function textCompletion(text: string) {
     .catch((err) => EDITOR_AI_COMPLETION_PROMPT);
 
   return aoaiCompletion.getCompletion(prompt + text).then((res) => res.choices[0].text);
+}
+
+/**
+ * Fixes the size of an array by either filling the remaining elements with 0.0 or slicing it.
+ * @param arr - The array to fix the size of.
+ * @param fixedLength - The desired fixed length of the array.
+ * @returns The array with the fixed size.
+ */
+function fixArraySize(arr: number[], fixedLength: number): number[] {
+  // if array length is less than 1000, fill the rest with 0.0
+  if (arr.length < fixedLength) {
+    return [...arr, ...Array(fixedLength - arr.length).fill(0.0)];
+  }
+  // if array length is more than 1000, slice it
+  else if (arr.length > fixedLength) {
+    return arr.slice(0, fixedLength);
+  }
+  // if array length is 1000, return it
+  return arr;
 }
