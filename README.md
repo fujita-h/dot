@@ -88,6 +88,13 @@ Elasticsearch URL, see [Elasticsearch Guide](https://www.elastic.co/guide/en/ela
 - Required: Yes
 - Example: `http://user:pass@host:port`
 
+### `ELASTICSEARCH_EMBEDDING_DIMS`
+Embedding dimensions which is used for similarity search. Default is `3072`.  
+Reducing this value will reduce the search time but may reduce the accuracy.
+- Required: No
+- Default: `3072`
+- Acceptable values: `768`, `1536`, `3072`
+
 ### `AUTH_SECRET`
 See [Auth.js Guide](https://authjs.dev/getting-started/deployment#environment-variables)  
 A random string used to encrypt cookies and tokens. It should be at least 32 characters long.
