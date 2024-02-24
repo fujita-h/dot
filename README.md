@@ -69,9 +69,9 @@ Key of embedding model of Azure OpenAI API
 - Example:
 
 ### `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
-Deployment name of embedding model of `text-embedding-ada-002`
+Deployment name of embedding model of `text-embedding-3-large`
 - Required: Yes
-- Example: `text-embedding-ada-002`
+- Example: `text-embedding-3-large`
 
 ### `DATABASE_URL`
 See [Prisma Doc](https://www.prisma.io/docs/reference/database-reference/connection-urls)
