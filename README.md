@@ -1,5 +1,14 @@
 # dot
 
+## Requirements
+
+- Node.js >= 18
+- MySQL >= 8.0
+- Elasticsearch >= 8.11 (for `dense_vector` with 4096 dimensions)
+- Redis >= 6.2
+- Azure Entra ID
+- Azure Blob Storage
+
 ## Environment variables
 
 ### `AZURE_AD_CLIENT_ID`
@@ -60,9 +69,9 @@ Key of embedding model of Azure OpenAI API
 - Example:
 
 ### `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
-Deployment name of embedding model of `text-embedding-ada-002`
+Deployment name of embedding model of `text-embedding-3-large`
 - Required: Yes
-- Example: `text-embedding-ada-002`
+- Example: `text-embedding-3-large`
 
 ### `DATABASE_URL`
 See [Prisma Doc](https://www.prisma.io/docs/reference/database-reference/connection-urls)
@@ -78,6 +87,13 @@ Redis URL, see [ioredis README](https://github.com/redis/ioredis)
 Elasticsearch URL, see [Elasticsearch Guide](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html)
 - Required: Yes
 - Example: `http://user:pass@host:port`
+
+### `ELASTICSEARCH_EMBEDDING_DIMS`
+Embedding dimensions which is used for similarity search. Default is `3072`.  
+Reducing this value will reduce the search time but may reduce the accuracy.
+- Required: No
+- Default: `3072`
+- Acceptable values: `768`, `1536`, `3072`
 
 ### `AUTH_SECRET`
 See [Auth.js Guide](https://authjs.dev/getting-started/deployment#environment-variables)  

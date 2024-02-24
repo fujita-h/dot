@@ -19,6 +19,18 @@ import './style.css';
 
 const LOCALE = process.env.LOCALE || 'ja-JP';
 const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+const ELASTICSEARCH_EMBEDDING_FIELD = () => {
+  switch (process.env.ELASTICSEARCH_EMBEDDING_DIMS) {
+    case '768':
+      return 'body_embed_768';
+    case '1536':
+      return 'body_embed_1536';
+    case '3072':
+      return 'body_embed_3072';
+    default:
+      return 'body_embed_3072';
+  }
+};
 
 export async function generateMetadata({ params }: { params: { noteId: string } }) {
   const user = await getSessionUser();
@@ -271,12 +283,12 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
 
   // Get embed vector of the note
   const embed = await es
-    .get('notes', noteId, 'body_embed_ada_002')
+    .get('notes', noteId, ELASTICSEARCH_EMBEDDING_FIELD())
     .then((doc) => {
       if (!doc.found) return null;
       const source: any = doc._source;
-      if (!source || !source.body_embed_ada_002) return null;
-      return source.body_embed_ada_002;
+      if (!source || !source[ELASTICSEARCH_EMBEDDING_FIELD()]) return null;
+      return source[ELASTICSEARCH_EMBEDDING_FIELD()];
     })
     .catch((e) => null);
   if (!embed) return <></>;
@@ -296,7 +308,7 @@ async function RelatedNoteList({ userId, noteId }: { userId: string; noteId: str
         'Group.name',
       ],
       knn: {
-        field: 'body_embed_ada_002',
+        field: ELASTICSEARCH_EMBEDDING_FIELD(),
         query_vector: embed,
         k: 10,
         num_candidates: 10,

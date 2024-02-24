@@ -36,9 +36,25 @@
         }
       }
     },
-    "body_embed_ada_002": {
+    "body_embed_model_deployment": {
+      "type": "keyword",
+      "null_value": "NULL"
+    },
+    "body_embed_768": {
+      "type": "dense_vector",
+      "dims": 768,
+      "index": true,
+      "similarity": "cosine"
+    },
+    "body_embed_1536": {
       "type": "dense_vector",
       "dims": 1536,
+      "index": true,
+      "similarity": "cosine"
+    },
+    "body_embed_3072": {
+      "type": "dense_vector",
+      "dims": 3072,
       "index": true,
       "similarity": "cosine"
     }
