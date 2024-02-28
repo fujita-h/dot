@@ -199,8 +199,10 @@ function Header({
           </div>
         </div>
         {group.about && (
-          <div className="pb-3 pl-1">
-            <p className="text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">{group.about}</p>
+          <div className="text-xs lg:text-sm text-gray-700 py-4 md:pr-2">
+            <pre className="font-noto-sans-jp whitespace-pre-wrap line-clamp-[9] md:line-clamp-[7] lg:line-clamp-5">
+              {group.about}
+            </pre>
           </div>
         )}
       </div>
