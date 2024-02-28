@@ -112,6 +112,11 @@ export default async function Page({ params, searchParams }: Props) {
             <div>
               <div className="text-base md:text-xl lg:text-2xl xl:text-3xl font-bold truncate">{targetUser.name}</div>
               <div className="text-xs md:text-sm lg:text-base text-gray-500 truncate">@{targetUser.handle}</div>
+              {targetUser.about && (
+                <div className="text-xs lg:text-sm text-gray-700 my-4 max-h-[80px] lg:max-h-[100px] overflow-hidden">
+                  <pre className="font-noto-sans-jp whitespace-pre-wrap">{targetUser.about}</pre>
+                </div>
+              )}
             </div>
             <div className="hidden mt-2 mr-1 lg:flex lg:flex-none lg:gap-3">
               <div>
