@@ -1,3 +1,6 @@
+import { SITE_NAME } from '@/libs/constants';
+import { version } from '@/package.json';
+
 const navigation = {
   main: [
     { name: 'About', href: '#' },
@@ -37,13 +40,16 @@ export function Footer() {
             </div>
           ))}
         </nav>
-        <div className="mt-10 flex justify-center space-x-10">
+        <div className="mt-4 flex justify-center space-x-10">
           {navigation.social.map((item) => (
             <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-500">
               <span className="sr-only">{item.name}</span>
               <item.icon className="h-6 w-6" aria-hidden="true" />
             </a>
           ))}
+        </div>
+        <div className="mt-4 flex justify-center text-sm text-gray-600">
+          {SITE_NAME} version {version}
         </div>
       </div>
     </footer>
