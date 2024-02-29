@@ -4,7 +4,7 @@ import { SimpleTab } from '@/components/tabs/simple-tab';
 import { getSessionUser } from '@/libs/auth/utils';
 import { getGroupWithMembers } from '@/libs/prisma/group';
 import { GroupType } from '@prisma/client';
-import { Form } from './form';
+import { DeleteForm, Form } from './form';
 
 type Props = {
   params: { groupId: string };
@@ -40,16 +40,21 @@ export default async function Page({ params }: Props) {
           <h2 className="text-base font-semibold leading-7 text-gray-900">Group Settings</h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">{group.name}</p>
         </div>
-        <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-3">
-          <div className="py-6">
-            <SimpleTab
-              tabs={[
-                { name: '一般設定', href: '#', current: true },
-                { name: 'メンバー設定', href: './members', current: false },
-              ]}
-            />
+        <div className="md:col-span-3 space-y-8 mb-8">
+          <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+            <div className="py-6">
+              <SimpleTab
+                tabs={[
+                  { name: '一般設定', href: '#', current: true },
+                  { name: 'メンバー設定', href: './members', current: false },
+                ]}
+              />
+            </div>
+            <Form group={group} />
           </div>
-          <Form group={group} />
+          <div className="bg-white shadow-sm ring-1 ring-red-600 sm:rounded-xl">
+            <DeleteForm group={group} />
+          </div>
         </div>
       </div>
     </div>

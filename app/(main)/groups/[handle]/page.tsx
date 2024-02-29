@@ -80,7 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
         <div className="md:w-80 p-2">
           <div>
             <div className="text-base font-semibold text-gray-800">メンバー</div>
-            <div className="mt-2 ml-3 flex gap-1">
+            <div className="mt-2 ml-3 flex flex-wrap gap-1">
               {group.Members.map((member) => (
                 <div key={member.userId} className="flex items-center">
                   <Link href={`/users/${member.User.handle}`}>
@@ -199,8 +199,10 @@ function Header({
           </div>
         </div>
         {group.about && (
-          <div className="pb-3 pl-1">
-            <p className="text-sm text-gray-500 line-clamp-6 md:line-clamp-4 xl:line-clamp-3">{group.about}</p>
+          <div className="text-xs lg:text-sm text-gray-700 py-4 md:pr-2">
+            <pre className="font-noto-sans-jp whitespace-pre-wrap line-clamp-[9] md:line-clamp-[7] lg:line-clamp-5">
+              {group.about}
+            </pre>
           </div>
         )}
       </div>

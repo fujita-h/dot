@@ -119,6 +119,13 @@ export default async function Page({ params, searchParams }: Props) {
               </div>
             </div>
           </div>
+          {targetUser.about && (
+            <div className="text-xs lg:text-sm text-gray-700 py-4 md:pr-2">
+              <pre className="font-noto-sans-jp whitespace-pre-wrap line-clamp-[9] md:line-clamp-[7] lg:line-clamp-5">
+                {targetUser.about}
+              </pre>
+            </div>
+          )}
         </div>
       </div>
       <div className="md:flex md:gap-1">

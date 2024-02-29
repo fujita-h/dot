@@ -239,12 +239,16 @@ export function Form({ props }: { props: Props }) {
                 name="about"
                 ref={aboutInputRef}
                 defaultValue={props.about || ''}
-                rows={3}
+                rows={5}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 autoComplete="off"
               />
             </div>
-            <p className="mt-1 ml-1 text-xs text-gray-500">自己紹介を記入できます。</p>
+            <p className="mt-1 ml-1 text-xs text-gray-500">
+              自己紹介を記入できます。内容はユーザーページで表示されます。
+              <br />
+              表示領域には上限があるため、長文の場合は表示が省略されることがあります。
+            </p>
           </div>
         </div>
       </div>
