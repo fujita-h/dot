@@ -80,7 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
         <div className="md:w-80 p-2">
           <div>
             <div className="text-base font-semibold text-gray-800">メンバー</div>
-            <div className="mt-2 ml-3 flex gap-1">
+            <div className="mt-2 ml-3 flex flex-wrap gap-1">
               {group.Members.map((member) => (
                 <div key={member.userId} className="flex items-center">
                   <Link href={`/users/${member.User.handle}`}>
