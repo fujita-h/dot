@@ -1,6 +1,6 @@
 'use server';
 
-import { getSessionUser } from '@/libs/auth/utils';
+import { checkAccountAuthorization, getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { revalidatePath } from 'next/cache';
 
@@ -15,6 +15,12 @@ export async function updateUserSettingAction(state: ActionState, formData: Form
   const user = await getSessionUser();
   if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
+  }
+
+  const isAuthorized = await checkAccountAuthorization(user.id).catch(() => false);
+  if (!isAuthorized) {
+    revalidatePath('/settings/editor');
+    return { status: 'error', target: null, message: 'Authorization error', lastModified: Date.now() };
   }
 
   try {
