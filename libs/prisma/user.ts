@@ -25,6 +25,21 @@ export function getUser(userId: string) {
     });
 }
 
+export function getUserAccountsTokenExpiresAt(userId: string) {
+  return prisma.user
+    .findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        accounts: { select: { provider: true, providerAccountId: true, expires_at: true } },
+      },
+    })
+    .catch((e) => {
+      console.error(e);
+      throw new Error('Error occurred while fetching user');
+    });
+}
+
 export function getUserFromHandle(handle: string) {
   return prisma.user
     .findUnique({

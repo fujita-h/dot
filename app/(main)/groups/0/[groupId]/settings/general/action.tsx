@@ -1,6 +1,6 @@
 'use server';
 
-import { getSessionUser } from '@/libs/auth/utils';
+import { checkAccountAuthorization, getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import prisma from '@/libs/prisma/instance';
 import { checkHandle } from '@/libs/utils/check-handle';
@@ -17,6 +17,12 @@ export async function UpdateGroupAction(state: ActionState, formData: FormData):
   const user = await getSessionUser();
   if (!user || !user.id) {
     return { status: 'error', target: null, message: 'Session error', lastModified: Date.now() };
+  }
+
+  const isAuthorized = await checkAccountAuthorization(user.id).catch(() => false);
+  if (!isAuthorized) {
+    revalidatePath('/settings/general');
+    return { status: 'error', target: null, message: 'Authorization error', lastModified: Date.now() };
   }
 
   // check group id

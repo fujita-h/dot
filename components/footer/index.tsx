@@ -1,5 +1,5 @@
 import { SITE_NAME } from '@/libs/constants';
-import { version } from '@/package.json';
+import packageInfo from '@/package.json';
 
 const navigation = {
   main: [
@@ -49,7 +49,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-4 flex justify-center text-sm text-gray-600">
-          {SITE_NAME} version {version}
+          {SITE_NAME} version {packageInfo.version}
         </div>
       </div>
     </footer>
