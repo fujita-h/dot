@@ -1,7 +1,7 @@
-import { SignInForm } from '@/components/auth';
+import { AutoSignInForm, SignInForm } from '@/components/auth';
 import { Error404 } from '@/components/error';
 import { SimpleTab } from '@/components/tabs/simple-tab';
-import { getSessionUser } from '@/libs/auth/utils';
+import { checkAccountAuthorization, getSessionUser } from '@/libs/auth/utils';
 import { getGroupWithMembers } from '@/libs/prisma/group';
 import { getUsersWithEmail } from '@/libs/prisma/user';
 import { GroupType } from '@prisma/client';
@@ -15,6 +15,13 @@ type Props = {
 export default async function Page({ params }: Props) {
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
+  const userId = user.id;
+
+  const isAuthorized = await checkAccountAuthorization(userId).catch(() => false);
+  if (!isAuthorized) {
+    // warn: endless loop if auth status is not updated
+    return <AutoSignInForm />;
+  }
 
   const group = await getGroupWithMembers(params.groupId).catch((e) => null);
   const users = await getUsersWithEmail().catch((e) => []);

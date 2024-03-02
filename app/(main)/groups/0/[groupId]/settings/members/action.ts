@@ -1,6 +1,6 @@
 'use server';
 
-import { getSessionUser } from '@/libs/auth/utils';
+import { checkAccountAuthorization, getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { revalidatePath } from 'next/cache';
 
@@ -9,6 +9,12 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
 
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
+
+  const isAuthorized = await checkAccountAuthorization(user.id).catch(() => false);
+  if (!isAuthorized) {
+    revalidatePath('/settings/general');
+    return { status: 'error', target: null, message: 'Authorization error', lastModified: Date.now() };
+  }
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
