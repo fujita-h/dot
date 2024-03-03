@@ -324,7 +324,9 @@ function EditorForm({
         )}
         {editor && (
           <>
-            <StickyMenu editor={editor} />
+            <div className="bg-gray-100 sticky top-0 left-0 z-10 pt-2">
+              <StickyMenu editor={editor} />
+            </div>
             <div className="px-2 pb-1">
               <BubbleMenuImage editor={editor} />
               <BubbleMenuLink editor={editor} />
