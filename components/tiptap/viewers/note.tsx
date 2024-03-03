@@ -1,6 +1,8 @@
 'use client';
 
 import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
+
+// TipTap
 import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
