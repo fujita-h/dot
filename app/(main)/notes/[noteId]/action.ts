@@ -43,7 +43,7 @@ export async function deleteNote(noteId: string) {
   return result;
 }
 
-export async function commentOnNote(noteId: string, comment: string) {
+export async function commentOnNote(noteId: string, body: string) {
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
@@ -58,11 +58,11 @@ export async function commentOnNote(noteId: string, comment: string) {
   };
 
   // create TipTap text for check valid json
-  const bodyText = generateTipTapText(comment);
+  const bodyText = generateTipTapText(body);
 
   const blobName = `${noteId}/${cuid()}`;
   const blobUploadResult = await blob
-    .upload('comments', blobName, 'text/markdown', comment, metadata, tags)
+    .upload('comments', blobName, 'text/markdown', body, metadata, tags)
     .then((res) => res._response.status)
     .catch((err) => 500);
 

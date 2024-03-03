@@ -53,7 +53,7 @@ export default function CommentEditor({
 }: {
   setting: UserSetting;
   noteId: string;
-  postAction: (noteId: string, comment: string) => Promise<{ id: string }>;
+  postAction: (noteId: string, body: string) => Promise<{ id: string }>;
 }) {
   const editor = useEditor({
     extensions: [
