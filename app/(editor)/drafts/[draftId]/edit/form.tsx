@@ -1,6 +1,13 @@
 'use client';
 
 import { EditorNavbar } from '@/components/navbar';
+import { TopicInput, TopicItem } from '@/components/topics/input';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
+import type { Group, UserSetting } from './types';
+
+// TipTap
 import { uploadFiles } from '@/components/tiptap/action';
 import {
   BubbleMenuImage,
@@ -10,7 +17,6 @@ import {
   FloatingMenuNewLine,
   StickyMenu,
 } from '@/components/tiptap/menus';
-import { TopicInput, TopicItem } from '@/components/topics/input';
 import AzureOpenAIExtension from '@/libs/tiptap/extensions/azure-openai';
 import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
@@ -43,10 +49,6 @@ import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
-import type { Group, UserSetting } from './types';
 
 import '@/components/tiptap/tiptap.css';
 import 'highlight.js/styles/github.css';
