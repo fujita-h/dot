@@ -230,37 +230,54 @@ async function CommentList({ noteId }: { noteId: string }) {
 
   return (
     <div className="divide-y divide-gray-200">
-      {comments.map((c) => (
-        <div key={c.id} className="px-2 py-4">
-          <div className="flex justify-between items-center">
-            <div className="mx-1 flex space-x-3 items-center">
-              <div>
-                <img src={`/api/users/${c.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
-              </div>
-              <div>
-                <div className="text-sm text-gray-700">
-                  @{c.User.handle} ({c.User.name})
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-600">
-                {new Date(c.createdAt).toLocaleString(LOCALE, { timeZone: TIMEZONE })}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 px-4">
-            <div className="text-sm text-gray-700">
-              {c.bodyBlobName ? <CommnetBody containerName="comments" bodyBlobName={c.bodyBlobName} /> : <></>}
-            </div>
-          </div>
-        </div>
+      {comments.map((comment) => (
+        <CommentItem key={comment.id} comment={comment} />
       ))}
       {comments.length === 0 && (
         <div className="px-4 py-4">
           <div className="text-base text-gray-700">この記事にまだコメントはありません。</div>
         </div>
       )}
+    </div>
+  );
+}
+
+type Comment = {
+  id: string;
+  bodyBlobName: string | null;
+  createdAt: Date;
+  User: {
+    uid: string;
+    handle: string;
+    name: string | null;
+  };
+};
+
+async function CommentItem({ comment }: { comment: Comment }) {
+  return (
+    <div className="px-2 py-4">
+      <div className="flex justify-between items-center">
+        <div className="mx-1 flex space-x-3 items-center">
+          <div>
+            <img src={`/api/users/${comment.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
+          </div>
+          <div>
+            <div className="text-sm text-gray-700">
+              @{comment.User.handle} ({comment.User.name})
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="text-sm text-gray-600">
+            {new Date(comment.createdAt).toLocaleString(LOCALE, { timeZone: TIMEZONE })}
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 px-4">
+        <div className="text-sm text-gray-700">
+          {comment.bodyBlobName ? <CommnetBody containerName="comments" bodyBlobName={comment.bodyBlobName} /> : <></>}
+        </div>
+      </div>
     </div>
   );
 }
