@@ -1,5 +1,6 @@
 'use client';
 
+import type { UserSetting } from '@/components/tiptap/editors/types';
 import { Dialog, Listbox, Menu, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -50,8 +51,8 @@ export function CommentViewer({ jsonString }: { jsonString: string }) {
   return <DynamicCommentViewer jsonString={jsonString} />;
 }
 
-export function CommentEditor({ noteId }: { noteId: string }) {
-  return <DynamicCommentEditor noteId={noteId} postAction={commentOnNote} />;
+export function CommentEditor({ setting, noteId }: { setting: UserSetting; noteId: string }) {
+  return <DynamicCommentEditor setting={setting} noteId={noteId} postAction={commentOnNote} />;
 }
 
 export function ScrollToC({ body }: { body: string }) {

@@ -11,6 +11,7 @@ import es from '@/libs/elasticsearch/instance';
 import { getCommentsByNoteId } from '@/libs/prisma/comment';
 import { getPostableGroups, getReadableGroups } from '@/libs/prisma/group';
 import { getNote, getNoteWithUserGroupTopics } from '@/libs/prisma/note';
+import { getUserSetting } from '@/libs/prisma/user-setting';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
 import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
@@ -46,7 +47,10 @@ export default async function Page({ params }: { params: { noteId: string } }) {
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 
-  const note = await getNoteWithUserGroupTopics(params.noteId, user.id).catch((e) => null);
+  const [setting, note] = await Promise.all([
+    getUserSetting(user.id).catch((e) => ({ editorShowNewLineFloatingMenu: true })),
+    getNoteWithUserGroupTopics(params.noteId, user.id).catch((e) => null),
+  ]);
   if (!note || !note.bodyBlobName) return <Error404 />;
 
   const blobBody = await blob
@@ -193,7 +197,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
                     <div id="comment-editor" className="px-4 pt-2 pb-4">
-                      <CommentEditor noteId={note.id} />
+                      <CommentEditor setting={setting} noteId={note.id} />
                     </div>
                   </div>
                 </div>
