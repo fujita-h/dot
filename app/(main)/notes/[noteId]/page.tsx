@@ -14,7 +14,7 @@ import { getNote, getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { getUserSetting } from '@/libs/prisma/user-setting';
 import { incrementAccess } from '@/libs/redis/access';
 import Link from 'next/link';
-import { CommentEditor, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
+import { CommentEditor, CommentItemWrapper, CommentViewer, NoteViewer, OtherMenuButton, ScrollToC } from './form';
 
 import './style.css';
 
@@ -192,7 +192,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
                   <div className="text-lg font-bold text-gray-900 border-b px-4 pt-2 pb-1">コメント</div>
                   <div className="p-4">
-                    <CommentList noteId={note.id} />
+                    <CommentList userId={user.id} noteId={note.id} />
                   </div>
                   <div>
                     <div className="text-lg font-bold text-gray-900 border-t mt-6 px-4 pt-2 pb-1">コメントを書く</div>
@@ -216,22 +216,12 @@ export default async function Page({ params }: { params: { noteId: string } }) {
   );
 }
 
-async function CommentList({ noteId }: { noteId: string }) {
-  const user = await getSessionUser();
-  if (!user || !user.id) {
-    return (
-      <div className="px-4 py-4">
-        <div className="text-base text-gray-700">コメントを書くにはログインしてください。</div>
-      </div>
-    );
-  }
-
+async function CommentList({ userId, noteId }: { userId: string; noteId: string }) {
   const comments = await getCommentsByNoteId(noteId).catch((e) => []);
-
   return (
     <div className="divide-y divide-gray-200">
       {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+        <CommentItem key={comment.id} userId={userId} noteId={noteId} comment={comment} />
       ))}
       {comments.length === 0 && (
         <div className="px-4 py-4">
@@ -253,45 +243,36 @@ type Comment = {
   };
 };
 
-async function CommentItem({ comment }: { comment: Comment }) {
-  return (
-    <div className="px-2 py-4">
-      <div className="flex justify-between items-center">
-        <div className="mx-1 flex space-x-3 items-center">
-          <div>
-            <img src={`/api/users/${comment.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
-          </div>
-          <div>
-            <div className="text-sm text-gray-700">
-              @{comment.User.handle} ({comment.User.name})
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-600">
-            {new Date(comment.createdAt).toLocaleString(LOCALE, { timeZone: TIMEZONE })}
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 px-4">
-        <div className="text-sm text-gray-700">
-          {comment.bodyBlobName ? <CommnetBody containerName="comments" bodyBlobName={comment.bodyBlobName} /> : <></>}
-        </div>
-      </div>
-    </div>
-  );
-}
+async function CommentItem({ userId, noteId, comment }: { userId: string; noteId: string; comment: Comment }) {
+  if (!comment.bodyBlobName) {
+    return <></>;
+  }
 
-async function CommnetBody({ containerName, bodyBlobName }: { containerName: string; bodyBlobName: string }) {
-  const body = await blob
-    .downloadToBuffer(containerName, bodyBlobName)
-    .then((res) => res.toString('utf-8'))
-    .catch((e) => null);
-  if (!body) return <></>;
+  const isOwner = userId === comment.User.uid;
+
+  const [setting, body] = await Promise.all([
+    getUserSetting(userId).catch((e) => ({ editorShowNewLineFloatingMenu: true })),
+    blob
+      .downloadToBuffer('comments', comment.bodyBlobName)
+      .then((res) => res.toString('utf-8'))
+      .catch((e) => null),
+  ]);
+
+  if (!body) {
+    return <></>;
+  }
+
   return (
-    <div id="comment-viewer">
+    <CommentItemWrapper
+      setting={setting}
+      noteId={noteId}
+      comment={comment}
+      body={body}
+      locale={LOCALE}
+      timeZone={TIMEZONE}
+    >
       <CommentViewer jsonString={body} />
-    </div>
+    </CommentItemWrapper>
   );
 }
 

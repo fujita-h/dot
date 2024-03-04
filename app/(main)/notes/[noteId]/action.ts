@@ -43,16 +43,29 @@ export async function deleteNote(noteId: string) {
   return result;
 }
 
-export async function commentOnNote(noteId: string, body: string) {
+export async function commentOnNote(noteId: string, commentId: string | null, body: string) {
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
 
+  // check if commentId is valid
+  let isEdited = false;
+  if (commentId) {
+    const comment = await prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) throw new Error('Comment not found');
+    if (comment.noteId !== noteId) throw new Error('Note not found');
+    if (comment.userId !== userId) throw new Error('Unauthorized');
+    isEdited = true;
+  }
+  const id = commentId || cuid();
+
   const metadata = {
+    commentId: id,
     userId: userId,
     noteId: noteId,
   };
   const tags = {
+    commentId: id,
     userId: userId,
     noteId: noteId,
   };
@@ -60,7 +73,7 @@ export async function commentOnNote(noteId: string, body: string) {
   // create TipTap text for check valid json
   const bodyText = generateTipTapText(body);
 
-  const blobName = `${noteId}/${cuid()}`;
+  const blobName = `${noteId}/${id}/${cuid()}`;
   const blobUploadResult = await blob
     .upload('comments', blobName, 'text/markdown', body, metadata, tags)
     .then((res) => res._response.status)
@@ -70,13 +83,18 @@ export async function commentOnNote(noteId: string, body: string) {
     throw new Error('Failed to upload comment');
   }
 
-  const result = await prisma.comment.create({
-    data: {
-      id: cuid(),
+  const result = await prisma.comment.upsert({
+    where: { id: id },
+    create: {
+      id: id,
       noteId: noteId,
       userId: userId,
       bodyBlobName: blobName,
-      isEdited: false,
+      isEdited: isEdited,
+    },
+    update: {
+      bodyBlobName: blobName,
+      isEdited: isEdited,
     },
   });
   if (result) {

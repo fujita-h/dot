@@ -8,7 +8,7 @@ import { DocumentDuplicateIcon, EllipsisHorizontalIcon, PencilSquareIcon, TrashI
 import clsx from 'clsx/lite';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { RiPushpinFill } from 'react-icons/ri';
 import { commentOnNote, deleteNote, duplicateNoteToDraft, pinNoteToGroupProfile, pinNoteToUserProfile } from './action';
 
@@ -51,8 +51,32 @@ export function CommentViewer({ jsonString }: { jsonString: string }) {
   return <DynamicCommentViewer jsonString={jsonString} />;
 }
 
-export function CommentEditor({ setting, noteId }: { setting: UserSetting; noteId: string }) {
-  return <DynamicCommentEditor setting={setting} noteId={noteId} postAction={commentOnNote} />;
+export function CommentEditor({
+  setting,
+  noteId,
+  commentId,
+  body,
+  onSuccess,
+  cancelAction,
+}: {
+  setting: UserSetting;
+  noteId: string;
+  commentId?: string;
+  body?: string;
+  onSuccess?: () => void;
+  cancelAction?: () => void;
+}) {
+  return (
+    <DynamicCommentEditor
+      setting={setting}
+      noteId={noteId}
+      commentId={commentId}
+      body={body}
+      postAction={commentOnNote}
+      onSuccess={onSuccess}
+      cancelAction={cancelAction}
+    />
+  );
 }
 
 export function ScrollToC({ body }: { body: string }) {
@@ -481,5 +505,155 @@ function DuplicateNoteModal({
         </div>
       </Dialog>
     </Transition.Root>
+  );
+}
+
+type Comment = {
+  id: string;
+  bodyBlobName: string | null;
+  createdAt: Date;
+  User: {
+    uid: string;
+    handle: string;
+    name: string | null;
+  };
+};
+
+export function CommentItemWrapper({
+  children,
+  setting,
+  noteId,
+  comment,
+  body,
+  locale,
+  timeZone,
+}: {
+  children: React.ReactNode;
+  setting: UserSetting;
+  noteId: string;
+  comment: Comment;
+  body: string;
+  locale: string;
+  timeZone: string;
+}) {
+  const [showEditor, setShowEditor] = useState(false);
+  return (
+    <div className="px-2 py-4">
+      <div className="flex justify-between items-center">
+        <div className="mx-1 flex space-x-3 items-center">
+          <div>
+            <img src={`/api/users/${comment.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
+          </div>
+          <div>
+            <div className="text-sm text-gray-700">
+              @{comment.User.handle} ({comment.User.name})
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="text-sm text-gray-600">
+            {new Date(comment.createdAt).toLocaleString(locale, { timeZone: timeZone })}
+            <CommentOtherMenuButton
+              id={comment.id}
+              onEditClicked={(value) => {
+                setShowEditor(value);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 px-4">
+        {showEditor ? (
+          <div>
+            <CommentEditor
+              setting={setting}
+              noteId={noteId}
+              commentId={comment.id}
+              body={body}
+              onSuccess={() => {
+                setShowEditor(false);
+              }}
+              cancelAction={() => {
+                setShowEditor(false);
+              }}
+            />
+          </div>
+        ) : (
+          <div className="text-sm text-gray-700">
+            <div id="comment-viewer" key={comment.bodyBlobName}>
+              {children}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function CommentOtherMenuButton({
+  id,
+  onEditClicked,
+}: {
+  id: string;
+  onEditClicked?: (value: boolean) => void;
+}) {
+  return (
+    <div>
+      <Menu as="div" className="relative h-5">
+        <Menu.Button>
+          <EllipsisHorizontalIcon className="mx-2 h-8 w-8" />
+        </Menu.Button>
+
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute right-0 z-20 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="m-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <span
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'group flex items-center px-4 py-3 text-sm hover:cursor-pointer'
+                    )}
+                    onClick={() => {
+                      if (onEditClicked) {
+                        onEditClicked(true);
+                      }
+                    }}
+                  >
+                    <PencilSquareIcon
+                      className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                    編集
+                  </span>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <span
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'group flex items-center px-4 py-3 text-sm hover:cursor-pointer'
+                    )}
+                    onClick={() => {}}
+                  >
+                    <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                    削除
+                  </span>
+                )}
+              </Menu.Item>
+            </div>
+          </Menu.Items>
+        </Transition>
+      </Menu>
+    </div>
   );
 }
