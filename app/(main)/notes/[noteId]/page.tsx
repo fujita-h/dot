@@ -191,7 +191,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 </div>
                 <div className="rounded-md ring-1 ring-gray-200 my-8 bg-white">
                   <div className="text-lg font-bold text-gray-900 border-b px-4 pt-2 pb-1">コメント</div>
-                  <div className="p-4">
+                  <div className="py-4">
                     <CommentList userId={user.id} noteId={note.id} />
                   </div>
                   <div>
@@ -219,7 +219,7 @@ export default async function Page({ params }: { params: { noteId: string } }) {
 async function CommentList({ userId, noteId }: { userId: string; noteId: string }) {
   const comments = await getCommentsByNoteId(noteId).catch((e) => []);
   return (
-    <div className="divide-y divide-gray-200">
+    <div className="space-y-2">
       {comments.map((comment) => (
         <CommentItem key={comment.id} userId={userId} noteId={noteId} comment={comment} />
       ))}
@@ -237,6 +237,7 @@ type Comment = {
   bodyBlobName: string | null;
   createdAt: Date;
   User: {
+    id: string;
     uid: string;
     handle: string;
     name: string | null;
@@ -247,8 +248,6 @@ async function CommentItem({ userId, noteId, comment }: { userId: string; noteId
   if (!comment.bodyBlobName) {
     return <></>;
   }
-
-  const isOwner = userId === comment.User.uid;
 
   const [setting, body] = await Promise.all([
     getUserSetting(userId).catch((e) => ({ editorShowNewLineFloatingMenu: true })),
@@ -264,6 +263,7 @@ async function CommentItem({ userId, noteId, comment }: { userId: string; noteId
 
   return (
     <CommentItemWrapper
+      userId={userId}
       setting={setting}
       noteId={noteId}
       comment={comment}

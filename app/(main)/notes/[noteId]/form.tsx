@@ -513,6 +513,7 @@ type Comment = {
   bodyBlobName: string | null;
   createdAt: Date;
   User: {
+    id: string;
     uid: string;
     handle: string;
     name: string | null;
@@ -521,6 +522,7 @@ type Comment = {
 
 export function CommentItemWrapper({
   children,
+  userId,
   setting,
   noteId,
   comment,
@@ -529,6 +531,7 @@ export function CommentItemWrapper({
   timeZone,
 }: {
   children: React.ReactNode;
+  userId: string;
   setting: UserSetting;
   noteId: string;
   comment: Comment;
@@ -538,53 +541,64 @@ export function CommentItemWrapper({
 }) {
   const [showEditor, setShowEditor] = useState(false);
   return (
-    <div className="px-2 py-4">
-      <div className="flex justify-between items-center">
-        <div className="mx-1 flex space-x-3 items-center">
-          <div>
-            <img src={`/api/users/${comment.User.uid}/icon`} className="w-6 h-6 rounded-full" alt="user icon" />
-          </div>
-          <div>
-            <div className="text-sm text-gray-700">
-              @{comment.User.handle} ({comment.User.name})
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-600">
-            {new Date(comment.createdAt).toLocaleString(locale, { timeZone: timeZone })}
-            <CommentOtherMenuButton
-              id={comment.id}
-              onEditClicked={(value) => {
-                setShowEditor(value);
-              }}
-            />
-          </div>
-        </div>
+    <div className="pl-3 pr-4 py-4 flex gap-2">
+      <div className="flex-none pt-2">
+        <img src={`/api/users/${comment.User.uid}/icon`} className="w-8 h-8 rounded-full" alt="user icon" />
       </div>
-      <div className="mt-4 px-4">
-        {showEditor ? (
-          <div>
-            <CommentEditor
-              setting={setting}
-              noteId={noteId}
-              commentId={comment.id}
-              body={body}
-              onSuccess={() => {
-                setShowEditor(false);
-              }}
-              cancelAction={() => {
-                setShowEditor(false);
-              }}
-            />
-          </div>
-        ) : (
-          <div className="text-sm text-gray-700">
-            <div id="comment-viewer" key={comment.bodyBlobName}>
-              {children}
+      <div className="flex-1">
+        <div className="border rounded-t-md bg-blue-100 px-2 py-1">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <div className="text-sm text-gray-700 font-semibold">
+                @{comment.User.handle} ({comment.User.name})
+              </div>
+              <div className="text-sm text-gray-600">
+                commented at {new Date(comment.createdAt).toLocaleString(locale, { timeZone: timeZone })}
+              </div>
+            </div>
+            <div className="flex-none">
+              {userId === comment.User.id && (
+                <div className="text-xs text-gray-500 font-semibold border border-gray-400 px-2 py-1 rounded-full">
+                  Owner
+                </div>
+              )}
+            </div>
+            <div className="flex-none">
+              {userId === comment.User.id && (
+                <CommentOtherMenuButton
+                  id={comment.id}
+                  onEditClicked={(value) => {
+                    setShowEditor(value);
+                  }}
+                />
+              )}
             </div>
           </div>
-        )}
+        </div>
+        <div className="border border-t-0 rounded-b-md">
+          {showEditor ? (
+            <div className="px-2 py-2">
+              <CommentEditor
+                setting={setting}
+                noteId={noteId}
+                commentId={comment.id}
+                body={body}
+                onSuccess={() => {
+                  setShowEditor(false);
+                }}
+                cancelAction={() => {
+                  setShowEditor(false);
+                }}
+              />
+            </div>
+          ) : (
+            <div className="px-1">
+              <div id="comment-viewer" key={comment.bodyBlobName}>
+                {children}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -601,7 +615,7 @@ export function CommentOtherMenuButton({
     <div>
       <Menu as="div" className="relative h-5">
         <Menu.Button>
-          <EllipsisHorizontalIcon className="mx-2 h-8 w-8" />
+          <EllipsisHorizontalIcon className="h-5 w-5" />
         </Menu.Button>
 
         <Transition
@@ -613,14 +627,14 @@ export function CommentOtherMenuButton({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 z-20 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 z-20 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="m-1">
               <Menu.Item>
                 {({ active }) => (
                   <span
                     className={clsx(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'group flex items-center px-4 py-3 text-sm hover:cursor-pointer'
+                      'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
                     )}
                     onClick={() => {
                       if (onEditClicked) {
@@ -641,7 +655,7 @@ export function CommentOtherMenuButton({
                   <span
                     className={clsx(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'group flex items-center px-4 py-3 text-sm hover:cursor-pointer'
+                      'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
                     )}
                     onClick={() => {}}
                   >
