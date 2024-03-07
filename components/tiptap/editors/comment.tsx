@@ -1,12 +1,25 @@
 'use client';
 
-import '@/components/tiptap/tiptap.css';
+import type { UserSetting } from './types';
+
+// TipTap
+import { uploadFiles } from '@/components/tiptap/action';
+import {
+  BubbleMenuImage,
+  BubbleMenuLink,
+  BubbleMenuTable,
+  BubbleMenuTextSelected,
+  FloatingMenuNewLine,
+  StickyMenu,
+} from '@/components/tiptap/menus';
+import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
+import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
-import BlockquoteExtension from '@tiptap/extension-blockquote';
+import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
+import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
-import CodeBlockExtension from '@tiptap/extension-code-block';
 import DocumentExtension from '@tiptap/extension-document';
 import DropcursorExtension from '@tiptap/extension-dropcursor';
 import GapcursorExtension from '@tiptap/extension-gapcursor';
@@ -21,28 +34,59 @@ import OrderedListExtension from '@tiptap/extension-ordered-list';
 import ParagraphExtension from '@tiptap/extension-paragraph';
 import PlaceholderExtension from '@tiptap/extension-placeholder';
 import StrikeExtension from '@tiptap/extension-strike';
+import TableExtension from '@tiptap/extension-table';
+import TableCellExtension from '@tiptap/extension-table-cell';
+import TableHeaderExtension from '@tiptap/extension-table-header';
+import TableRowExtension from '@tiptap/extension-table-row';
+import TaskItemExtension from '@tiptap/extension-task-item';
+import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 
+import '@/components/tiptap/tiptap.css';
+
 export default function CommentEditor({
+  setting,
   noteId,
-  postAction: post,
+  commentId,
+  body,
+  postAction,
+  onSuccess,
+  cancelAction,
 }: {
+  setting: UserSetting;
   noteId: string;
-  postAction: (noteId: string, comment: string) => Promise<{ id: string }>;
+  commentId?: string;
+  body?: string;
+  postAction: (noteId: string, commentId: string | null, body: string) => Promise<{ id: string }>;
+  onSuccess?: () => void;
+  cancelAction?: () => void;
 }) {
+  // if commnetId is not set, this editor is for new comment.
+  // if commentId is set, this editor is for editing comment.
+  const isEdit = !!commentId;
+
+  let content: any = undefined;
+  try {
+    content = body ? JSON.parse(body) : '';
+  } catch (e) {
+    content = body || '';
+  }
+
   const editor = useEditor({
     extensions: [
       BlockquoteExtension,
       BulletListExtension,
-      CodeBlockExtension,
+      CodeBlockLowlightExtension,
       DocumentExtension,
       HardBreakExtension,
       HeadingExtension.configure({ levels: [1, 2, 3] }),
       HorizontalRuleExtension,
       ListItemExtension,
       OrderedListExtension,
+      TaskListExtension,
+      TaskItemExtension.configure({ nested: true }),
       ParagraphExtension,
       TextExtension,
       BoldExtension,
@@ -52,36 +96,88 @@ export default function CommentEditor({
       DropcursorExtension,
       GapcursorExtension,
       HistoryExtension,
+      TableExtension.configure({
+        resizable: true,
+      }),
+      TableRowExtension,
+      TableHeaderExtension,
+      TableCellExtension,
       ImageExtension,
+      SelectionMarkerExtension.configure({
+        HTMLAttributes: { class: 'selection-marker' },
+      }),
+      UploadImageExtension.configure({
+        uploadImageFunc: uploadFiles,
+      }),
+      UnderlineExtension,
       LinkExtension.configure({
         openOnClick: false,
       }),
       PlaceholderExtension.configure({
         placeholder: 'ここからコメントを書き始めます...',
       }),
-      UnderlineExtension,
     ],
+    content: content,
   });
 
   return (
     <div>
-      <div className="border rounded-lg p-2">
-        <EditorContent editor={editor} />
-      </div>
-      <div className="mt-3 flex justify-end">
-        <button
-          type="button"
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          onClick={async () => {
-            const result = await post(noteId, JSON.stringify(editor?.getJSON())).catch((e) => null);
-            if (result) {
-              editor?.commands.clearContent();
-            }
-          }}
-        >
-          コメントを投稿
-        </button>
-      </div>
+      {editor && (
+        <>
+          <StickyMenu editor={editor} />
+          <div className="border border-t-0 border-gray-300 rounded-b-lg p-2 min-h-40">
+            <BubbleMenuImage editor={editor} />
+            <BubbleMenuLink editor={editor} />
+            <BubbleMenuTable editor={editor} />
+            <BubbleMenuTextSelected editor={editor} />
+            {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
+            <EditorContent editor={editor} />
+          </div>
+          {isEdit ? (
+            <div className="mt-3 flex justify-end gap-2">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+                onClick={async () => {
+                  cancelAction?.();
+                }}
+              >
+                キャンセル
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={async () => {
+                  const result = await postAction(noteId, commentId, JSON.stringify(editor?.getJSON())).catch(
+                    (e) => null
+                  );
+                  if (result) {
+                    editor?.commands.clearContent();
+                    onSuccess?.();
+                  }
+                }}
+              >
+                更新
+              </button>
+            </div>
+          ) : (
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={async () => {
+                  const result = await postAction(noteId, null, JSON.stringify(editor?.getJSON())).catch((e) => null);
+                  if (result) {
+                    editor?.commands.clearContent();
+                  }
+                }}
+              >
+                コメントを投稿
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

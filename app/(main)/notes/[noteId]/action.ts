@@ -43,26 +43,39 @@ export async function deleteNote(noteId: string) {
   return result;
 }
 
-export async function commentOnNote(noteId: string, comment: string) {
+export async function commentOnNote(noteId: string, commentId: string | null, body: string) {
   const user = await getSessionUser();
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
 
+  // check if commentId is valid
+  let isEdited = false;
+  if (commentId) {
+    const comment = await prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) throw new Error('Comment not found');
+    if (comment.noteId !== noteId) throw new Error('Note not found');
+    if (comment.userId !== userId) throw new Error('Unauthorized');
+    isEdited = true;
+  }
+  const id = commentId || cuid();
+
   const metadata = {
+    commentId: id,
     userId: userId,
     noteId: noteId,
   };
   const tags = {
+    commentId: id,
     userId: userId,
     noteId: noteId,
   };
 
   // create TipTap text for check valid json
-  const bodyText = generateTipTapText(comment);
+  const bodyText = generateTipTapText(body);
 
-  const blobName = `${noteId}/${cuid()}`;
+  const blobName = `${noteId}/${id}/${cuid()}`;
   const blobUploadResult = await blob
-    .upload('comments', blobName, 'text/markdown', comment, metadata, tags)
+    .upload('comments', blobName, 'text/markdown', body, metadata, tags)
     .then((res) => res._response.status)
     .catch((err) => 500);
 
@@ -70,13 +83,18 @@ export async function commentOnNote(noteId: string, comment: string) {
     throw new Error('Failed to upload comment');
   }
 
-  const result = await prisma.comment.create({
-    data: {
-      id: cuid(),
+  const result = await prisma.comment.upsert({
+    where: { id: id },
+    create: {
+      id: id,
       noteId: noteId,
       userId: userId,
       bodyBlobName: blobName,
-      isEdited: false,
+      isEdited: isEdited,
+    },
+    update: {
+      bodyBlobName: blobName,
+      isEdited: isEdited,
     },
   });
   if (result) {
@@ -165,4 +183,29 @@ export async function duplicateNoteToDraft(noteId: string, groupId?: string) {
   }).catch((e) => null);
 
   return draft;
+}
+
+export async function deleteComment(commentId: string) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id: commentId,
+    },
+  });
+
+  if (comment?.userId !== user.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const result = await prisma.comment.delete({
+    where: {
+      id: commentId,
+    },
+  });
+  if (result) {
+    revalidatePath(`/notes/${comment.noteId}`);
+  }
+  return result;
 }
