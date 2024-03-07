@@ -271,6 +271,7 @@
 
 
 #comment-viewer {
+  font-family: var(--font-inter), var(--font-noto-sans-jp);
   overflow-wrap: break-word;
   font-size: 1.0rem;
 }
@@ -339,25 +340,6 @@
 #comment-viewer a:hover {
   text-decoration: underline;
 }
-#comment-viewer table {
-  font-size: 1.0rem;
-  line-height: 2.0;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  border: 1px solid #ddd;
-}
-#comment-viewer table th {
-  font-weight: bold;
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-#comment-viewer table td {
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-}
 #comment-viewer ul {
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
@@ -376,11 +358,44 @@
   list-style-type: number;
   counter-reset: number;
 }
+#comment-viewer ol ol {
+  list-style-type: circle;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 #comment-viewer li {
   font-size: 1.0rem;
   line-height: 1.6;
   margin: 0rem;
 }
+#comment-viewer li>p:first-child {
+  margin: 0rem;
+}
+
+/* Task List */
+#comment-viewer ul[data-type="taskList"] {
+  list-style-type: none;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-left: 0rem;
+}
+#comment-viewer ul[data-type="taskList"] p {
+  margin: 0rem;
+  margin-top: 0.1rem;
+}
+#comment-viewer ul[data-type="taskList"] li {
+  display: flex;
+  line-height: unset;
+}
+#comment-viewer ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+#comment-viewer ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+}
+
 #comment-viewer blockquote {
   font-size: 0.9rem;
   margin-top: 0.8rem;
@@ -390,11 +405,138 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #eee;
 }
+#comment-viewer blockquote p {
+  margin-top: 0.3rem !important;
+  margin-bottom: 0.4rem;
+}
+#comment-viewer blockquote.type-null {
+  padding-top: 0.2rem;
+}
+#comment-viewer blockquote.type-note {
+  border-left: 5px solid rgb(9, 105, 218);
+}
+#comment-viewer blockquote.type-note::before {
+  content: "Note";
+  color: rgb(9, 105, 218);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(9, 105, 218)"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-viewer blockquote.type-tip {
+  border-left: 5px solid rgb(31, 136, 61);
+}
+#comment-viewer blockquote.type-tip::before {
+  content: "Tip";
+  color:rgb(31, 136, 61);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(31, 136, 61)"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-viewer blockquote.type-important {
+  border-left: 5px solid rgb(130, 80, 223);
+}
+#comment-viewer blockquote.type-important::before {
+  content: "Important";
+  color: rgb(130, 80, 223);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(130, 80, 223)"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-viewer blockquote.type-warning {
+  border-left: 5px solid rgb(245, 161, 17);
+}
+#comment-viewer blockquote.type-warning::before {
+  content: "Warning";
+  color: rgb(245, 161, 17);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(245, 161, 17)"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-viewer blockquote.type-caution {
+  border-left: 5px solid rgb(207, 34, 46);
+}
+#comment-viewer blockquote.type-caution::before {
+  content: "Warning";
+  color: rgb(207, 34, 46);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(207, 34, 46)"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+/* Image */
 #comment-viewer img {
   display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+}
+#comment-viewer div.image-container img {
+  display: inline-block;
+  box-shadow: 0 0 0 1px #ddd;
+  max-width: 100%;
+  background-color: #fff;
+}
+#comment-viewer div.image-container p.image-caption {
+  font-size: 0.7rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+}
+
+/* Table */
+#comment-viewer .tiptap .table-container {
+  overflow-x: auto;
+}
+#comment-viewer .tiptap table {
+  border-collapse: collapse;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+}
+#comment-viewer .tiptap table td, #comment-viewer .tiptap table th {
+  border: 2px solid #ced4da;
+  box-sizing: border-box;
+  min-width: 1em;
+  padding: 3px 5px;
+  position: relative;
+  vertical-align: top;
+}
+#comment-viewer .tiptap table td > *, #comment-viewer .tiptap table th > * {
+  margin-bottom: 0;
+}
+#comment-viewer .tiptap table th  {
+  background-color: #f1f3f5;
+  font-weight: bold;
+  text-align: left;
+}
+#comment-viewer .tiptap table p {
+  margin: 0;
 }
 
 #comment-editor {
@@ -441,6 +583,11 @@
 #comment-editor p:first-child {
   margin-top: 0rem;
 }
+#comment-editor p::after {
+  content: attr(data-azure-openai-completion)"";
+  color: #999999;
+  font-style: italic;
+}
 #comment-editor code {
   font-family: var(--font-source-code-pro), var(--font-noto-sans-jp), Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
 }
@@ -470,25 +617,6 @@
 #comment-editor a:hover {
   text-decoration: underline;
 }
-#comment-editor table {
-  font-size: 1.0rem;
-  line-height: 2.0;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-top: 0.8rem;
-  margin-bottom: 0.8rem;
-  border: 1px solid #ddd;
-}
-#comment-editor table th {
-  font-weight: bold;
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-#comment-editor table td {
-  padding: 0.2rem 0.3rem;
-  border: 1px solid #ddd;
-}
 #comment-editor ul {
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
@@ -507,11 +635,44 @@
   list-style-type: number;
   counter-reset: number;
 }
+#comment-editor ol ol {
+  list-style-type: number;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 #comment-editor li {
   font-size: 1.0rem;
   line-height: 1.6;
   margin: 0rem;
 }
+#comment-editor li>p:first-child {
+  margin: 0rem;
+}
+
+/* Task List */
+#comment-editor ul[data-type="taskList"] {
+  list-style-type: none;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-left: 0rem;
+}
+#comment-editor ul[data-type="taskList"] p {
+  margin: 0rem;
+  margin-top: 0.1rem;
+}
+#comment-editor ul[data-type="taskList"] li {
+  display: flex;
+  line-height: unset;
+}
+#comment-editor ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+#comment-editor ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+}
+
 #comment-editor blockquote {
   font-size: 0.9rem;
   margin-top: 0.8rem;
@@ -521,11 +682,108 @@
   padding-bottom: 0.3rem;
   border-left: 4px solid #eee;
 }
+#comment-editor blockquote p {
+  margin-top: 0.3rem !important;
+  margin-bottom: 0.4rem;
+}
+#comment-editor blockquote.type-null {
+  padding-top: 0.2rem;
+}
+#comment-editor blockquote.type-note {
+  border-left: 5px solid rgb(9, 105, 218);
+}
+#comment-editor blockquote.type-note::before {
+  content: "Note";
+  color: rgb(9, 105, 218);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(9, 105, 218)"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-editor blockquote.type-tip {
+  border-left: 5px solid rgb(31, 136, 61);
+}
+#comment-editor blockquote.type-tip::before {
+  content: "Tip";
+  color:rgb(31, 136, 61);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(31, 136, 61)"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-editor blockquote.type-important {
+  border-left: 5px solid rgb(130, 80, 223);
+}
+#comment-editor blockquote.type-important::before {
+  content: "Important";
+  color: rgb(130, 80, 223);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(130, 80, 223)"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-editor blockquote.type-warning {
+  border-left: 5px solid rgb(245, 161, 17);
+}
+#comment-editor blockquote.type-warning::before {
+  content: "Warning";
+  color: rgb(245, 161, 17);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(245, 161, 17)"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#comment-editor blockquote.type-caution {
+  border-left: 5px solid rgb(207, 34, 46);
+}
+#comment-editor blockquote.type-caution::before {
+  content: "Warning";
+  color: rgb(207, 34, 46);
+  font-size: 1.0rem;
+  font-weight: 500;
+  padding-left: 1.9rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" fill="rgb(207, 34, 46)"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+/* Image */
 #comment-editor img {
   display: inline-block;
   box-shadow: 0 0 0 1px #ddd;
   max-width: 100%;
   background-color: #fff;
+}
+#comment-editor div.image-container img {
+  box-shadow: 0 0 0 1px #ddd;
+  max-width: 100%;
+  background-color: #fff;
+}
+#comment-editor div.ProseMirror-selectednode.image-container img {
+  box-shadow: 0 0 0 4px #aaa;
+}
+#comment-editor div.image-container p.image-caption {
+  font-size: 0.9rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }
 
 /* Placeholder */
@@ -538,4 +796,61 @@
 }
 #comment-editor .tiptap p.is-editor-empty:first-child {
   margin-top: 0rem;
+}
+
+/* Table */
+#comment-editor .tiptap table {
+  border-collapse: collapse;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+  font-size: 1.0rem;
+  line-height: 2.0;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+}
+#comment-editor .tiptap table td, #comment-editor .tiptap table th {
+  border: 2px solid #ced4da;
+  box-sizing: border-box;
+  min-width: 1em;
+  padding: 3px 5px;
+  position: relative;
+  vertical-align: top;
+}
+#comment-editor .tiptap table td > *, #comment-editor .tiptap table th > * {
+  margin-bottom: 0;
+}
+#comment-editor .tiptap table th  {
+  background-color: #f1f3f5;
+  font-weight: bold;
+  text-align: left;
+}
+#comment-editor .tiptap table .selectedCell:after {
+  background: rgba(200, 200, 255, 0.4);
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+#comment-editor .tiptap table .column-resize-handle {
+  background-color: rgba(120, 120, 120);
+  bottom: -2px;
+  position: absolute;
+  right: -2px;
+  pointer-events: none;
+  top: 0;
+  width: 4px;
+}
+#comment-editor .tiptap table p {
+  margin: 0;
+}
+#comment-editor .tiptap.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
 }
