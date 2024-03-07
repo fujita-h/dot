@@ -184,3 +184,28 @@ export async function duplicateNoteToDraft(noteId: string, groupId?: string) {
 
   return draft;
 }
+
+export async function deleteComment(commentId: string) {
+  const user = await getSessionUser();
+  if (!user || !user.id) throw new Error('Unauthorized');
+
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id: commentId,
+    },
+  });
+
+  if (comment?.userId !== user.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const result = await prisma.comment.delete({
+    where: {
+      id: commentId,
+    },
+  });
+  if (result) {
+    revalidatePath(`/notes/${comment.noteId}`);
+  }
+  return result;
+}
