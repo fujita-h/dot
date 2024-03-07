@@ -49,12 +49,31 @@ import '@/components/tiptap/tiptap.css';
 export default function CommentEditor({
   setting,
   noteId,
-  postAction: post,
+  commentId,
+  body,
+  postAction,
+  onSuccess,
+  cancelAction,
 }: {
   setting: UserSetting;
   noteId: string;
-  postAction: (noteId: string, comment: string) => Promise<{ id: string }>;
+  commentId?: string;
+  body?: string;
+  postAction: (noteId: string, commentId: string | null, body: string) => Promise<{ id: string }>;
+  onSuccess?: () => void;
+  cancelAction?: () => void;
 }) {
+  // if commnetId is not set, this editor is for new comment.
+  // if commentId is set, this editor is for editing comment.
+  const isEdit = !!commentId;
+
+  let content: any = undefined;
+  try {
+    content = body ? JSON.parse(body) : '';
+  } catch (e) {
+    content = body || '';
+  }
+
   const editor = useEditor({
     extensions: [
       BlockquoteExtension,
@@ -98,6 +117,7 @@ export default function CommentEditor({
         placeholder: 'ここからコメントを書き始めます...',
       }),
     ],
+    content: content,
   });
 
   return (
@@ -113,20 +133,49 @@ export default function CommentEditor({
             {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
             <EditorContent editor={editor} />
           </div>
-          <div className="mt-3 flex justify-end">
-            <button
-              type="button"
-              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={async () => {
-                const result = await post(noteId, JSON.stringify(editor?.getJSON())).catch((e) => null);
-                if (result) {
-                  editor?.commands.clearContent();
-                }
-              }}
-            >
-              コメントを投稿
-            </button>
-          </div>
+          {isEdit ? (
+            <div className="mt-3 flex justify-end gap-2">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+                onClick={async () => {
+                  cancelAction?.();
+                }}
+              >
+                キャンセル
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={async () => {
+                  const result = await postAction(noteId, commentId, JSON.stringify(editor?.getJSON())).catch(
+                    (e) => null
+                  );
+                  if (result) {
+                    editor?.commands.clearContent();
+                    onSuccess?.();
+                  }
+                }}
+              >
+                更新
+              </button>
+            </div>
+          ) : (
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={async () => {
+                  const result = await postAction(noteId, null, JSON.stringify(editor?.getJSON())).catch((e) => null);
+                  if (result) {
+                    editor?.commands.clearContent();
+                  }
+                }}
+              >
+                コメントを投稿
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

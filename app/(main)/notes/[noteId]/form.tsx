@@ -8,7 +8,7 @@ import { DocumentDuplicateIcon, EllipsisHorizontalIcon, PencilSquareIcon, TrashI
 import clsx from 'clsx/lite';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { RiPushpinFill } from 'react-icons/ri';
 import { commentOnNote, deleteNote, duplicateNoteToDraft, pinNoteToGroupProfile, pinNoteToUserProfile } from './action';
 
@@ -51,8 +51,32 @@ export function CommentViewer({ jsonString }: { jsonString: string }) {
   return <DynamicCommentViewer jsonString={jsonString} />;
 }
 
-export function CommentEditor({ setting, noteId }: { setting: UserSetting; noteId: string }) {
-  return <DynamicCommentEditor setting={setting} noteId={noteId} postAction={commentOnNote} />;
+export function CommentEditor({
+  setting,
+  noteId,
+  commentId,
+  body,
+  onSuccess,
+  cancelAction,
+}: {
+  setting: UserSetting;
+  noteId: string;
+  commentId?: string;
+  body?: string;
+  onSuccess?: () => void;
+  cancelAction?: () => void;
+}) {
+  return (
+    <DynamicCommentEditor
+      setting={setting}
+      noteId={noteId}
+      commentId={commentId}
+      body={body}
+      postAction={commentOnNote}
+      onSuccess={onSuccess}
+      cancelAction={cancelAction}
+    />
+  );
 }
 
 export function ScrollToC({ body }: { body: string }) {
@@ -481,5 +505,169 @@ function DuplicateNoteModal({
         </div>
       </Dialog>
     </Transition.Root>
+  );
+}
+
+type Comment = {
+  id: string;
+  bodyBlobName: string | null;
+  createdAt: Date;
+  User: {
+    id: string;
+    uid: string;
+    handle: string;
+    name: string | null;
+  };
+};
+
+export function CommentItemWrapper({
+  children,
+  userId,
+  setting,
+  noteId,
+  comment,
+  body,
+  locale,
+  timeZone,
+}: {
+  children: React.ReactNode;
+  userId: string;
+  setting: UserSetting;
+  noteId: string;
+  comment: Comment;
+  body: string;
+  locale: string;
+  timeZone: string;
+}) {
+  const [showEditor, setShowEditor] = useState(false);
+  return (
+    <div className="pl-3 pr-4 py-4 flex gap-2">
+      <div className="flex-none pt-2">
+        <img src={`/api/users/${comment.User.uid}/icon`} className="w-8 h-8 rounded-full" alt="user icon" />
+      </div>
+      <div className="flex-1">
+        <div className="border rounded-t-md bg-blue-100 px-2 py-1">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <div className="text-sm text-gray-700 font-semibold">
+                @{comment.User.handle} ({comment.User.name})
+              </div>
+              <div className="text-sm text-gray-600">
+                commented at {new Date(comment.createdAt).toLocaleString(locale, { timeZone: timeZone })}
+              </div>
+            </div>
+            <div className="flex-none">
+              {userId === comment.User.id && (
+                <div className="text-xs text-gray-500 font-semibold border border-gray-400 px-2 py-1 rounded-full">
+                  Owner
+                </div>
+              )}
+            </div>
+            <div className="flex-none">
+              {userId === comment.User.id && (
+                <CommentOtherMenuButton
+                  id={comment.id}
+                  onEditClicked={(value) => {
+                    setShowEditor(value);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="border border-t-0 rounded-b-md">
+          {showEditor ? (
+            <div id="comment-editor" className="px-2 py-2">
+              <CommentEditor
+                setting={setting}
+                noteId={noteId}
+                commentId={comment.id}
+                body={body}
+                onSuccess={() => {
+                  setShowEditor(false);
+                }}
+                cancelAction={() => {
+                  setShowEditor(false);
+                }}
+              />
+            </div>
+          ) : (
+            <div className="px-1">
+              <div id="comment-viewer" key={comment.bodyBlobName}>
+                {children}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function CommentOtherMenuButton({
+  id,
+  onEditClicked,
+}: {
+  id: string;
+  onEditClicked?: (value: boolean) => void;
+}) {
+  return (
+    <div>
+      <Menu as="div" className="relative h-5">
+        <Menu.Button>
+          <EllipsisHorizontalIcon className="h-5 w-5" />
+        </Menu.Button>
+
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute right-0 z-20 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="m-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <span
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
+                    )}
+                    onClick={() => {
+                      if (onEditClicked) {
+                        onEditClicked(true);
+                      }
+                    }}
+                  >
+                    <PencilSquareIcon
+                      className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                    編集
+                  </span>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <span
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
+                    )}
+                    onClick={() => {}}
+                  >
+                    <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                    削除
+                  </span>
+                )}
+              </Menu.Item>
+            </div>
+          </Menu.Items>
+        </Transition>
+      </Menu>
+    </div>
   );
 }
