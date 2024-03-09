@@ -584,7 +584,7 @@ export function CommentItemWrapper({
         </div>
         <div className="border border-t-0 rounded-b-md">
           {showEditor ? (
-            <div id="comment-editor" className="px-2 py-2">
+            <div className="px-2 py-2">
               <CommentEditor
                 setting={setting}
                 noteId={noteId}

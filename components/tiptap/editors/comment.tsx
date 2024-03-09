@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import type { UserSetting } from './types';
 
 // TipTap
@@ -66,6 +67,7 @@ export default function CommentEditor({
   // if commnetId is not set, this editor is for new comment.
   // if commentId is set, this editor is for editing comment.
   const isEdit = !!commentId;
+  const commentDivId = `comment-${commentId || 'new'}`;
 
   let content: any = undefined;
   try {
@@ -120,8 +122,60 @@ export default function CommentEditor({
     content: content,
   });
 
+  const editorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!editor || !editorRef.current) {
+      return;
+    }
+    const target = editorRef.current;
+
+    // Tab key handling. Prevent tab key from moving focus to outside of the editor.
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') {
+        return;
+      }
+
+      // Collect focusable elements
+      const focusableElements = Array.from(document.querySelectorAll(`#${commentDivId} #comment-editor button`)).filter(
+        (element: any) => element.tabIndex >= 0 && !element.disabled && element.offsetParent != null
+      );
+
+      // If there are no focusable elements, do nothing
+      if (focusableElements.length === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      // Find first and last focusable elements
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      // Control focus. If shift + tab key pressed, move focus to the last element. If tab key pressed, move focus to the first element.
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    // Add event listener
+    target.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener when component unmounts
+    return () => {
+      target.removeEventListener('keydown', handleKeyDown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, editorRef]);
+
   return (
-    <div>
+    <div id={`${commentDivId}`}>
       {editor && (
         <>
           <StickyMenu editor={editor} />
@@ -131,7 +185,9 @@ export default function CommentEditor({
             <BubbleMenuTable editor={editor} />
             <BubbleMenuTextSelected editor={editor} />
             {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
-            <EditorContent editor={editor} />
+            <div id="comment-editor" ref={editorRef}>
+              <EditorContent editor={editor} />
+            </div>
           </div>
           {isEdit ? (
             <div className="mt-3 flex justify-end gap-2">
