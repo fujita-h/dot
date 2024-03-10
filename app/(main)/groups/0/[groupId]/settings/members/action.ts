@@ -8,12 +8,14 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
   const targetUserId = userId;
 
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   const isAuthorized = await checkAccountAuthorization(user.id).catch(() => false);
   if (!isAuthorized) {
     revalidatePath('/settings/general');
-    return { status: 'error', target: null, message: 'Authorization error', lastModified: Date.now() };
+    return { error: 'Unauthorized' };
   }
 
   const group = await prisma.group.findUnique({
@@ -23,11 +25,11 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
     },
   });
   if (!group) {
-    throw new Error('Group not found');
+    return { error: 'Group not found' };
   }
 
   if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
-    throw new Error('You must be the owner of the group to add a member');
+    return { error: 'You must be the owner of the group to add a member' };
   }
 
   const member = await prisma.membership.create({
@@ -36,6 +38,7 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
       groupId,
       role,
     },
+    select: { userId: true, groupId: true, role: true },
   });
   revalidatePath(`/groups/0/${groupId}/settings/members`);
   return member;

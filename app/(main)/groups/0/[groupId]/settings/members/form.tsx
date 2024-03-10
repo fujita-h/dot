@@ -371,9 +371,11 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                       activeUser.id,
                                       selected?.value || 'READER'
                                     ).catch((e) => null);
-                                    if (res) {
-                                      setOpen(false);
+                                    if (!res || (res && 'error' in res)) {
+                                      alert(res?.error || 'エラーが発生しました');
+                                      return;
                                     }
+                                    setOpen(false);
                                   }}
                                 >
                                   メンバーに追加
