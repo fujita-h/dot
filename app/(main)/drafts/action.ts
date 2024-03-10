@@ -4,16 +4,25 @@ import { getSessionUser } from '@/libs/auth/utils';
 import prisma from '@/libs/prisma/instance';
 import { revalidatePath } from 'next/cache';
 
-export async function deleteDraft(draftId: string): Promise<boolean> {
+export async function deleteDraft(draftId: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
-  const draft = await prisma.draft.delete({ where: { id: draftId } }).catch((e) => {
-    console.error(e);
-    return null;
-  });
-  revalidatePath('/drafts', 'page');
+  const draft = await prisma.draft
+    .delete({
+      where: { id: draftId },
+      select: { id: true },
+    })
+    .catch((e) => {
+      console.error(e);
+      return null;
+    });
 
-  // TODO: we should return object to notify detail of error
-  return Boolean(draft);
+  if (draft) {
+    revalidatePath('/drafts', 'page');
+  }
+
+  return draft;
 }

@@ -72,8 +72,12 @@ function ConfirmDeleteModal({
   const router = useRouter();
   const cancelButtonRef = useRef(null);
   const handleDelete = async () => {
-    const deleted = await deleteDraft(id);
-    if (deleted) {
+    const result = await deleteDraft(id);
+    if (!result || (result && 'error' in result)) {
+      alert(result?.error || '削除に失敗しました');
+      return;
+    }
+    if (result && result.id) {
       router.push(`/drafts?page=${page}`);
     }
   };
