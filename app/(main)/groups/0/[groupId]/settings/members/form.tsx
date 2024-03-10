@@ -551,9 +551,11 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                     onClick={async () => {
                       const role = selected?.value || 'READER';
                       const res = await updateMemberRole(group.id, user?.id || '', role).catch((e) => null);
-                      if (res) {
-                        setOpen(false);
+                      if (!res || (res && 'error' in res)) {
+                        alert(res?.error || 'エラーが発生しました');
+                        return;
                       }
+                      setOpen(false);
                     }}
                   >
                     ユーザー設定を変更

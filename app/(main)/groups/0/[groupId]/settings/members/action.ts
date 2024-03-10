@@ -46,7 +46,9 @@ export async function addMemberToGroup(groupId: string, userId: string, role: 'A
 
 export async function updateMemberRole(groupId: string, userId: string, role: 'ADMIN' | 'CONTRIBUTOR' | 'READER') {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -55,11 +57,11 @@ export async function updateMemberRole(groupId: string, userId: string, role: 'A
     },
   });
   if (!group) {
-    throw new Error('Group not found');
+    return { error: 'Group not found' };
   }
 
   if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
-    throw new Error('You must be the owner of the group to add a member');
+    return { error: 'You must be the owner of the group to add a member' };
   }
 
   const member = await prisma.membership.update({
@@ -72,6 +74,7 @@ export async function updateMemberRole(groupId: string, userId: string, role: 'A
     data: {
       role,
     },
+    select: { userId: true, groupId: true, role: true },
   });
   revalidatePath(`/groups/0/${groupId}/settings/members`);
   return member;
