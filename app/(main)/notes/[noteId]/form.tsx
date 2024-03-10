@@ -298,11 +298,9 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
                     onClick={async () => {
-                      const res = await deleteNote(note.id)
-                        .then((data) => ({ ...data, error: null }))
-                        .catch((e) => ({ error: e }));
-                      if (res.error) {
-                        alert(res.error);
+                      const res = await deleteNote(note.id).catch((e) => null);
+                      if (!res || (res && 'error' in res)) {
+                        alert(res?.error || 'ノートの削除に失敗しました');
                       } else {
                         setOpen(false);
                         router.replace('/');
@@ -491,7 +489,11 @@ function DuplicateNoteModal({
                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                     onClick={async () => {
                       const draft = await duplicateNoteToDraft(note.id, selected.id).catch((e) => null);
-                      if (draft) {
+                      if (!draft || (draft && 'error' in draft)) {
+                        alert('記事の複製に失敗しました');
+                        return;
+                      }
+                      if (draft && draft.id) {
                         router.push(`/drafts/${draft.id}/edit`);
                       }
                     }}
@@ -751,11 +753,10 @@ function DeleteCommentModal({
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
                     onClick={async () => {
-                      const res = await deleteComment(commentId)
-                        .then((data) => ({ ...data, error: null }))
-                        .catch((e) => ({ error: e }));
-                      if (res.error) {
-                        alert(res.error);
+                      const res = await deleteComment(commentId).catch((e) => null);
+                      console.log(res);
+                      if (!res || (res && 'error' in res)) {
+                        alert(res?.error || 'コメントの削除に失敗しました');
                       } else {
                         setOpen(false);
                       }

@@ -60,7 +60,7 @@ export default function CommentEditor({
   noteId: string;
   commentId?: string;
   body?: string;
-  postAction: (noteId: string, commentId: string | null, body: string) => Promise<{ id: string }>;
+  postAction: (noteId: string, commentId: string | null, body: string) => Promise<{ id: string } | { error: string }>;
   onSuccess?: () => void;
   cancelAction?: () => void;
 }) {
@@ -207,7 +207,10 @@ export default function CommentEditor({
                   const result = await postAction(noteId, commentId, JSON.stringify(editor?.getJSON())).catch(
                     (e) => null
                   );
-                  if (result) {
+                  if (!result || (result && 'error' in result)) {
+                    return;
+                  }
+                  if (result && result.id) {
                     editor?.commands.clearContent();
                     onSuccess?.();
                   }
