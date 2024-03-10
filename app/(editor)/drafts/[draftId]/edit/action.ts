@@ -354,7 +354,7 @@ export async function processPublish(
 export async function textCompletion(text: string) {
   const user = await getSessionUser();
   if (!user || !user.id) {
-    // Note: When using the Server Function, throw is not delivered to the client.
+    // Note: When using the Server Function, throw message is not delivered to the client.
     throw new Error('Unauthorized');
   }
   const userId = user.id;
