@@ -178,9 +178,11 @@ export function Form({
             topicsState.map((t) => t.id),
             JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
-          if (result) {
-            router.replace(`/drafts/?id=${result.id}`);
+          if (!result || (result && 'error' in result)) {
+            alert(result?.error || 'Failed to save draft');
+            return;
           }
+          router.replace(`/drafts/?id=${result.id}`);
         }}
         formPublishAction={async () => {
           setAutoSaveTimestamp(0);
@@ -192,9 +194,11 @@ export function Form({
             topicsState.map((t) => t.id),
             JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
-          if (result) {
-            router.replace(`/notes/${result.id}`);
+          if (!result || (result && 'error' in result)) {
+            alert(result?.error || 'Failed to publish note');
+            return;
           }
+          router.replace(`/notes/${result.id}`);
         }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
