@@ -82,7 +82,9 @@ export async function updateMemberRole(groupId: string, userId: string, role: 'A
 
 export async function removeMemberFromGroup(groupId: string, userId: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -91,11 +93,11 @@ export async function removeMemberFromGroup(groupId: string, userId: string) {
     },
   });
   if (!group) {
-    throw new Error('Group not found');
+    return { error: 'Group not found' };
   }
 
   if (group.Members.find((member) => member.userId === user.id)?.role !== 'ADMIN') {
-    throw new Error('You must be the owner of the group to add a member');
+    return { error: 'You must be the owner of the group to add a member' };
   }
 
   const member = await prisma.$transaction(async (prisma) => {
@@ -106,9 +108,12 @@ export async function removeMemberFromGroup(groupId: string, userId: string) {
           groupId,
         },
       },
+      select: { userId: true, groupId: true, role: true },
     });
 
-    if (!userToDelete) throw new Error('User not found');
+    if (!userToDelete) {
+      return { error: 'User not found in group' };
+    }
 
     if (userToDelete.role === 'ADMIN') {
       const admins = await prisma.membership.findMany({
@@ -116,9 +121,10 @@ export async function removeMemberFromGroup(groupId: string, userId: string) {
           groupId,
           role: 'ADMIN',
         },
+        select: { userId: true },
       });
       if (admins.length === 1) {
-        throw new Error('Cannot remove the last admin');
+        return { error: 'Cannot remove the last admin' };
       }
     }
     return prisma.membership.delete({
@@ -128,6 +134,7 @@ export async function removeMemberFromGroup(groupId: string, userId: string) {
           groupId,
         },
       },
+      select: { userId: true, groupId: true, role: true },
     });
   });
   revalidatePath(`/groups/0/${groupId}/settings/members`);

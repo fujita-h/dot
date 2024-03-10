@@ -678,14 +678,11 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                     disabled={confirm.replace('@', '') !== user?.handle}
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-300 disabled:cursor-not-allowed"
                     onClick={async () => {
-                      const res = await removeMemberFromGroup(group.id, user?.id || '')
-                        .then((data) => ({ ...data, error: null }))
-                        .catch((e) => ({ error: e.message }));
-                      if (res.error) {
-                        alert(res.error);
-                      } else {
-                        setOpen(false);
+                      const res = await removeMemberFromGroup(group.id, user?.id || '').catch((e) => null);
+                      if (!res || (res && 'error' in res)) {
+                        alert(res?.error || 'エラーが発生しました');
                       }
+                      setOpen(false);
                     }}
                   >
                     ユーザーを削除
