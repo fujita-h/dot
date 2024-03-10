@@ -3,7 +3,7 @@
 import { EditorNavbar } from '@/components/navbar';
 import { TopicInput, TopicItem } from '@/components/topics/input';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { processAutoSave, processDraft, processPublish, textCompletion } from './action';
 import type { Group, UserSetting } from './types';
 
@@ -178,9 +178,11 @@ export function Form({
             topicsState.map((t) => t.id),
             JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
-          if (result) {
-            router.replace(`/drafts/?id=${result.id}`);
+          if (!result || (result && 'error' in result)) {
+            alert(result?.error || 'Failed to save draft');
+            return;
           }
+          router.replace(`/drafts/?id=${result.id}`);
         }}
         formPublishAction={async () => {
           setAutoSaveTimestamp(0);
@@ -192,9 +194,11 @@ export function Form({
             topicsState.map((t) => t.id),
             JSON.stringify(editor?.getJSON())
           ).catch((e) => null);
-          if (result) {
-            router.replace(`/notes/${result.id}`);
+          if (!result || (result && 'error' in result)) {
+            alert(result?.error || 'Failed to publish note');
+            return;
           }
+          router.replace(`/notes/${result.id}`);
         }}
         showAutoSavingMessage={showAutoSavingMessage}
       />
@@ -246,7 +250,14 @@ function EditorForm({
   onTitleChange?: (title: string) => void;
   onTopicsChange?: (topics: TopicItem[]) => void;
 }) {
+  const editorRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    if (!editor || !editorRef.current) {
+      return;
+    }
+
+    const target = editorRef.current;
+
     // Tab key handling. Prevent tab key from moving focus to outside of the editor.
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') {
@@ -283,13 +294,13 @@ function EditorForm({
     };
 
     // Add event listener
-    document.addEventListener('keydown', handleKeyDown);
+    target.addEventListener('keydown', handleKeyDown);
 
     // Remove event listener when component unmounts
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      target.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [editor, editorRef]);
   return (
     <div>
       <div className="flex gap-2 mb-2">
@@ -335,7 +346,7 @@ function EditorForm({
               <BubbleMenuTable editor={editor} />
               <BubbleMenuTextSelected editor={editor} />
               {setting.editorShowNewLineFloatingMenu && <FloatingMenuNewLine editor={editor} />}
-              <div id="draft-editor">
+              <div id="draft-editor" ref={editorRef}>
                 <EditorContent editor={editor} />
               </div>
             </div>

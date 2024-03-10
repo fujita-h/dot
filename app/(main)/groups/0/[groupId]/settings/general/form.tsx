@@ -365,16 +365,11 @@ export function DeleteForm({ group }: { group: Group }) {
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-red-600/30  disabled:cursor-not-allowed"
                       disabled={confirmText !== group.handle}
                       onClick={async () => {
-                        try {
-                          await DeleteGroup(group.id, confirmText);
-                          router.push('/groups');
-                        } catch (e: unknown) {
-                          if (e instanceof Error) {
-                            alert('エラー: グループの削除に失敗しました。\n' + e.message);
-                          } else {
-                            alert('エラー: グループの削除に失敗しました。');
-                          }
+                        const result = await DeleteGroup(group.id, confirmText);
+                        if (!result || (result && 'error' in result)) {
+                          alert(result?.error || 'エラー: グループの削除に失敗しました');
                         }
+                        router.push('/groups');
                       }}
                     >
                       グループを削除する

@@ -24,11 +24,15 @@ export async function processAutoSave(
   body?: string
 ) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   if (groupId) {
     const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
-    if (!postable) throw new Error('Forbbiden');
+    if (!postable) {
+      return { error: 'Forbbiden' };
+    }
   }
 
   const metadata = {
@@ -61,7 +65,9 @@ export async function processAutoSave(
       .then((res) => res._response.status)
       .catch((err) => 500);
 
-    if (blobUploadResult !== 201) throw new Error('Failed to upload draft');
+    if (blobUploadResult !== 201) {
+      return { error: 'Failed to upload draft' };
+    }
   }
 
   let _topics = undefined;
@@ -87,7 +93,7 @@ export async function processAutoSave(
 
   if (!draft) {
     if (blobName) await blob.delete('drafts', blobName).catch((err) => null);
-    throw new Error('Failed to update draft');
+    return { error: 'Failed to update draft' };
   }
 
   return draft;
@@ -102,15 +108,19 @@ export async function processDraft(
   body?: string
 ) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   if (body === undefined) {
-    throw new Error('body is undefined');
+    return { error: 'body is undefined' };
   }
 
   if (groupId) {
     const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
-    if (!postable) throw new Error('Forbbiden');
+    if (!postable) {
+      return { error: 'Forbbiden' };
+    }
   }
 
   const metadata = {
@@ -141,7 +151,9 @@ export async function processDraft(
     .then((res) => res._response.status)
     .catch((err) => 500);
 
-  if (blobUploadResult !== 201) throw new Error('Failed to upload draft');
+  if (blobUploadResult !== 201) {
+    return { error: 'Failed to upload draft' };
+  }
 
   const draft = await prisma.draft
     .update({
@@ -161,7 +173,7 @@ export async function processDraft(
 
   if (!draft) {
     await blob.delete('drafts', blobName).catch((err) => null);
-    throw new Error('Failed to update draft');
+    return { error: 'Failed to update draft' };
   }
 
   return draft;
@@ -176,16 +188,20 @@ export async function processPublish(
   body?: string
 ) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
   const userId = user.id;
 
   if (body === undefined) {
-    throw new Error('body is undefined');
+    return { error: 'body is undefined' };
   }
 
   if (groupId) {
     const postable = await checkPostableGroup(user.id, groupId).catch((err) => false);
-    if (!postable) throw new Error('Forbbiden');
+    if (!postable) {
+      return { error: 'Forbbiden' };
+    }
   }
 
   const metadata = {
@@ -245,7 +261,9 @@ export async function processPublish(
       .upload('notes', blobName, 'application/json', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
-    if (blobUploadResult !== 201) throw new Error('Failed to upload note');
+    if (blobUploadResult !== 201) {
+      return { error: 'Failed to upload note' };
+    }
 
     const note = await prisma.$transaction(async (tx) => {
       const note = await tx.note.update({
@@ -279,7 +297,7 @@ export async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      throw new Error('Failed to update note');
+      return { error: 'Failed to update note' };
     }
     return note;
   } else {
@@ -290,7 +308,9 @@ export async function processPublish(
       .upload('notes', blobName, 'application/json', body, metadata, tags)
       .then((res) => res._response.status)
       .catch((err) => 500);
-    if (blobUploadResult !== 201) throw new Error('Failed to upload note');
+    if (blobUploadResult !== 201) {
+      return { error: 'Failed to upload note' };
+    }
 
     const note = await prisma.$transaction(async (tx) => {
       const note = await tx.note.create({
@@ -325,7 +345,7 @@ export async function processPublish(
 
     if (!note) {
       await blob.delete('notes', blobName).catch((err) => null);
-      throw new Error('Failed to update note');
+      return { error: 'Failed to create note' };
     }
     return note;
   }
@@ -333,7 +353,10 @@ export async function processPublish(
 
 export async function textCompletion(text: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    // Note: When using the Server Function, throw message is not delivered to the client.
+    throw new Error('Unauthorized');
+  }
   const userId = user.id;
 
   if (!text) return '';

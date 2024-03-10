@@ -16,7 +16,9 @@ const cuid = initCuid();
 
 export async function deleteNote(noteId: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   const note = await prisma.note.findUnique({
     where: {
@@ -25,7 +27,7 @@ export async function deleteNote(noteId: string) {
   });
 
   if (note?.userId !== user.id) {
-    throw new Error('Unauthorized');
+    return { error: 'Unauthorized' };
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -45,16 +47,24 @@ export async function deleteNote(noteId: string) {
 
 export async function commentOnNote(noteId: string, commentId: string | null, body: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
   const userId = user.id;
 
   // check if commentId is valid
   let isEdited = false;
   if (commentId) {
     const comment = await prisma.comment.findUnique({ where: { id: commentId } });
-    if (!comment) throw new Error('Comment not found');
-    if (comment.noteId !== noteId) throw new Error('Note not found');
-    if (comment.userId !== userId) throw new Error('Unauthorized');
+    if (!comment) {
+      return { error: 'Comment not found' };
+    }
+    if (comment.noteId !== noteId) {
+      return { error: 'Comment not found' };
+    }
+    if (comment.userId !== userId) {
+      return { error: 'Unauthorized' };
+    }
     isEdited = true;
   }
   const id = commentId || cuid();
@@ -80,7 +90,7 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
     .catch((err) => 500);
 
   if (blobUploadResult !== 201) {
-    throw new Error('Failed to upload comment');
+    return { error: 'Failed to upload comment' };
   }
 
   const result = await prisma.comment.upsert({
@@ -105,12 +115,18 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
 
 export async function pinNoteToUserProfile(noteId: string, pinned: boolean) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
   const userId = user.id;
 
   const note = await prisma.note.findUnique({ where: { id: noteId } });
-  if (!note) throw new Error('Note not found');
-  if (note.userId !== userId) throw new Error('Unauthorized');
+  if (!note) {
+    return { error: 'Note not found' };
+  }
+  if (note.userId !== userId) {
+    return { error: 'Unauthorized' };
+  }
 
   const result = await prisma.note.update({
     where: {
@@ -128,17 +144,27 @@ export async function pinNoteToUserProfile(noteId: string, pinned: boolean) {
 
 export async function pinNoteToGroupProfile(noteId: string, pinned: boolean) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
   const userId = user.id;
 
   const note = await prisma.note.findUnique({ where: { id: noteId } });
-  if (!note) throw new Error('Note not found');
+  if (!note) {
+    return { error: 'Note not found' };
+  }
   const groupId = note.groupId;
-  if (!groupId) throw new Error('Note not in group');
+  if (!groupId) {
+    return { error: 'Note not in group' };
+  }
   const group = await prisma.group.findUnique({ where: { id: groupId }, include: { Members: true } });
-  if (!group) throw new Error('Group not found');
+  if (!group) {
+    return { error: 'Group not found' };
+  }
   const member = group.Members.find((member) => member.userId === userId && member.role === MembershipRole.ADMIN);
-  if (!member) throw new Error('Unauthorized');
+  if (!member) {
+    return { error: 'Unauthorized' };
+  }
 
   const result = await prisma.note.update({
     where: {
@@ -156,15 +182,21 @@ export async function pinNoteToGroupProfile(noteId: string, pinned: boolean) {
 
 export async function duplicateNoteToDraft(noteId: string, groupId?: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
   const userId = user.id;
 
   const note = await getNoteWithUserGroupTopics(noteId, user.id).catch((e) => null);
-  if (!note) throw new Error('Note not found');
+  if (!note) {
+    return { error: 'Note not found' };
+  }
 
   if (groupId) {
     const isGroupPostable = await checkPostableGroup(userId, groupId).catch((e) => false);
-    if (!isGroupPostable) throw new Error('Unauthorized');
+    if (!isGroupPostable) {
+      return { error: 'Unauthorized' };
+    }
   }
 
   const body = await blob
@@ -187,7 +219,9 @@ export async function duplicateNoteToDraft(noteId: string, groupId?: string) {
 
 export async function deleteComment(commentId: string) {
   const user = await getSessionUser();
-  if (!user || !user.id) throw new Error('Unauthorized');
+  if (!user || !user.id) {
+    return { error: 'Unauthorized' };
+  }
 
   const comment = await prisma.comment.findUnique({
     where: {
@@ -196,7 +230,7 @@ export async function deleteComment(commentId: string) {
   });
 
   if (comment?.userId !== user.id) {
-    throw new Error('Unauthorized');
+    return { error: 'Unauthorized' };
   }
 
   const result = await prisma.comment.delete({

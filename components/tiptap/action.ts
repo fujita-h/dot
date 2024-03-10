@@ -8,6 +8,7 @@ const fileCuid = initCuid({ length: 24 });
 
 export async function uploadFiles(fileParams: FileParam[]) {
   const user = await getSessionUser();
+  // Note: When using the Server Function, throw message is not delivered to the client.
   if (!user || !user.id) throw new Error('Unauthorized');
   const userId = user.id;
 

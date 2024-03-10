@@ -24,7 +24,7 @@ export function StickyMenu({ editor }: { editor: Editor }) {
           prevButtonId="button-italic"
           nextButtonId="button-strike"
         />
-        <ButtonStrike editor={editor} id="button-strike" prevButtonId="button-underline" nextButtonId="utton-code" />
+        <ButtonStrike editor={editor} id="button-strike" prevButtonId="button-underline" nextButtonId="button-code" />
         <ButtonCode editor={editor} id="button-code" prevButtonId="button-strike" nextButtonId="button-table" />
         <div className="border-l-2 border-gray-400/30 ml-2 pl-1"></div>
         <ButtonTableInsert
