@@ -82,7 +82,7 @@ export async function UpdateGroupAction(state: ActionState, formData: FormData):
 export async function DeleteGroup(id: string, handle: string) {
   const user = await getSessionUser();
   if (!user || !user.id) {
-    throw new Error('Session error');
+    return { error: 'Unauthorized' };
   }
 
   // check group permission
@@ -91,23 +91,21 @@ export async function DeleteGroup(id: string, handle: string) {
     select: { id: true, handle: true, Members: { where: { userId: user.id, role: 'ADMIN' } } },
   });
   if (!group || !group.Members.length) {
-    throw new Error('グループが存在しないか、権限がありません。');
+    return { error: 'グループが存在しないか、権限がありません。' };
   }
 
   // check handle
   if (group.handle !== handle) {
-    throw new Error('グループの handle が一致しません。');
+    return { error: 'グループの handle が一致しません。' };
   }
 
   // check group notes exists
   const notesCount = await prisma.note.count({ where: { groupId: id } });
   if (notesCount > 0) {
-    throw new Error('グループにノートが存在します。');
+    return { error: 'グループにノートが存在します。' };
   }
 
-  const result = await prisma.group.delete({ where: { id } }).catch((e) => {
-    throw new Error('Delete error');
-  });
+  const result = await prisma.group.delete({ where: { id } }).catch((e) => ({ error: 'Delete group error' }));
   revalidatePath(`/groups/0/${group.id}/settings/general`);
   revalidatePath(`/groups/${group.handle}`);
   return result;
