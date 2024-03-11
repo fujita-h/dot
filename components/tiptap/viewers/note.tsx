@@ -6,6 +6,7 @@ import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowlight';
 import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
+import UniqueIdExtension from '@/libs/tiptap/extensions/unique-id';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
 import CodeExtension from '@tiptap/extension-code';
@@ -40,6 +41,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
   try {
     const editor = useEditor({
       extensions: [
+        UniqueIdExtension.configure({ readOnly: true }),
         BlockquoteExtension,
         BulletListExtension,
         CodeBlockLowlightExtension,
@@ -59,7 +61,9 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
               'h' + node.attrs.level,
               {
                 ...HTMLAttributes,
-                id: node.textContent, // ノードのテキスト内容をid属性として設定
+                // set the id to the unique-id or the text content.
+                // the text content is used as a fallback for old notes.
+                id: node.attrs['unique-id'] || node.textContent,
               },
               0,
             ];
