@@ -22,6 +22,7 @@ import CodeBlockLowlightExtension from '@/libs/tiptap/extensions/code-block-lowl
 import BlockquoteExtension from '@/libs/tiptap/extensions/highlite-blockquote';
 import ImageExtension from '@/libs/tiptap/extensions/image';
 import SelectionMarkerExtension from '@/libs/tiptap/extensions/selection-marker';
+import UniqueIdExtension from '@/libs/tiptap/extensions/unique-id';
 import UploadImageExtension from '@/libs/tiptap/extensions/upload-image';
 import BoldExtension from '@tiptap/extension-bold';
 import BulletListExtension from '@tiptap/extension-bullet-list';
@@ -93,6 +94,7 @@ export function Form({
         tabCompletion: true,
         completionFunc: textCompletion,
       }),
+      UniqueIdExtension,
       BlockquoteExtension,
       BulletListExtension,
       CodeBlockLowlightExtension,

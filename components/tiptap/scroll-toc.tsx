@@ -40,12 +40,15 @@ export default function ScrollToc({ children: jsonString }: { children: string }
   return (
     <div className="flex flex-col">
       {headingsForToc.map((heading: any, index: number) => {
+        // set the id to the unique-id or the text content.
+        // the text content is used as a fallback for old notes.
+        const to = heading.attrs['unique-id'] || heading.content[0].text;
         return (
-          <Scroll key={index} to={`${heading.content[0].text}`} smooth={true} duration={400} offset={0}>
+          <Scroll key={index} to={to} smooth={true} duration={400} offset={0}>
             <div
               className={clsx(
                 'text-sm',
-                `${heading.content[0].text}` == scrollMarker ? 'bg-gray-200' : '',
+                `${to}` == scrollMarker ? 'bg-gray-200' : '',
                 'py-1 px-1 hover:cursor-pointer hover:bg-gray-300',
                 heading.attrs.level === 2 ? 'pl-4' : ''
               )}
