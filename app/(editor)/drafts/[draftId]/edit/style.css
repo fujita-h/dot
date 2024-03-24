@@ -248,7 +248,7 @@
   border-left: 5px solid rgb(207, 34, 46);
 }
 #draft-editor blockquote.type-caution::before {
-  content: "Warning";
+  content: "Caution";
   color: rgb(207, 34, 46);
   font-size: 1.0rem;
   font-weight: 500;
