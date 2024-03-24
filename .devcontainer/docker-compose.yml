@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: workspace/Dockerfile
       args:
-        VARIANT: 18-bookworm
+        VARIANT: 1-20-bookworm
     volumes:
       - ..:/workspace:cached
     command: /bin/sh -c "while sleep 1000; do :; done"
