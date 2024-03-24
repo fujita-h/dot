@@ -11,8 +11,6 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"
   mysql:
     image: mysql:8.0.32
-    ports:
-      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=database
@@ -20,13 +18,9 @@ services:
       - MYSQL_PASSWORD=user
   redis:
     image: redis:latest
-    ports:
-      - 6379:6379
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite:latest
     command: azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck
-    ports:
-      - 10000:10000
   elasticsearch:
     build:
       context: .
@@ -46,5 +40,3 @@ services:
     image: docker.elastic.co/kibana/kibana:8.12.2
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    ports:
-      - 5601:5601
