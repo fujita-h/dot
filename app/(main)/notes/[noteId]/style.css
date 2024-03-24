@@ -207,7 +207,7 @@
   border-left: 5px solid rgb(207, 34, 46);
 }
 #note-viewer blockquote.type-caution::before {
-  content: "Warning";
+  content: "Caution";
   color: rgb(207, 34, 46);
   font-size: 1.0rem;
   font-weight: 500;
@@ -476,7 +476,7 @@
   border-left: 5px solid rgb(207, 34, 46);
 }
 #comment-viewer blockquote.type-caution::before {
-  content: "Warning";
+  content: "Caution";
   color: rgb(207, 34, 46);
   font-size: 1.0rem;
   font-weight: 500;
@@ -753,7 +753,7 @@
   border-left: 5px solid rgb(207, 34, 46);
 }
 #comment-editor blockquote.type-caution::before {
-  content: "Warning";
+  content: "Caution";
   color: rgb(207, 34, 46);
   font-size: 1.0rem;
   font-weight: 500;
