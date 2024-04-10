@@ -199,15 +199,15 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     href={`/drafts/new?group=${group.id}`}
                                     className={clsx(
                                       active ? 'bg-gray-100' : '',
-                                      'flex items-center gap-2 pl-6 pr-4 py-[0.375rem] text-sm font-semibold text-gray-600'
+                                      'flex items-center pl-6 pr-4 py-[0.375rem] text-sm font-semibold text-gray-600'
                                     )}
                                   >
                                     <img
                                       src={`/api/groups/${group.id}/icon`}
-                                      className="w-6 h-6 rounded-sm border border-gray-100"
+                                      className="fixed w-6 h-6 rounded-sm border border-gray-100"
                                       alt="group-icon"
                                     />
-                                    <div className="truncate">{group.name}</div>
+                                    <div className="ml-8 truncate">{group.name}</div>
                                   </a>
                                 )}
                               </Menu.Item>

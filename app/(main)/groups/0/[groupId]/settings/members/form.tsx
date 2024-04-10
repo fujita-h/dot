@@ -226,7 +226,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
               </div>
               <Combobox value={userSelected} onChange={setUserSelected}>
                 {({ activeOption }) => {
-                  const activeUser = (activeOption as User) || userSelected || null;
+                  const activeUser = userSelected || null;
                   return (
                     <>
                       <div className="relative">
@@ -262,7 +262,8 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                   value={person}
                                   className={({ active }) =>
                                     clsx(
-                                      'flex cursor-default select-none items-center rounded-md p-2',
+                                      'flex cursor-pointer select-none items-center rounded-md p-2',
+                                      activeUser?.id === person.id && 'bg-gray-200 text-black',
                                       active && 'bg-gray-100 text-gray-900'
                                     )
                                   }
