@@ -65,7 +65,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                     </Disclosure.Button>
                   </div>
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:gap-1">
-                    <div className="w-full max-w-lg lg:max-w-xs">
+                    <div className="w-[360px] max-w-[360px]">
                       <label htmlFor="search" className="sr-only">
                         Search
                       </label>
