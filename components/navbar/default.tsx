@@ -3,7 +3,7 @@
 import { SITE_NAME } from '@/libs/constants';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -64,7 +64,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                       )}
                     </Disclosure.Button>
                   </div>
-                  <div className="hidden lg:ml-4 lg:flex lg:items-center lg:gap-1">
+                  <div className="hidden lg:ml-4 lg:flex lg:items-center lg:gap-2">
                     <div className="w-[360px] max-w-[360px]">
                       <label htmlFor="search" className="sr-only">
                         Search
@@ -97,15 +97,16 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         </form>
                       </div>
                     </div>
-                    {/* <button
+                    <button
                       type="button"
-                      className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="flex-shrink-0 rounded-full bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      onClick={() => router.push('/notifications')}
                     >
                       <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-7 w-7" aria-hidden="true" />
-                    </button> */}
+                      <BellIcon className="h-8 w-8 rounded-full" aria-hidden="true" />
+                    </button>
                     {/* Profile dropdown */}
-                    <Menu as="div" className="ml-1 relative flex-shrink-0">
+                    <Menu as="div" className="relative flex-shrink-0">
                       <div>
                         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
