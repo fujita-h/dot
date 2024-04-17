@@ -93,10 +93,11 @@ model User {
 model UserSetting {
   id                            String   @id @default(cuid())
   userId                        String   @unique @map("user_id")
-  createdAt                     DateTime @default(now()) @map("created_at")
-  updatedAt                     DateTime @updatedAt @map("updated_at")
   editorShowNewLineFloatingMenu Boolean  @default(true) @map("editor_show_floating_menu_new_line")
   editorAiCompletionPrompt      String?  @map("editor_ai_completion_prompt") @db.Text
+  notificationOnCommentAdded    Boolean  @default(true) @map("notification_on_comment_added")
+  createdAt                     DateTime @default(now()) @map("created_at")
+  updatedAt                     DateTime @updatedAt @map("updated_at")
   User                          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_setting")
@@ -222,15 +223,16 @@ model Note {
 }
 
 model Comment {
-  id           String   @id @default(cuid())
-  userId       String   @map("user_id")
-  noteId       String   @map("note_id")
-  bodyBlobName String?  @map("body_blob_name")
-  isEdited     Boolean  @default(false) @map("is_edited")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Note         Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  id            String                @id @default(cuid())
+  userId        String                @map("user_id")
+  noteId        String                @map("note_id")
+  bodyBlobName  String?               @map("body_blob_name")
+  isEdited      Boolean               @default(false) @map("is_edited")
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
+  User          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Note          Note                  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  Notifications NotificationComment[]
 
   @@map("comment")
 }
@@ -315,23 +317,36 @@ model Like {
 }
 
 model Notification {
-  id        String            @id @default(cuid())
-  userId    String            @map("user_id")
-  type      NotificationType  @default(NORMAL)
-  status    NotificationStaus @default(UNREAD)
-  body      String            @db.Text
-  createdAt DateTime          @default(now()) @map("created_at")
-  updatedAt DateTime          @updatedAt @map("updated_at")
-  User      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String               @id @default(cuid())
+  userId              String               @map("user_id")
+  status              NotificationStaus    @default(UNREAD)
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  User                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  NotificationComment NotificationComment?
 
   @@map("notification")
-}
-
-enum NotificationType {
-  NORMAL
 }
 
 enum NotificationStaus {
   UNREAD
   READ
+}
+
+model NotificationComment {
+  id             String                  @id @default(cuid())
+  notificationId String                  @unique @map("notification_id")
+  commentId      String                  @map("comment_id")
+  type           CommentNotificationType @default(NORMAL)
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+  Notification   Notification            @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  Comment        Comment                 @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@map("notification_comment")
+}
+
+enum CommentNotificationType {
+  NORMAL
+  COMMNET_ADDED
 }
