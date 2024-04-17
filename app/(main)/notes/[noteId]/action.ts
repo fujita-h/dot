@@ -6,10 +6,11 @@ import es from '@/libs/elasticsearch/instance';
 import { createDraft } from '@/libs/prisma/draft';
 import { checkPostableGroup } from '@/libs/prisma/group';
 import prisma from '@/libs/prisma/instance';
-import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
+import { getNote, getNoteWithUserGroupTopics } from '@/libs/prisma/note';
+import { getUserSetting } from '@/libs/prisma/user-setting';
 import { generateTipTapText } from '@/libs/tiptap/text';
 import { init as initCuid } from '@paralleldrive/cuid2';
-import { MembershipRole } from '@prisma/client';
+import { CommentNotificationType, MembershipRole } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 const cuid = initCuid();
@@ -52,8 +53,14 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
   }
   const userId = user.id;
 
+  // check user is allowed to access note
+  const note = await getNote(noteId, userId);
+  if (!note) {
+    return { error: 'Note not found or not allowed' };
+  }
+
   // check if commentId is valid
-  let isEdited = false;
+  let mode: 'NEW' | 'EDIT' = 'NEW';
   if (commentId) {
     const comment = await prisma.comment.findUnique({ where: { id: commentId } });
     if (!comment) {
@@ -65,7 +72,7 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
     if (comment.userId !== userId) {
       return { error: 'Unauthorized' };
     }
-    isEdited = true;
+    mode = 'EDIT';
   }
   const id = commentId || cuid();
 
@@ -80,8 +87,8 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
     noteId: noteId,
   };
 
-  // create TipTap text for check valid json
-  const bodyText = generateTipTapText(body);
+  // create TipTap text for check valid json. If invalid, it will throw an error.
+  generateTipTapText(body);
 
   const blobName = `${noteId}/${id}/${cuid()}`;
   const blobUploadResult = await blob
@@ -93,24 +100,58 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
     return { error: 'Failed to upload comment' };
   }
 
-  const result = await prisma.comment.upsert({
-    where: { id: id },
-    create: {
-      id: id,
-      noteId: noteId,
-      userId: userId,
-      bodyBlobName: blobName,
-      isEdited: isEdited,
-    },
-    update: {
-      bodyBlobName: blobName,
-      isEdited: isEdited,
-    },
-  });
-  if (result) {
-    revalidatePath(`/notes/${noteId}`);
+  // retrieve user setting
+  const userSetting = await getUserSetting(userId);
+
+  if (mode == 'NEW') {
+    const result = await prisma.$transaction(async (tx) => {
+      const result = await tx.comment.create({
+        data: {
+          id: id,
+          noteId: noteId,
+          userId: userId,
+          bodyBlobName: blobName,
+          isEdited: false,
+        },
+      });
+
+      // if user setting is set to receive notification on comment added, create notification
+      if (userSetting.notificationOnCommentAdded) {
+        await tx.notification.create({
+          data: {
+            id: cuid(),
+            userId: note.userId,
+            NotificationComment: {
+              create: {
+                id: cuid(),
+                type: CommentNotificationType.COMMNET_ADDED,
+                commentId: id,
+              },
+            },
+          },
+        });
+      }
+      return result;
+    });
+    if (result) {
+      revalidatePath(`/notes/${noteId}`);
+    }
+    return result;
+  } else if (mode == 'EDIT') {
+    const result = await prisma.comment.update({
+      where: {
+        id: id,
+      },
+      data: {
+        bodyBlobName: blobName,
+        isEdited: true,
+      },
+    });
+    if (result) {
+      revalidatePath(`/notes/${noteId}`);
+    }
+    return result;
   }
-  return result;
 }
 
 export async function pinNoteToUserProfile(noteId: string, pinned: boolean) {
@@ -233,13 +274,39 @@ export async function deleteComment(commentId: string) {
     return { error: 'Unauthorized' };
   }
 
-  const result = await prisma.comment.delete({
-    where: {
-      id: commentId,
-    },
-  });
+  const result = await prisma
+    .$transaction([
+      // delete notification
+      prisma.notification.deleteMany({
+        where: {
+          NotificationComment: {
+            commentId: commentId,
+          },
+        },
+      }),
+      prisma.comment.delete({
+        where: {
+          id: commentId,
+        },
+        select: {
+          id: true,
+          noteId: true,
+        },
+      }),
+    ])
+    .then(([, result]) => {
+      return { id: result.id, noteId: result.noteId, error: undefined };
+    })
+    .catch((e) => {
+      console.error(e);
+      return { id: undefined, noteId: undefined, error: 'Error occurred while deleting comment' };
+    });
+
+  if (result.error) {
+    return { error: result.error };
+  }
   if (result) {
-    revalidatePath(`/notes/${comment.noteId}`);
+    revalidatePath(`/notes/${result.noteId}`);
   }
   return result;
 }
