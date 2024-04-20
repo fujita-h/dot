@@ -64,10 +64,10 @@ export function NotificationsList({
 
   return (
     <div>
-      <p className="text-sm font-semibold">Notifications</p>
+      <p className="text-lg font-semibold">Notifications</p>
       <div className="mt-2 border border-neutral-300 rounded-md">
         <div className="bg-gray-100 border-b border-neutral-300 rounded-t-md p-2">
-          <div className="flex gap-2 items-center min-h-7">
+          <div className="flex gap-2 items-center min-h-8">
             <div className="flex-none w-5">
               {checked.length == 0 || checked.length == notifications.length ? (
                 <input
@@ -95,12 +95,12 @@ export function NotificationsList({
                 />
               )}
             </div>
-            <div className="flex-1 text-xs">
+            <div className="flex-1 text-sm">
               {checked.length == 0 && <span>全て選択</span>}
               {checked.length > 0 && <span>{checked.length} 件選択</span>}
               {checked.length > 0 && (
                 <button
-                  className="text-xs ml-2 text-gray-700 border border-gray-300 rounded-md px-2 py-1"
+                  className="text-sm ml-2 text-gray-900 bg-gray-50 hover:bg-white border border-gray-300 rounded-md px-2 py-1"
                   onClick={async () => {
                     const res = await markNotificationAsRead(checked).catch(() => null);
                     if (res) {
@@ -113,7 +113,7 @@ export function NotificationsList({
               )}
               {checked.length > 0 && (
                 <Menu as="div" className="relative inline-block">
-                  <Menu.Button className="text-xs ml-2 text-gray-700 border border-gray-300 rounded-md px-2 py-1">
+                  <Menu.Button className="text-sm ml-2 text-gray-900 bg-gray-50 hover:bg-white border border-gray-300 rounded-md px-2 py-1">
                     ...
                   </Menu.Button>
                   <Transition
@@ -201,11 +201,11 @@ export function NotificationsList({
                     }}
                   >
                     <div className="flex-1">
-                      <div className="text-xs space-x-1">
+                      <div className="text-xs font-semibold space-x-1">
                         <GoCommentDiscussion className="w-4 h-4 inline-flex text-gray-600" />
                         <span>コメント</span>
                       </div>
-                      <div className="mt-2 space-x-1 text-xs">
+                      <div className="mt-2 space-x-1 text-sm">
                         <span>{notification.NotificationComment.Comment.Note.title || 'タイトルなし'}</span>
                         <span>に</span>
                         <span>
