@@ -1,13 +1,14 @@
 'use client';
+
 import { Dialog, Menu, Transition } from '@headlessui/react';
+import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { StopIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx/lite';
+import { useRouter } from 'next/navigation';
 import { Fragment, useRef, useState } from 'react';
 import { GoCommentDiscussion } from 'react-icons/go';
 import { RiCheckboxIndeterminateLine } from 'react-icons/ri';
-import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { StopIcon } from '@heroicons/react/24/solid';
-import { useRouter } from 'next/navigation';
-import { markNotificationAsRead, markNotificationAsUnRead, deleteNotification } from './action';
+import { deleteNotification, markNotificationAsRead, markNotificationAsUnRead } from './action';
 
 type Notification = {
   id: string;
@@ -64,7 +65,6 @@ export function NotificationsList({
 
   return (
     <div>
-      <p className="text-lg font-semibold">Notifications</p>
       <div className="mt-2 border border-neutral-300 rounded-md">
         <div className="bg-gray-100 border-b border-neutral-300 rounded-t-md p-2">
           <div className="flex gap-2 items-center min-h-8">
