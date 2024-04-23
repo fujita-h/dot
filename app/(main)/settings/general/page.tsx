@@ -34,6 +34,7 @@ export default async function Page() {
               tabs={[
                 { name: '一般設定', href: '#', current: true },
                 { name: 'エディター設定', href: './editor', current: false },
+                { name: '通知設定', href: './notification', current: false },
               ]}
             />
           </div>
