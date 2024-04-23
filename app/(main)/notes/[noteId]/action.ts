@@ -137,7 +137,8 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
       revalidatePath(`/notes/${noteId}`);
     }
     return result;
-  } else if (mode == 'EDIT') {
+  } else {
+    // mode == 'EDIT'
     const result = await prisma.comment.update({
       where: {
         id: id,
