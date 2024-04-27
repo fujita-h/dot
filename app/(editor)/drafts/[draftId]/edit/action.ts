@@ -370,7 +370,7 @@ export async function textCompletion(text: string) {
     })
     .catch((err) => EDITOR_AI_COMPLETION_PROMPT);
 
-  return aoaiCompletion.getCompletion(prompt + text).then((res) => res.choices[0].text);
+  return aoaiCompletion.getTextCompletion(prompt, text).then((res) => res);
 }
 
 /**
