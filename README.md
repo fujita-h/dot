@@ -53,9 +53,16 @@ Key of completion model of Azure OpenAI API
 - Required: Yes
 - Example:
 
+### `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT`
+Deployment name of completion model of `gpt-35-turbo`
+This takes precedence over `AZURE_OPENAI_COMPLETION_DEPLOYMENT` if both are set.
+- Required: Yes if `AZURE_OPENAI_COMPLETION_DEPLOYMENT` is not set
+- Example: `gpt-35-turbo`
+
 ### `AZURE_OPENAI_COMPLETION_DEPLOYMENT`
 Deployment name of completion model of `gpt-35-turbo-instruct`
-- Required: Yes
+This is used if `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT` is not set.
+- Required: Yes if `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT` is not set
 - Example: `gpt-35-turbo-instruct`
 
 ### `AZURE_OPENAI_EMBEDDING_ENDPOINT`
