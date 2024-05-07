@@ -28,6 +28,7 @@ export async function updateUserSettingAction(state: ActionState, formData: Form
       where: { userId: user.id },
       data: {
         notificationOnCommentAdded: formData.get('notificationOnCommentAdded') === 'true',
+        notificationOnCommentReplied: formData.get('notificationOnCommentReplied') === 'true',
       },
     });
     revalidatePath('/settings/editor');

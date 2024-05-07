@@ -30,6 +30,7 @@ function SubmitButton() {
 
 interface Props {
   notificationOnCommentAdded: boolean;
+  notificationOnCommentReplied: boolean;
 }
 
 export function Form({ props }: { props: Props }) {
@@ -59,12 +60,12 @@ export function Form({ props }: { props: Props }) {
             <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
               エディターの機能
             </label>
-            <div className="mt-2 ml-4">
+            <div className="mt-2 ml-4 space-y-3">
               <div className="relative flex items-start">
                 <div className="flex h-6 items-center">
                   <input
-                    id="checkbox-show-new-line-floating-menu"
-                    aria-describedby="checkbox-notification-on-comment-added"
+                    id="checkbox-notification-on-comment-added"
+                    aria-describedby="checkbox-notification-on-comment-added-description"
                     name="notificationOnCommentAdded"
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -73,11 +74,32 @@ export function Form({ props }: { props: Props }) {
                   />
                 </div>
                 <div className="ml-3 text-sm leading-6">
-                  <label htmlFor="checkbox-show-new-line-floating-menu" className="font-medium text-gray-900">
+                  <label htmlFor="checkbox-notification-on-comment-added" className="font-medium text-gray-900">
+                    投稿にコメントされたときに通知する
+                  </label>
+                  <p id="checkbox-notification-on-comment-added-description" className="text-gray-500">
+                    あなたの投稿に対してコメントされたときに通知します。
+                  </p>
+                </div>
+              </div>
+              <div className="relative flex items-start">
+                <div className="flex h-6 items-center">
+                  <input
+                    id="checkbox-notification-on-comment-replied"
+                    aria-describedby="checkbox-notification-on-comment-replied-description"
+                    name="notificationOnCommentReplied"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    value="true"
+                    defaultChecked={props.notificationOnCommentReplied}
+                  />
+                </div>
+                <div className="ml-3 text-sm leading-6">
+                  <label htmlFor="checkbox-notification-on-comment-replied" className="font-medium text-gray-900">
                     コメントが追加されたときに通知する
                   </label>
-                  <p id="checkbox-notification-on-comment-added" className="text-gray-500">
-                    あなたの投稿にコメントが追加されたときに通知します。
+                  <p id="checkbox-notification-on-comment-replied-description" className="text-gray-500">
+                    あなたがコメントをした投稿に対して、他の人のコメントが追加されたときに通知します。
                   </p>
                 </div>
               </div>

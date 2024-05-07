@@ -139,6 +139,45 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
           });
         }
       })();
+
+      // 2. Notification for other commenters
+      (async () => {
+        // get distinct commenter user ids except the current user
+        const commenterIds = await prisma.comment
+          .findMany({
+            select: {
+              userId: true,
+            },
+            where: {
+              noteId: noteId,
+              userId: {
+                not: userId,
+              },
+            },
+            distinct: ['userId'],
+          })
+          .then((res) => res.map((r) => r.userId));
+
+        for (const commenterId of commenterIds) {
+          const commenterSetting = await getUserSetting(commenterId);
+          if (commenterSetting.notificationOnCommentReplied) {
+            // if user setting is set to receive notification on comment replied, create notification
+            await prisma.notification.create({
+              data: {
+                id: cuid(),
+                userId: commenterId,
+                NotificationComment: {
+                  create: {
+                    id: cuid(),
+                    type: CommentNotificationType.COMMNET_ADDED,
+                    commentId: id,
+                  },
+                },
+              },
+            });
+          }
+        }
+      })();
     }
     return result;
   } else {
