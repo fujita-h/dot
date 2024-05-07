@@ -100,41 +100,45 @@ export async function commentOnNote(noteId: string, commentId: string | null, bo
     return { error: 'Failed to upload comment' };
   }
 
-  // retrieve user setting
-  const userSetting = await getUserSetting(userId);
-
   if (mode == 'NEW') {
-    const result = await prisma.$transaction(async (tx) => {
-      const result = await tx.comment.create({
-        data: {
-          id: id,
-          noteId: noteId,
-          userId: userId,
-          bodyBlobName: blobName,
-          isEdited: false,
-        },
-      });
-
-      // if user setting is set to receive notification on comment added, create notification
-      if (userSetting.notificationOnCommentAdded) {
-        await tx.notification.create({
-          data: {
-            id: cuid(),
-            userId: note.userId,
-            NotificationComment: {
-              create: {
-                id: cuid(),
-                type: CommentNotificationType.COMMNET_ADDED,
-                commentId: id,
-              },
-            },
-          },
-        });
-      }
-      return result;
+    const result = await prisma.comment.create({
+      data: {
+        id: id,
+        noteId: noteId,
+        userId: userId,
+        bodyBlobName: blobName,
+        isEdited: false,
+      },
     });
+
     if (result) {
       revalidatePath(`/notes/${noteId}`);
+
+      //
+      // Notification Processes
+      //   Run asynchronously to avoid blocking the main process
+      //
+
+      // 1. Notification for note owner
+      (async () => {
+        const noteOwnerSetting = await getUserSetting(note.userId);
+        if (noteOwnerSetting.notificationOnCommentAdded) {
+          // if user setting is set to receive notification on comment added, create notification
+          await prisma.notification.create({
+            data: {
+              id: cuid(),
+              userId: note.userId,
+              NotificationComment: {
+                create: {
+                  id: cuid(),
+                  type: CommentNotificationType.COMMNET_ADDED,
+                  commentId: id,
+                },
+              },
+            },
+          });
+        }
+      })();
     }
     return result;
   } else {
