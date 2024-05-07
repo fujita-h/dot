@@ -96,6 +96,7 @@ model UserSetting {
   editorShowNewLineFloatingMenu Boolean  @default(true) @map("editor_show_floating_menu_new_line")
   editorAiCompletionPrompt      String?  @map("editor_ai_completion_prompt") @db.Text
   notificationOnCommentAdded    Boolean  @default(true) @map("notification_on_comment_added")
+  notificationOnCommentReplied  Boolean  @default(false) @map("notification_on_comment_replied")
   createdAt                     DateTime @default(now()) @map("created_at")
   updatedAt                     DateTime @updatedAt @map("updated_at")
   User                          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
