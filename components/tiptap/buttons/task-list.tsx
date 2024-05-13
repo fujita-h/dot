@@ -1,8 +1,8 @@
 'use client';
 
 import { Editor } from '@tiptap/react';
+import { PiListChecks } from 'react-icons/pi';
 import { ButtonTemplate } from './template';
-import { LuListChecks } from 'react-icons/lu';
 
 export function ButtonTaskList({
   editor,
@@ -23,7 +23,7 @@ export function ButtonTaskList({
       prevButtonId={prevButtonId}
       nextButtonId={nextButtonId}
     >
-      <LuListChecks />
+      <PiListChecks />
     </ButtonTemplate>
   );
 }

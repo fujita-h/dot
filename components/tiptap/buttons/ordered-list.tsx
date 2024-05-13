@@ -1,8 +1,8 @@
 'use client';
 
 import { Editor } from '@tiptap/react';
+import { PiListNumbers } from 'react-icons/pi';
 import { ButtonTemplate } from './template';
-import { PiListNumbersFill } from 'react-icons/pi';
 
 export function ButtonOrderedList({
   editor,
@@ -23,7 +23,7 @@ export function ButtonOrderedList({
       prevButtonId={prevButtonId}
       nextButtonId={nextButtonId}
     >
-      <PiListNumbersFill />
+      <PiListNumbers />
     </ButtonTemplate>
   );
 }
