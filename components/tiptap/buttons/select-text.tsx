@@ -5,11 +5,10 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Editor } from '@tiptap/react';
 import clsx from 'clsx/lite';
 import { Fragment } from 'react';
-import { BsTextParagraph } from 'react-icons/bs';
-import { LuHeading1, LuHeading2, LuHeading3, LuTable } from 'react-icons/lu';
-import { PiListDashesFill, PiListNumbersFill } from 'react-icons/pi';
 import { AiOutlineCode } from 'react-icons/ai';
-import { LuListChecks } from 'react-icons/lu';
+import { BsTextParagraph } from 'react-icons/bs';
+import { LuHeading1, LuHeading2, LuHeading3 } from 'react-icons/lu';
+import { PiListChecks, PiListDashes, PiListNumbers } from 'react-icons/pi';
 
 export function ButtonSelectText({
   editor,
@@ -49,9 +48,9 @@ export function ButtonSelectText({
           {editor.isActive('heading', { level: 1 }) && <LuHeading1 />}
           {editor.isActive('heading', { level: 2 }) && <LuHeading2 />}
           {editor.isActive('heading', { level: 3 }) && <LuHeading3 />}
-          {editor.isActive('bulletList') && <PiListDashesFill />}
-          {editor.isActive('orderedList') && <PiListNumbersFill />}
-          {editor.isActive('taskList') && <LuListChecks />}
+          {editor.isActive('bulletList') && <PiListDashes />}
+          {editor.isActive('orderedList') && <PiListNumbers />}
+          {editor.isActive('taskList') && <PiListChecks />}
           {editor.isActive('codeBlock') && <AiOutlineCode />}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
@@ -182,7 +181,7 @@ export function ButtonSelectText({
                       'text-xl font-semibold p-1 rounded-md'
                     )}
                   >
-                    <PiListDashesFill />
+                    <PiListDashes />
                   </span>
                   <span className="mx-2 text-base whitespace-nowrap">Bullet List</span>
                 </button>
@@ -204,7 +203,7 @@ export function ButtonSelectText({
                       'text-xl font-semibold p-1 rounded-md'
                     )}
                   >
-                    <PiListNumbersFill />
+                    <PiListNumbers />
                   </span>
                   <span className="mx-2 text-base whitespace-nowrap">Ordered List</span>
                 </button>
@@ -226,7 +225,7 @@ export function ButtonSelectText({
                       'text-xl font-semibold p-1 rounded-md'
                     )}
                   >
-                    <LuListChecks />
+                    <PiListChecks />
                   </span>
                   <span className="mx-2 text-base whitespace-nowrap">Task List</span>
                 </button>

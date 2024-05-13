@@ -1,8 +1,8 @@
 'use client';
 
 import { Editor } from '@tiptap/react';
+import { PiListDashes } from 'react-icons/pi';
 import { ButtonTemplate } from './template';
-import { PiListDashesFill } from 'react-icons/pi';
 
 export function ButtonBulletList({
   editor,
@@ -23,7 +23,7 @@ export function ButtonBulletList({
       prevButtonId={prevButtonId}
       nextButtonId={nextButtonId}
     >
-      <PiListDashesFill />
+      <PiListDashes />
     </ButtonTemplate>
   );
 }
