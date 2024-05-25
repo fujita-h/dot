@@ -27,6 +27,8 @@ import TableRowExtension from '@tiptap/extension-table-row';
 import TableHeaderExtension from '@tiptap/extension-table-header';
 import TableCellExtension from '@tiptap/extension-table-cell';
 
+import { DraftLoader } from '@/components/loaders';
+
 import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonDraftRenderer({ jsonString }: { jsonString: string }) {
@@ -63,7 +65,8 @@ export default function TipTapJsonDraftRenderer({ jsonString }: { jsonString: st
       ],
       editable: false,
     });
-    editor?.commands.setContent(JSON.parse(jsonString));
+    if (!editor) return <DraftLoader />;
+    editor.commands.setContent(JSON.parse(jsonString));
     return <EditorContent editor={editor} />;
   } catch (e) {
     console.error(e);

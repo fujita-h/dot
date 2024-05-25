@@ -44,6 +44,7 @@ import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
+import { CommentEditorLoader } from '@/components/loaders';
 
 import '@/components/tiptap/tiptap.css';
 
@@ -174,6 +175,7 @@ export default function CommentEditor({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, editorRef]);
 
+  if (!editor) return <CommentEditorLoader />;
   return (
     <div id={`${commentDivId}`}>
       {editor && (

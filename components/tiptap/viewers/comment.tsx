@@ -31,6 +31,8 @@ import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 
+import { CommentLoader } from '@/components/loaders';
+
 import '@/components/tiptap/tiptap.css';
 
 export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: string }) {
@@ -90,6 +92,7 @@ export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: 
       content: JSON.parse(jsonString),
       editable: false,
     });
+    if (!editor) return <CommentLoader />;
     return <EditorContent editor={editor} />;
   } catch (e) {
     console.error(e);

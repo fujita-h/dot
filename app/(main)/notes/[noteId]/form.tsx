@@ -1,5 +1,6 @@
 'use client';
 
+import { CommentLoader, CommentEditorLoader, NoteLoader, TocLoader } from '@/components/loaders';
 import type { UserSetting } from '@/components/tiptap/editors/types';
 import { Dialog, Listbox, Menu, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
@@ -12,17 +13,29 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { RiPushpinFill } from 'react-icons/ri';
 import {
   commentOnNote,
+  deleteComment,
   deleteNote,
   duplicateNoteToDraft,
   pinNoteToGroupProfile,
   pinNoteToUserProfile,
-  deleteComment,
 } from './action';
 
-const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), { ssr: false });
-const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), { ssr: false });
-const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), { ssr: false });
-const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), { ssr: false });
+const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), {
+  ssr: false,
+  loading: () => <NoteLoader />,
+});
+const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), {
+  ssr: false,
+  loading: () => <CommentLoader />,
+});
+const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), {
+  ssr: false,
+  loading: () => <CommentEditorLoader />,
+});
+const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), {
+  ssr: false,
+  loading: () => <TocLoader />,
+});
 
 interface User {
   id: string;
