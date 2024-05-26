@@ -1,7 +1,7 @@
 'use client';
 
 import { SITE_NAME } from '@/libs/constants';
-import { Menu, Transition } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
@@ -68,10 +68,10 @@ export function EditorNavbar({
             {/* Profile dropdown */}
             <Menu as="div" className="ml-1 relative flex-shrink-0">
               <div>
-                <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                   <span className="sr-only">Open user menu</span>
                   <img src="/api/user/icon" width={32} height={32} className="rounded-full" alt="user-icon" />
-                </Menu.Button>
+                </MenuButton>
               </div>
               <Transition
                 as={Fragment}
@@ -82,27 +82,27 @@ export function EditorNavbar({
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
                   {userNavigation.map((item) => (
-                    <Menu.Item key={item.name}>
-                      {({ active }) => (
+                    <MenuItem key={item.name}>
+                      {({ focus }) => (
                         <Link
                           href={item.href}
                           className={clsx(
-                            active ? 'bg-gray-100' : '',
+                            focus ? 'bg-gray-100' : '',
                             'block px-4 py-2 text-sm font-semibold text-gray-600'
                           )}
                         >
                           {item.name}
                         </Link>
                       )}
-                    </Menu.Item>
+                    </MenuItem>
                   ))}
-                  <Menu.Item>
-                    {({ active }) => (
+                  <MenuItem>
+                    {({ focus }) => (
                       <span
                         className={clsx(
-                          active ? 'bg-red-100' : '',
+                          focus ? 'bg-red-100' : '',
                           'block px-4 py-2 text-sm font-semibold text-gray-600 hover:cursor-pointer'
                         )}
                         onClick={() => setSignOutModalOpen(true)}
@@ -110,8 +110,8 @@ export function EditorNavbar({
                         サインアウト
                       </span>
                     )}
-                  </Menu.Item>
-                </Menu.Items>
+                  </MenuItem>
+                </MenuItems>
               </Transition>
             </Menu>
           </div>

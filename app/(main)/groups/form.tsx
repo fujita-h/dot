@@ -1,13 +1,23 @@
 'use client';
 
 import Alert from '@/components/alerts/simple';
-import { Dialog, RadioGroup, Transition } from '@headlessui/react';
+import {
+  Description,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Label,
+  Radio,
+  RadioGroup,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
+import { GroupType } from '@prisma/client';
 import clsx from 'clsx/lite';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ActionState, createGroupAction } from './action';
-import { GroupType } from '@prisma/client';
 
 const groupTypes = [
   { name: 'private', value: GroupType.PRIVATE, description: 'グループ内部での情報の整理におすすめ', descItem: [''] },
@@ -54,13 +64,12 @@ const initialActionState: ActionState = {
 function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
   const [actionState, formAction] = useFormState(createGroupAction, initialActionState);
 
-  const cancelButtonRef = useRef(null);
   const [typeSelected, setTypeSelected] = useState(groupTypes[0]);
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
-        <Transition.Child
+    <Transition show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -70,11 +79,11 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -83,7 +92,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <form action={formAction}>
                   <div>
                     <div className="flex justify-center items-center gap-3">
@@ -91,9 +100,9 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                         <UserGroupIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
                       </div>
                       <div>
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-center text-gray-900">
+                        <DialogTitle as="h3" className="text-base font-semibold leading-6 text-center text-gray-900">
                           新しいグループの作成
-                        </Dialog.Title>
+                        </DialogTitle>
                       </div>
                     </div>
                     <div className="mt-3 sm:mt-5">
@@ -150,10 +159,10 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                             <label className="block text-sm font-medium leading-6 text-gray-900">タイプ</label>
                             <input type="hidden" name="type" value={typeSelected.value} />
                             <RadioGroup value={typeSelected} onChange={setTypeSelected}>
-                              <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
+                              <Label className="sr-only">Privacy setting</Label>
                               <div className="-space-y-px rounded-md bg-white">
                                 {groupTypes.map((type, typeIdx) => (
-                                  <RadioGroup.Option
+                                  <Radio
                                     key={type.name}
                                     value={type}
                                     className={({ checked }) =>
@@ -165,12 +174,12 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                       )
                                     }
                                   >
-                                    {({ active, checked }) => (
+                                    {({ focus, checked }) => (
                                       <>
                                         <span
                                           className={clsx(
                                             checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300',
-                                            active ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
+                                            focus ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
                                             'mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center'
                                           )}
                                           aria-hidden="true"
@@ -178,7 +187,7 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                           <span className="rounded-full bg-white w-1.5 h-1.5" />
                                         </span>
                                         <span className="ml-3 flex flex-col">
-                                          <RadioGroup.Label
+                                          <Label
                                             as="span"
                                             className={clsx(
                                               checked ? 'text-indigo-900' : 'text-gray-900',
@@ -186,8 +195,8 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                             )}
                                           >
                                             {type.name}
-                                          </RadioGroup.Label>
-                                          <RadioGroup.Description
+                                          </Label>
+                                          <Description
                                             as="span"
                                             className={clsx(
                                               checked ? 'text-indigo-700' : 'text-gray-500',
@@ -195,11 +204,11 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                                             )}
                                           >
                                             {type.description}
-                                          </RadioGroup.Description>
+                                          </Description>
                                         </span>
                                       </>
                                     )}
-                                  </RadioGroup.Option>
+                                  </Radio>
                                 ))}
                               </div>
                             </RadioGroup>
@@ -224,17 +233,17 @@ function CreateGroupModal({ open, setOpen }: { open: boolean; setOpen: (open: bo
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
                       onClick={() => setOpen(false)}
-                      ref={cancelButtonRef}
+                      data-autofocus
                     >
                       キャンセル
                     </button>
                   </div>
                 </form>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Transition } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import { Cog8ToothIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx/lite';
 import { useRouter } from 'next/navigation';
@@ -42,9 +42,9 @@ export function OtherMenuButton({ id }: { id: string }) {
   return (
     <div>
       <Menu as="div" className="relative h-5">
-        <Menu.Button>
+        <MenuButton>
           <EllipsisHorizontalIcon className="mx-2 h-6 w-6" />
-        </Menu.Button>
+        </MenuButton>
 
         <Transition
           as={Fragment}
@@ -55,13 +55,13 @@ export function OtherMenuButton({ id }: { id: string }) {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt-2 z-10 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <MenuItems className="absolute right-0 mt-2 z-10 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="m-1">
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <span
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'group flex items-center px-4 py-3 text-sm hover:cursor-pointer'
                     )}
                     onClick={() => router.push(`/groups/0/${id}/settings`)}
@@ -73,9 +73,9 @@ export function OtherMenuButton({ id }: { id: string }) {
                     設定
                   </span>
                 )}
-              </Menu.Item>
+              </MenuItem>
             </div>
-          </Menu.Items>
+          </MenuItems>
         </Transition>
       </Menu>
     </div>

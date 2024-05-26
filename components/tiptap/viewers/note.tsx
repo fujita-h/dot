@@ -34,6 +34,8 @@ import UnderlineExtension from '@tiptap/extension-underline';
 import { DOMOutputSpec } from '@tiptap/pm/model';
 import { EditorContent, mergeAttributes, useEditor } from '@tiptap/react';
 
+import { NoteLoader } from '@/components/loaders';
+
 import '@/components/tiptap/tiptap.css';
 import 'highlight.js/styles/github.css';
 
@@ -116,6 +118,7 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       content: JSON.parse(jsonString),
       editable: false,
     });
+    if (!editor) return <NoteLoader />;
     return <EditorContent editor={editor} />;
   } catch (e) {
     console.error(e);

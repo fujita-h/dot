@@ -1,7 +1,23 @@
 'use client';
 
+import { CommentEditorLoader, CommentLoader, NoteLoader, TocLoader } from '@/components/loaders';
 import type { UserSetting } from '@/components/tiptap/editors/types';
-import { Dialog, Listbox, Menu, Transition } from '@headlessui/react';
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Listbox,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+  TransitionChild,
+  ListboxOptions,
+  ListboxOption,
+  ListboxButton,
+  Label,
+} from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DocumentDuplicateIcon, EllipsisHorizontalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
@@ -12,17 +28,29 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { RiPushpinFill } from 'react-icons/ri';
 import {
   commentOnNote,
+  deleteComment,
   deleteNote,
   duplicateNoteToDraft,
   pinNoteToGroupProfile,
   pinNoteToUserProfile,
-  deleteComment,
 } from './action';
 
-const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), { ssr: false });
-const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), { ssr: false });
-const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), { ssr: false });
-const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), { ssr: false });
+const DynamicNoteViewer = dynamic(() => import('@/components/tiptap/viewers/note'), {
+  ssr: false,
+  loading: () => <NoteLoader />,
+});
+const DynamicCommentViewer = dynamic(() => import('@/components/tiptap/viewers/comment'), {
+  ssr: false,
+  loading: () => <CommentLoader />,
+});
+const DynamicCommentEditor = dynamic(() => import('@/components/tiptap/editors/comment'), {
+  ssr: false,
+  loading: () => <CommentEditorLoader />,
+});
+const DynamicScrollToc = dynamic(() => import('@/components/tiptap/scroll-toc'), {
+  ssr: false,
+  loading: () => <TocLoader />,
+});
 
 interface User {
   id: string;
@@ -110,9 +138,9 @@ export function OtherMenuButton({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="">
+        <MenuButton className="">
           <EllipsisHorizontalIcon className={className} />
-        </Menu.Button>
+        </MenuButton>
       </div>
       <DuplicateNoteModal
         note={note}
@@ -130,15 +158,15 @@ export function OtherMenuButton({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItems className="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             {isOwner && (
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <a
                     href={`/notes/${note.id}/edit`}
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'group flex items-center px-4 py-2 text-sm'
                     )}
                   >
@@ -149,15 +177,15 @@ export function OtherMenuButton({
                     編集する
                   </a>
                 )}
-              </Menu.Item>
+              </MenuItem>
             )}
             {isOwner && (
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <button
                     type="button"
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'w-full group flex items-center px-4 py-2 text-sm'
                     )}
                     onClick={() => pinNoteToUserProfile(note.id, !note.isUserPinned)}
@@ -168,15 +196,15 @@ export function OtherMenuButton({
                     {note.isUserPinned ? 'プロフィールから外す' : 'プロフィールに固定'}
                   </button>
                 )}
-              </Menu.Item>
+              </MenuItem>
             )}
             {canPinGroup && (
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <button
                     type="button"
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'w-full group flex items-center px-4 py-2 text-sm'
                     )}
                     onClick={() => pinNoteToGroupProfile(note.id, !note.isGroupPinned)}
@@ -187,14 +215,14 @@ export function OtherMenuButton({
                     {note.isGroupPinned ? 'グループから外す' : 'グループに固定'}
                   </button>
                 )}
-              </Menu.Item>
+              </MenuItem>
             )}
-            <Menu.Item>
-              {({ active }) => (
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'w-full group flex items-center px-4 py-2 text-sm'
                   )}
                   onClick={() => setOpenDuplicateModal(true)}
@@ -206,16 +234,16 @@ export function OtherMenuButton({
                   複製する
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
           {isOwner && (
             <div className="py-1">
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <button
                     type="button"
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'w-full group flex items-center px-4 py-2 text-sm'
                     )}
                     onClick={() => setOpenDeleteModal(true)}
@@ -224,10 +252,10 @@ export function OtherMenuButton({
                     削除する
                   </button>
                 )}
-              </Menu.Item>
+              </MenuItem>
             </div>
           )}
-        </Menu.Items>
+        </MenuItems>
       </Transition>
     </Menu>
   );
@@ -237,9 +265,9 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
   const router = useRouter();
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -249,11 +277,11 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -262,7 +290,7 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -278,9 +306,9 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                     <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                    <DialogTitle as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
                       ノートの削除
-                    </Dialog.Title>
+                    </DialogTitle>
                     <div className="mt-2">
                       <div className="text-sm">
                         <p className="text-gray-800 my-4">ノートを削除しようとしています。この操作は取り消せません。</p>
@@ -313,16 +341,17 @@ function DeleteNoteModal({ note, open, setOpen }: { note: Note; open: boolean; s
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
+                    data-autofocus
                   >
                     キャンセル
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
 
@@ -345,9 +374,9 @@ function DuplicateNoteModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -357,11 +386,11 @@ function DuplicateNoteModal({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -370,7 +399,7 @@ function DuplicateNoteModal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -386,20 +415,20 @@ function DuplicateNoteModal({
                     <DocumentDuplicateIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                    <DialogTitle as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
                       記事を複製する
-                    </Dialog.Title>
+                    </DialogTitle>
                   </div>
                 </div>
                 <div className="mt-6 min-h-80">
                   <Listbox value={selected} onChange={setSelected} horizontal>
                     {({ open }) => (
                       <>
-                        <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
+                        <Label className="block text-sm font-medium leading-6 text-gray-900">
                           複製して投稿するグループを選択
-                        </Listbox.Label>
+                        </Label>
                         <div className="relative">
-                          <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                          <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
                             <span className="flex items-center">
                               {selected.id ? (
                                 <img
@@ -415,7 +444,7 @@ function DuplicateNoteModal({
                             <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                               <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                             </span>
-                          </Listbox.Button>
+                          </ListboxButton>
 
                           <Transition
                             show={open}
@@ -424,19 +453,19 @@ function DuplicateNoteModal({
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                            <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            <ListboxOptions className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                               {groups.map((group) => (
-                                <Listbox.Option
+                                <ListboxOption
                                   key={group.id}
-                                  className={({ active }) =>
+                                  className={({ focus }) =>
                                     clsx(
-                                      active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                                      focus ? 'bg-indigo-600 text-white' : 'text-gray-900',
                                       'relative cursor-default select-none py-2 pl-3 pr-9'
                                     )
                                   }
                                   value={group}
                                 >
-                                  {({ selected, active }) => (
+                                  {({ selected, focus }) => (
                                     <>
                                       <div className="flex items-center">
                                         {group.id ? (
@@ -459,9 +488,9 @@ function DuplicateNoteModal({
                                       </div>
                                     </>
                                   )}
-                                </Listbox.Option>
+                                </ListboxOption>
                               ))}
-                            </Listbox.Options>
+                            </ListboxOptions>
                           </Transition>
                         </div>
                       </>
@@ -504,16 +533,17 @@ function DuplicateNoteModal({
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
+                    data-autofocus
                   >
                     キャンセル
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
 
@@ -624,9 +654,9 @@ export function CommentOtherMenuButton({
   return (
     <div>
       <Menu as="div" className="relative h-5">
-        <Menu.Button>
+        <MenuButton>
           <EllipsisHorizontalIcon className="h-5 w-5" />
-        </Menu.Button>
+        </MenuButton>
 
         <Transition
           as={Fragment}
@@ -637,13 +667,13 @@ export function CommentOtherMenuButton({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 z-20 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <MenuItems className="absolute right-0 z-20 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="m-1">
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <span
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
                     )}
                     onClick={() => {
@@ -659,12 +689,12 @@ export function CommentOtherMenuButton({
                     編集
                   </span>
                 )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
+              </MenuItem>
+              <MenuItem>
+                {({ focus }) => (
                   <span
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'group flex items-center px-4 py-2 text-sm hover:cursor-pointer'
                     )}
                     onClick={() => setOpenDeleteModal(true)}
@@ -673,9 +703,9 @@ export function CommentOtherMenuButton({
                     削除
                   </span>
                 )}
-              </Menu.Item>
+              </MenuItem>
             </div>
-          </Menu.Items>
+          </MenuItems>
         </Transition>
         <DeleteCommentModal commentId={id} open={openDeleteModal} setOpen={setOpenDeleteModal} />
       </Menu>
@@ -695,9 +725,9 @@ function DeleteCommentModal({
   const router = useRouter();
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -707,11 +737,11 @@ function DeleteCommentModal({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -720,7 +750,7 @@ function DeleteCommentModal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -736,9 +766,9 @@ function DeleteCommentModal({
                     <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                    <DialogTitle as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
                       コメントの削除
-                    </Dialog.Title>
+                    </DialogTitle>
                     <div className="mt-2">
                       <div className="text-sm">
                         <p className="text-gray-800 my-4">
@@ -768,15 +798,16 @@ function DeleteCommentModal({
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
+                    data-autofocus
                   >
                     キャンセル
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }

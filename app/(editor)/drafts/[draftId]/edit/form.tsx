@@ -50,6 +50,7 @@ import TaskListExtension from '@tiptap/extension-task-list';
 import TextExtension from '@tiptap/extension-text';
 import UnderlineExtension from '@tiptap/extension-underline';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
+import { EditorLoader } from '@/components/loaders/editor';
 
 import '@/components/tiptap/tiptap.css';
 import 'highlight.js/styles/github.css';
@@ -333,8 +334,8 @@ function EditorForm({
       </div>
       <div className=" bg-white rounded-md ring-1 ring-inset ring-gray-300">
         {!editor && (
-          <div className="mt-2 px-2 py-16">
-            <div className="text-center text-2xl text-gray-400">Loading...</div>
+          <div className="mt-2 px-2">
+            <EditorLoader />
           </div>
         )}
         {editor && (
