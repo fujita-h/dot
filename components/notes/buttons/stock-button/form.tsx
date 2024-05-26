@@ -1,11 +1,10 @@
 'use client';
 
-import { Popover, Transition } from '@headlessui/react';
+import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, Transition } from '@headlessui/react';
 import { ArchiveBoxIcon, FolderPlusIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx/lite';
 import { ChangeEvent, Fragment, useState } from 'react';
-import { stockDefault, stock, unStock, createLabel } from './action';
-import { set } from 'lodash';
+import { createLabel, stock, stockDefault, unStock } from './action';
 
 export function Form({
   noteId,
@@ -81,7 +80,7 @@ export function Form({
     <Popover>
       <div className="relative z-20">
         <div className="flex flex-col w-10">
-          <Popover.Button
+          <PopoverButton
             as="div"
             className={clsx(
               'h-10 rounded-full bg-white flex items-center justify-center hover:cursor-pointer',
@@ -91,10 +90,10 @@ export function Form({
             onClick={handleButtonClick}
           >
             <ArchiveBoxIcon className={clsx('w-6 h-6')} />
-          </Popover.Button>
+          </PopoverButton>
           {showCounter ? <div className="text-center font-bold text-gray-500">{count}</div> : <></>}
         </div>
-        <Popover.Overlay className="fixed inset-0" />
+        <PopoverOverlay className="fixed inset-0" />
         <Transition
           as={Fragment}
           enter="transition ease-out duration-100"
@@ -104,7 +103,7 @@ export function Form({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel
+          <PopoverPanel
             className={clsx(
               popoverDirection === 'right' ? '-top-3 left-12' : '',
               popoverDirection === 'left' ? '-top-3 right-12' : '',
@@ -163,7 +162,7 @@ export function Form({
                 </div>
               </div>
             </div>
-          </Popover.Panel>
+          </PopoverPanel>
         </Transition>
       </div>
     </Popover>

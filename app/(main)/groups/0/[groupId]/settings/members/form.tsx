@@ -1,6 +1,20 @@
 'use client';
 
-import { Combobox, Dialog, RadioGroup, Transition } from '@headlessui/react';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Description,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Label,
+  Radio,
+  RadioGroup,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
 import { ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ArrowPathIcon, ExclamationTriangleIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx/lite';
@@ -196,9 +210,9 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
       : users?.filter((person) => person.name && person.name.toLowerCase().includes(query.toLowerCase())) || [];
 
   return (
-    <Transition.Root show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
+    <Transition show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -208,10 +222,10 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
@@ -220,7 +234,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="mx-auto max-w-3xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+            <DialogPanel className="mx-auto max-w-3xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
               <div className="px-6 py-4">
                 <div className="text-xl font-semibold">メンバーの追加</div>
               </div>
@@ -234,16 +248,17 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                           className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
                           aria-hidden="true"
                         />
-                        <Combobox.Input
+                        <ComboboxInput
                           className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
                           placeholder="Search..."
                           value={query}
                           onChange={(event) => setQuery(event.target.value)}
+                          autoFocus={true}
                         />
                       </div>
 
                       {(query === '' || filteredUser.length > 0) && (
-                        <Combobox.Options as="div" static hold className="flex transform-gpu divide-x divide-gray-100">
+                        <ComboboxOptions as="div" static hold className="flex transform-gpu divide-x divide-gray-100">
                           <div
                             className={clsx(
                               'max-h-[450px] min-w-0 flex-auto scroll-py-4 overflow-y-auto px-6 py-4',
@@ -255,20 +270,20 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                             )}
                             <div className="-mx-2 text-sm text-gray-700">
                               {(query === '' ? users || [] : filteredUser).map((person) => (
-                                <Combobox.Option
+                                <ComboboxOption
                                   as="div"
                                   onClick={() => {}}
                                   key={person.id}
                                   value={person}
-                                  className={({ active }) =>
+                                  className={({ focus }) =>
                                     clsx(
                                       'flex cursor-pointer select-none items-center rounded-md p-2',
                                       activeUser?.id === person.id && 'bg-gray-200 text-black',
-                                      active && 'bg-gray-100 text-gray-900'
+                                      focus && 'bg-gray-100 text-gray-900'
                                     )
                                   }
                                 >
-                                  {({ active }) => (
+                                  {({ focus }) => (
                                     <>
                                       <img
                                         src={`/api/users/${person.uid}/icon`}
@@ -276,7 +291,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                         className="h-6 w-6 flex-none rounded-full"
                                       />
                                       <span className="ml-3 flex-auto truncate">{person.name}</span>
-                                      {active && (
+                                      {focus && (
                                         <ChevronRightIcon
                                           className="ml-3 h-5 w-5 flex-none text-gray-400"
                                           aria-hidden="true"
@@ -284,7 +299,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                       )}
                                     </>
                                   )}
-                                </Combobox.Option>
+                                </ComboboxOption>
                               ))}
                             </div>
                           </div>
@@ -308,10 +323,10 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                               <div className="flex flex-auto flex-col justify-between p-4">
                                 <div className="text-lg font-semibold">Role</div>
                                 <RadioGroup value={selected} onChange={setSelected}>
-                                  <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
+                                  <Label className="sr-only">Privacy setting</Label>
                                   <div className="-space-y-px rounded-md bg-white">
                                     {roles.map((setting, settingIdx) => (
-                                      <RadioGroup.Option
+                                      <Radio
                                         key={setting.name}
                                         value={setting}
                                         className={({ checked }) =>
@@ -323,14 +338,14 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                           )
                                         }
                                       >
-                                        {({ active, checked }) => (
+                                        {({ focus, checked }) => (
                                           <>
                                             <span
                                               className={clsx(
                                                 checked
                                                   ? 'bg-indigo-600 border-transparent'
                                                   : 'bg-white border-gray-300',
-                                                active ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
+                                                focus ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
                                                 'mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center'
                                               )}
                                               aria-hidden="true"
@@ -338,7 +353,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                               <span className="rounded-full bg-white w-1.5 h-1.5" />
                                             </span>
                                             <span className="ml-3 flex flex-col">
-                                              <RadioGroup.Label
+                                              <Label
                                                 as="span"
                                                 className={clsx(
                                                   checked ? 'text-indigo-900' : 'text-gray-900',
@@ -346,8 +361,8 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                                 )}
                                               >
                                                 {setting.name}
-                                              </RadioGroup.Label>
-                                              <RadioGroup.Description
+                                              </Label>
+                                              <Description
                                                 as="span"
                                                 className={clsx(
                                                   checked ? 'text-indigo-700' : 'text-gray-500',
@@ -355,11 +370,11 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                                                 )}
                                               >
                                                 {setting.description}
-                                              </RadioGroup.Description>
+                                              </Description>
                                             </span>
                                           </>
                                         )}
-                                      </RadioGroup.Option>
+                                      </Radio>
                                     ))}
                                   </div>
                                 </RadioGroup>
@@ -394,7 +409,7 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                               </div>
                             </div>
                           )}
-                        </Combobox.Options>
+                        </ComboboxOptions>
                       )}
 
                       {query !== '' && filteredUser.length === 0 && (
@@ -410,11 +425,11 @@ function AddUserModal({ group, users }: { group: Group; users: User[] | null }) 
                   );
                 }}
               </Combobox>
-            </Dialog.Panel>
-          </Transition.Child>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
 
@@ -429,9 +444,9 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
   }, [user]);
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -441,11 +456,11 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -454,7 +469,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -470,9 +485,9 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                     <ArrowPathIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                    <DialogTitle as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
                       メンバーの設定変更
-                    </Dialog.Title>
+                    </DialogTitle>
                     <div className="mt-2">
                       <div className="text-sm">
                         <p className="text-gray-800 my-4">以下のメンバーの設定を変更しようとしています。</p>
@@ -490,10 +505,10 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                         <p className="text-gray-900 my-4 text-base font-semibold">ロールの変更</p>
 
                         <RadioGroup value={selected} onChange={setSelected}>
-                          <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
+                          <Label className="sr-only">Privacy setting</Label>
                           <div className="-space-y-px rounded-md bg-white">
                             {roles.map((setting, settingIdx) => (
-                              <RadioGroup.Option
+                              <Radio
                                 key={setting.name}
                                 value={setting}
                                 className={({ checked }) =>
@@ -505,12 +520,12 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                                   )
                                 }
                               >
-                                {({ active, checked }) => (
+                                {({ focus, checked }) => (
                                   <>
                                     <span
                                       className={clsx(
                                         checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300',
-                                        active ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
+                                        focus ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
                                         'mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center'
                                       )}
                                       aria-hidden="true"
@@ -518,7 +533,7 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                                       <span className="rounded-full bg-white w-1.5 h-1.5" />
                                     </span>
                                     <span className="ml-3 flex flex-col">
-                                      <RadioGroup.Label
+                                      <Label
                                         as="span"
                                         className={clsx(
                                           checked ? 'text-indigo-900' : 'text-gray-900',
@@ -526,17 +541,17 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                                         )}
                                       >
                                         {setting.name}
-                                      </RadioGroup.Label>
-                                      <RadioGroup.Description
+                                      </Label>
+                                      <Description
                                         as="span"
                                         className={clsx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}
                                       >
                                         {setting.description}
-                                      </RadioGroup.Description>
+                                      </Description>
                                     </span>
                                   </>
                                 )}
-                              </RadioGroup.Option>
+                              </Radio>
                             ))}
                           </div>
                         </RadioGroup>
@@ -565,16 +580,17 @@ function EditUserModal({ group, user }: { group: Group; user: (User & { role: st
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
+                    data-autofocus
                   >
                     キャンセル
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
 
@@ -590,9 +606,9 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
   }, [user]);
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -602,11 +618,11 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -615,7 +631,7 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -631,9 +647,9 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                     <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
+                    <DialogTitle as="h3" className="mt-2 text-base font-semibold leading-6 text-gray-900">
                       メンバーの削除
-                    </Dialog.Title>
+                    </DialogTitle>
                     <div className="mt-2">
                       <div className="text-sm">
                         <p className="text-gray-800 my-4">
@@ -692,15 +708,16 @@ function DeleteUserModal({ group, user }: { group: Group; user: User | null }) {
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     onClick={() => setOpen(false)}
+                    data-autofocus
                   >
                     キャンセル
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }

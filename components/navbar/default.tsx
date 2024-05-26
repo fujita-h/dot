@@ -1,7 +1,16 @@
 'use client';
 
 import { SITE_NAME } from '@/libs/constants';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx/lite';
@@ -55,14 +64,14 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                   </div>
                   <div className="flex items-center lg:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                    <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                       ) : (
                         <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                       )}
-                    </Disclosure.Button>
+                    </DisclosureButton>
                   </div>
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:gap-2">
                     <div className="w-[360px] max-w-[360px]">
@@ -108,10 +117,10 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative flex-shrink-0">
                       <div>
-                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <MenuButton className="flex rounded-full bg-white text-sm focus:outline-none hover:ring-gray-300 hover:ring-2 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
                           <img src="/api/user/icon" width={32} height={32} className="rounded-full" alt="user-icon" />
-                        </Menu.Button>
+                        </MenuButton>
                       </div>
                       <Transition
                         as={Fragment}
@@ -122,30 +131,30 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white divide-y divide-gray-200 py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                        <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white divide-y divide-gray-200 py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
                           <div>
                             {userNavigation.map((item) => (
-                              <Menu.Item key={item.name}>
-                                {({ active }) => (
+                              <MenuItem key={item.name}>
+                                {({ focus }) => (
                                   <Link
                                     href={item.href}
                                     className={clsx(
-                                      active ? 'bg-gray-100' : '',
+                                      focus ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm font-semibold text-gray-600'
                                     )}
                                   >
                                     {item.name}
                                   </Link>
                                 )}
-                              </Menu.Item>
+                              </MenuItem>
                             ))}
                           </div>
                           <div>
-                            <Menu.Item>
-                              {({ active }) => (
+                            <MenuItem>
+                              {({ focus }) => (
                                 <span
                                   className={clsx(
-                                    active ? 'bg-red-100' : '',
+                                    focus ? 'bg-red-100' : '',
                                     'block px-4 py-2 text-sm font-semibold text-gray-600 hover:cursor-pointer'
                                   )}
                                   onClick={() => setSignOutModalOpen(true)}
@@ -153,16 +162,16 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                   サインアウト
                                 </span>
                               )}
-                            </Menu.Item>
+                            </MenuItem>
                           </div>
-                        </Menu.Items>
+                        </MenuItems>
                       </Transition>
                     </Menu>
                     <Menu as="div" className="ml-2 relative flex-shrink-0">
                       <div>
-                        <Menu.Button className="flex rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <MenuButton className="flex rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                           <span>投稿する</span>
-                        </Menu.Button>
+                        </MenuButton>
                       </div>
                       <Transition
                         as={Fragment}
@@ -173,33 +182,33 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-auto min-w-[240px] max-w-[420px] origin-top-right divide-y divide-gray-200 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
+                        <MenuItems className="absolute right-0 z-10 mt-2 w-auto min-w-[240px] max-w-[420px] origin-top-right divide-y divide-gray-200 rounded-md bg-white py-1 shadow-lg ring-2 ring-black ring-opacity-5 focus:outline-none">
                           <div className="py-1">
-                            <Menu.Item>
-                              {({ active }) => (
+                            <MenuItem>
+                              {({ focus }) => (
                                 <a
                                   href="/drafts/new"
                                   className={clsx(
-                                    active ? 'bg-gray-100' : '',
+                                    focus ? 'bg-gray-100' : '',
                                     'block px-4 py-2 text-sm font-semibold text-gray-600'
                                   )}
                                 >
                                   全体に投稿する
                                 </a>
                               )}
-                            </Menu.Item>
+                            </MenuItem>
                           </div>
                           <div className="py-1">
                             <div className="block px-4 py-2 text-sm font-semibold text-gray-600">
                               グループに投稿する
                             </div>
                             {groups.map((group) => (
-                              <Menu.Item key={group.id}>
-                                {({ active }) => (
+                              <MenuItem key={group.id}>
+                                {({ focus }) => (
                                   <a
                                     href={`/drafts/new?group=${group.id}`}
                                     className={clsx(
-                                      active ? 'bg-gray-100' : '',
+                                      focus ? 'bg-gray-100' : '',
                                       'flex items-center pl-6 pr-4 py-[0.375rem] text-sm font-semibold text-gray-600'
                                     )}
                                   >
@@ -211,10 +220,10 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                                     <div className="ml-8 truncate">{group.name}</div>
                                   </a>
                                 )}
-                              </Menu.Item>
+                              </MenuItem>
                             ))}
                           </div>
-                        </Menu.Items>
+                        </MenuItems>
                       </Transition>
                     </Menu>
                   </div>
@@ -240,11 +249,11 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                 </div>
               </div>
 
-              <Disclosure.Panel className="lg:hidden">
+              <DisclosurePanel className="lg:hidden">
                 <div className="space-y-1 pb-3 pt-2">
                   {navigation.map((item) => (
                     <Link key={item.name} href={item.href}>
-                      <Disclosure.Button
+                      <DisclosureButton
                         as="span"
                         className={clsx(
                           'block border-l-4 py-2 pl-3 pr-4 text-base font-medium',
@@ -255,7 +264,7 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </Disclosure.Button>
+                      </DisclosureButton>
                     </Link>
                   ))}
                 </div>
@@ -287,26 +296,26 @@ export function Navbar({ userName, groups }: { userName: string; groups: { id: s
                   <div className="mt-3">
                     {userNavigation.map((item) => (
                       <Link key={item.name} href={item.href}>
-                        <Disclosure.Button
+                        <DisclosureButton
                           as="span"
                           className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                         >
                           {item.name}
-                        </Disclosure.Button>
+                        </DisclosureButton>
                       </Link>
                     ))}
                     <span>
-                      <Disclosure.Button
+                      <DisclosureButton
                         as="span"
                         className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-red-100 hover:text-gray-800 hover:cursor-pointer"
                         onClick={() => setSignOutModalOpen(true)}
                       >
                         サインアウト
-                      </Disclosure.Button>
+                      </DisclosureButton>
                     </span>
                   </div>
                 </div>
-              </Disclosure.Panel>
+              </DisclosurePanel>
             </>
           )}
         </Disclosure>

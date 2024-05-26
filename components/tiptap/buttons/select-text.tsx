@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Transition } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Editor } from '@tiptap/react';
 import clsx from 'clsx/lite';
@@ -24,7 +24,7 @@ export function ButtonSelectText({
   return (
     <Menu as="div" className="relative text-left">
       <div>
-        <Menu.Button
+        <MenuButton
           id={id}
           className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           onKeyDown={(e) => {
@@ -53,7 +53,7 @@ export function ButtonSelectText({
           {editor.isActive('taskList') && <PiListChecks />}
           {editor.isActive('codeBlock') && <AiOutlineCode />}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Menu.Button>
+        </MenuButton>
       </div>
       <Transition
         as={Fragment}
@@ -64,14 +64,14 @@ export function ButtonSelectText({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute left-0 z-10 mt-2 px-1 origin-top-left divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItems className="absolute left-0 z-10 mt-2 px-1 origin-top-left divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div>
-            <Menu.Item>
-              {({ active }) => (
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => {
@@ -94,15 +94,15 @@ export function ButtonSelectText({
                   <span className="ml-2 text-base whitespace-nowrap">Paragraph</span>
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
           <div>
-            <Menu.Item>
-              {({ active }) => (
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
@@ -118,13 +118,13 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Heading 1</span>
                 </button>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
@@ -140,13 +140,13 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Heading 2</span>
                 </button>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
@@ -162,15 +162,15 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Heading 3</span>
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
           <div>
-            <Menu.Item>
-              {({ active }) => (
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -186,13 +186,13 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Bullet List</span>
                 </button>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -208,13 +208,13 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Ordered List</span>
                 </button>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -230,15 +230,15 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">Task List</span>
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
           <div>
-            <Menu.Item>
-              {({ active }) => (
+            <MenuItem>
+              {({ focus }) => (
                 <button
                   type="button"
                   className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'group flex items-center px-1 my-1 py-1 rounded-md'
                   )}
                   onClick={() => editor.chain().focus().toggleCodeBlock().run()}
@@ -254,9 +254,9 @@ export function ButtonSelectText({
                   <span className="mx-2 text-base whitespace-nowrap">CodeBlock</span>
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
-        </Menu.Items>
+        </MenuItems>
       </Transition>
     </Menu>
   );

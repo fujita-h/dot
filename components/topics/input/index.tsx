@@ -3,7 +3,7 @@
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Combobox } from '@headlessui/react';
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
@@ -124,7 +124,7 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
 
   const handleChange = (topic: TopicItem) => {
     setQuery('');
-    setSelectedItem(null);
+    setSelectedItem(() => null);
     onChange(topic);
   };
 
@@ -141,7 +141,7 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
   return (
     <Combobox as="div" value={selectedItem} onChange={handleChange}>
       <div className="relative">
-        <Combobox.Input
+        <ComboboxInput
           className="w-full rounded-md border-0 bg-white pt-2 pb-1 pl-3 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm"
           onKeyDown={(event) => {
             if (filteredOptions.length === 0 && event.key === 'Enter') {
@@ -152,24 +152,24 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
           displayValue={(person: any) => person?.name}
           placeholder="トピック..."
         />
-        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+        <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Combobox.Button>
+        </ComboboxButton>
 
         {filteredOptions.length > 0 && (
-          <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <ComboboxOptions className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {filteredOptions.map((item) => (
-              <Combobox.Option
+              <ComboboxOption
                 key={item.id}
                 value={item}
-                className={({ active }) =>
+                className={({ focus }) =>
                   clsx(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                    focus ? 'bg-indigo-600 text-white' : 'text-gray-900'
                   )
                 }
               >
-                {({ active, selected }) => (
+                {({ focus, selected }) => (
                   <>
                     <div className="flex items-center">
                       <img src={`/api/topics/${item.id}/icon`} alt="" className="h-6 w-6 flex-shrink-0 rounded-md" />
@@ -180,7 +180,7 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
                       <span
                         className={clsx(
                           'absolute inset-y-0 right-0 flex items-center pr-4',
-                          active ? 'text-white' : 'text-indigo-600'
+                          focus ? 'text-white' : 'text-indigo-600'
                         )}
                       >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -188,9 +188,9 @@ function TopicsComboBox({ options, onChange }: { options: TopicItem[]; onChange:
                     )}
                   </>
                 )}
-              </Combobox.Option>
+              </ComboboxOption>
             ))}
-          </Combobox.Options>
+          </ComboboxOptions>
         )}
       </div>
     </Combobox>
