@@ -68,6 +68,7 @@ export function TopicInput({
         <TopicsComboBox
           options={options.filter((option) => !items.some((item) => item.id === option.id))}
           onChange={(item) => {
+            if (!item) return;
             const newItems = [...new Set([...items, item])];
             setItems(newItems);
             onChange(newItems);
