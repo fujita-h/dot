@@ -7,17 +7,16 @@ export async function Preview({ userId, id, page }: { userId: string; id?: strin
   if (!id) return <></>;
 
   const draft = await getDraftWithGroupTopics(userId, id).catch((e) => null);
-  if (!draft || !draft.bodyBlobName) {
+  if (!draft) {
     return <div>データがありません</div>;
   }
 
-  const blobBody = await blob
-    .downloadToBuffer('drafts', draft.bodyBlobName)
-    .then((res) => res.toString('utf-8'))
-    .catch((e) => '');
-
-  if (!blobBody) {
-    return <div>データがありません</div>;
+  let blobBody = '{}';
+  if (draft.bodyBlobName) {
+    blobBody = await blob
+      .downloadToBuffer('drafts', draft.bodyBlobName)
+      .then((res) => res.toString('utf-8'))
+      .catch((e) => '{}');
   }
 
   return (
