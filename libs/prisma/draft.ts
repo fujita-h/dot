@@ -113,7 +113,6 @@ export function getDraftsWithGroupTopic(userId: string, take?: number, skip?: nu
     .findMany({
       where: {
         userId: userId,
-        bodyBlobName: { not: null },
       },
       orderBy: { updatedAt: 'desc' },
       take: take,
@@ -135,7 +134,6 @@ export function getDraftsCount(userId: string) {
     .count({
       where: {
         userId: userId,
-        bodyBlobName: { not: null },
       },
     })
     .catch((e) => {
