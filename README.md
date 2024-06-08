@@ -112,7 +112,7 @@ On Linux systems, you can generate a suitable string using the command `openssl 
 ### `AUTH_URL`
 See [NextAuth.js Doc](https://next-auth.js.org/configuration/options)
 - Required: Yes
-- Example: `https://example.com/api/auth`
+- Example: `https://example.com`
 
 ### `AUTH_SESSION_MAX_AGE`
 Maximum session time (in seconds). Default is `86400`. See [NextAuth.js Doc](https://next-auth.js.org/configuration/options)
