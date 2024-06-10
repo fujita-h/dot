@@ -1,3 +1,4 @@
+import SimpleAlert from '@/components/alerts/simple';
 import { SignInForm } from '@/components/auth';
 import { Error404, Error500 } from '@/components/error';
 import { LikeButton } from '@/components/notes/buttons/like-button';
@@ -71,6 +72,18 @@ export default async function Page({ params }: { params: { noteId: string } }) {
     day: 'numeric',
   });
 
+  const updatedAt = new Date(note.updatedAt).toLocaleDateString(LOCALE, {
+    timeZone: TIMEZONE,
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const spentDaysSinceUpdate = Math.max(
+    0,
+    Math.floor((new Date().getTime() - new Date(note.updatedAt).getTime()) / (1000 * 60 * 60 * 24))
+  );
+
   return (
     <div>
       {note.Group && (
@@ -96,6 +109,39 @@ export default async function Page({ params }: { params: { noteId: string } }) {
               <div className="order-0 hidden md:block w-12 print:hidden"></div>
               <div className="order-1 flex-1">
                 <div className="space-y-1 sm:space-y-2 mx-4">
+                  {spentDaysSinceUpdate > 365 * 5 ? (
+                    <SimpleAlert
+                      type="warning"
+                      title="この記事は最終更新日から5年以上経過しています。"
+                      className="mb-4"
+                    />
+                  ) : spentDaysSinceUpdate > 365 * 4 ? (
+                    <SimpleAlert
+                      type="warning"
+                      title="この記事は最終更新日から4年以上経過しています。"
+                      className="mb-4"
+                    />
+                  ) : spentDaysSinceUpdate > 365 * 3 ? (
+                    <SimpleAlert
+                      type="warning"
+                      title="この記事は最終更新日から3年以上経過しています。"
+                      className="mb-4"
+                    />
+                  ) : spentDaysSinceUpdate > 365 * 2 ? (
+                    <SimpleAlert
+                      type="warning"
+                      title="この記事は最終更新日から2年以上経過しています。"
+                      className="mb-4"
+                    />
+                  ) : spentDaysSinceUpdate > 365 ? (
+                    <SimpleAlert
+                      type="warning"
+                      title="この記事は最終更新日から1年以上経過しています。"
+                      className="mb-4"
+                    />
+                  ) : (
+                    <></>
+                  )}
                   <div
                     id="note_title"
                     className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:tracking-tight"
@@ -132,6 +178,11 @@ export default async function Page({ params }: { params: { noteId: string } }) {
                 <div>
                   <div className="rounded-md bg-white ring-1 ring-gray-200 p-4 flex flex-col divide-y divide-gray-300 ">
                     <div className="pb-2">
+                      {updatedAt !== releasedAt && (
+                        <div className="mx-2">
+                          <div className="text-gray-800">{updatedAt} に更新</div>
+                        </div>
+                      )}
                       <div className="mx-2">
                         <div className="text-gray-800">{releasedAt} に公開</div>
                       </div>
