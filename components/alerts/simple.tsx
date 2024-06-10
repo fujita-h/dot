@@ -24,10 +24,12 @@ function Icon({ type }: { type: AlertType }) {
 export default function SimpleAlert({
   type,
   title,
+  className,
   children,
 }: {
   type: AlertType;
   title: string;
+  className?: string;
   children?: React.ReactNode;
 }) {
   const color = {
@@ -60,7 +62,7 @@ export default function SimpleAlert({
   }
 
   return (
-    <div className={clsx('rounded-md p-4', color.bg)}>
+    <div className={clsx('rounded-md p-4', className, color.bg)}>
       <div className="flex">
         <div className="flex-shrink-0">
           <Icon type={type} />
