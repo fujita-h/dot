@@ -89,10 +89,19 @@ const UploadImageExtension = Extension.create({
                   return uploadImageFunc(files);
                 })
                 .then((results) => {
-                  let transaction = view.state.tr;
-                  if (results.filter((result) => result.status === 'fulfilled').length > 0) {
-                    transaction = transaction.deleteSelection();
+                  // Check results. If all promises are rejected, do nothing.
+                  if (results.filter((result) => result.status === 'fulfilled').length == 0) {
+                    view.dispatch(view.state.tr);
+                    return;
                   }
+
+                  // Get transaction
+                  let transaction = view.state.tr;
+
+                  // if the selection exists, delete the selection
+                  transaction = transaction.deleteSelection();
+
+                  // insert image nodes
                   results.forEach((result) => {
                     if (result.status !== 'fulfilled') return;
                     const node = schema.nodes.image.create({
@@ -100,6 +109,18 @@ const UploadImageExtension = Extension.create({
                     });
                     transaction = transaction.insert(transaction.selection.from, node);
                   });
+
+                  // delete the node of current cursor if it is empty
+                  const { $from } = view.state.selection;
+                  const start = $from.start($from.depth);
+                  const end = $from.end($from.depth);
+                  const node = $from.node($from.depth);
+                  const isEmptyNode = node.content.size === 0;
+                  if (isEmptyNode) {
+                    transaction = transaction.delete(start - 1, end + 1);
+                  }
+
+                  // run transaction
                   view.dispatch(transaction);
                 });
             },
