@@ -91,6 +91,8 @@ export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: 
       ],
       content: JSON.parse(jsonString),
       editable: false,
+      immediatelyRender: false,
+      shouldRerenderOnTransaction: false,
     });
     if (!editor) return <CommentLoader />;
     return <EditorContent editor={editor} />;
