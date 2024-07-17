@@ -117,6 +117,8 @@ export default function TipTapJsonNoteRenderer({ jsonString }: { jsonString: str
       ],
       content: JSON.parse(jsonString),
       editable: false,
+      immediatelyRender: false,
+      shouldRerenderOnTransaction: false,
     });
     if (!editor) return <NoteLoader />;
     return <EditorContent editor={editor} />;

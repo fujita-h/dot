@@ -64,6 +64,8 @@ export default function TipTapJsonDraftRenderer({ jsonString }: { jsonString: st
         TableCellExtension,
       ],
       editable: false,
+      immediatelyRender: false,
+      shouldRerenderOnTransaction: false,
     });
     if (!editor) return <DraftLoader />;
     editor.commands.setContent(JSON.parse(jsonString));

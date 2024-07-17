@@ -121,6 +121,8 @@ export default function CommentEditor({
       }),
     ],
     content: content,
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
   });
 
   const editorRef = useRef<HTMLDivElement>(null);

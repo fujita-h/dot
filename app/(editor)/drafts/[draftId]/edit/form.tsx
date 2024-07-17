@@ -138,6 +138,8 @@ export function Form({
       }),
     ],
     content: content,
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
     onUpdate: ({ editor }) => {
       setAutoSaveTimestamp(Date.now());
     },
