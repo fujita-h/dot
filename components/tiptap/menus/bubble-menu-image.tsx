@@ -13,14 +13,14 @@ export function BubbleMenuImage({ editor }: { editor: Editor }) {
   return (
     <BubbleMenu
       pluginKey="image-bm"
-      tippyOptions={{ duration: 200, placement: 'top-start', maxWidth: 'none' }}
+      tippyOptions={{ duration: 500, placement: 'top-start', offset: [2, -63], maxWidth: 'none' }}
       editor={editor}
       shouldShow={({ editor, view, state, oldState, from, to }) => {
         if (!editor.isActive('image')) return false;
         return true;
       }}
     >
-      <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 shadow-md shadow-gray-300 ring-inset ring-1 ring-gray-300">
+      <div className="flex rounded-md text-2xl bg-white text-black px-2 py-1 shadow-xl shadow-gray-300 ring-inset ring-2 ring-gray-300">
         <div className="my-auto">
           <div className="text-sm text-center mt-0.5 mb-[-8px]">
             <span className="mr-1">最大幅:</span>
