@@ -61,10 +61,7 @@ export default function TipTapJsonCommentRenderer({ jsonString }: { jsonString: 
         HistoryExtension,
         UnderlineExtension,
         ImageExtension,
-        LinkExtension.configure({
-          // this is a workaround for the issue that the link opens twice when clicking on it (#39)
-          openOnClick: false,
-        }),
+        LinkExtension,
         TableExtension.extend({
           renderHTML({ node, HTMLAttributes }) {
             const { colgroup, tableWidth, tableMinWidth } = createColGroup(node, this.options.cellMinWidth);
