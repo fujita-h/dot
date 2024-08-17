@@ -12,7 +12,7 @@
     "cli:es:full-sync": "ts-node tools/cli/es/full-sync.ts"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "2.2.0",
+    "@auth/prisma-adapter": "2.4.2",
     "@azure/openai": "1.0.0-beta.12",
     "@azure/storage-blob": "12.24.0",
     "@dnd-kit/core": "6.1.0",
@@ -61,7 +61,7 @@
     "lodash": "4.17.21",
     "lowlight": "3.1.0",
     "next": "14.2.5",
-    "next-auth": "5.0.0-beta.19",
+    "next-auth": "5.0.0-beta.20",
     "qs": "6.13.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
