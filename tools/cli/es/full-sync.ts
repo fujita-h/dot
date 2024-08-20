@@ -90,7 +90,7 @@ const main = async () => {
             if (data.length === 0) {
               return undefined;
             }
-            totalTokens += res.usage.totalTokens;
+            totalTokens += res.usage.total_tokens;
             return data[0].embedding;
           })
           .catch((err) => {

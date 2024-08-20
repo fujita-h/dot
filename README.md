@@ -31,18 +31,6 @@ Connection string for Azure Blob Storage for the specific container
 - Required: Yes
 - Example: `DefaultEndpointsProtocol=...`
 
-### `AZURE_OPENAI_ENDPOINT` **Deprecated**
-Endpoint of Azure OpenAI API. This is used for both completion and embedding models.  
-This is deprecated and will be removed in the future.
-- Required: Yes if not using `AZURE_OPENAI_COMPLETION_ENDPOINT` and `AZURE_OPENAI_EMBEDDING_ENDPOINT`
-- Example: `https://<resource-name>.openai.azure.com/`
-
-### `AZURE_OPENAI_KEY` **Deprecated**
-Key of Azure OpenAI API. This is used for both completion and embedding models.  
-This is deprecated and will be removed in the future.
-- Required: Yes if not using `AZURE_OPENAI_COMPLETION_KEY` and `AZURE_OPENAI_EMBEDDING_KEY`
-- Example: 
-
 ### `AZURE_OPENAI_COMPLETION_ENDPOINT`
 Endpoint of completion model of Azure OpenAI API
 - Required: Yes
@@ -53,17 +41,15 @@ Key of completion model of Azure OpenAI API
 - Required: Yes
 - Example:
 
-### `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT`
-Deployment name of completion model of `gpt-35-turbo`
-This takes precedence over `AZURE_OPENAI_COMPLETION_DEPLOYMENT` if both are set.
-- Required: Yes if `AZURE_OPENAI_COMPLETION_DEPLOYMENT` is not set
-- Example: `gpt-35-turbo`
+### `AZURE_OPENAI_COMPLETION_API_VERSION`
+API version of completion model of Azure OpenAI API
+- Required: Yes
+- Example: `2024-06-01`
 
 ### `AZURE_OPENAI_COMPLETION_DEPLOYMENT`
-Deployment name of completion model of `gpt-35-turbo-instruct`
-This is used if `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT` is not set.
-- Required: Yes if `AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT` is not set
-- Example: `gpt-35-turbo-instruct`
+Deployment name of completion model of `gpt-4o` grade model
+- Required: Yes
+- Example: `gpt-4o`
 
 ### `AZURE_OPENAI_EMBEDDING_ENDPOINT`
 Endpoint of embedding model of Azure OpenAI API
@@ -74,6 +60,11 @@ Endpoint of embedding model of Azure OpenAI API
 Key of embedding model of Azure OpenAI API
 - Required: Yes
 - Example:
+
+### `AZURE_OPENAI_EMBEDDING_API_VERSION`
+API version of embedding model of Azure OpenAI API
+- Required: Yes
+- Example: `2024-06-01`
 
 ### `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
 Deployment name of embedding model of `text-embedding-3-large`

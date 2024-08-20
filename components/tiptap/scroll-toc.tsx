@@ -42,7 +42,8 @@ export default function ScrollToc({ children: jsonString }: { children: string }
       {headingsForToc.map((heading: any, index: number) => {
         // set the id to the unique-id or the text content.
         // the text content is used as a fallback for old notes.
-        const to = heading.attrs['unique-id'] || heading.content[0].text;
+        const content = heading.content && Array.isArray(heading.content) ? heading.content[0].text : '(空白のヘッダ)';
+        const to = heading.attrs['unique-id'] || content;
         return (
           <Scroll key={index} to={to} smooth={true} duration={400} offset={0}>
             <div
@@ -53,7 +54,7 @@ export default function ScrollToc({ children: jsonString }: { children: string }
                 heading.attrs.level === 2 ? 'pl-4' : ''
               )}
             >
-              {heading.content[0].text}
+              {content}
             </div>
           </Scroll>
         );

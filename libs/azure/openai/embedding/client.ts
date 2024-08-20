@@ -4,23 +4,29 @@ export class AzureOpenAIEmbeddingClient extends AzureOpenAIClient {
   private _deployment: string;
 
   constructor() {
-    const endpoint = process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT || process.env.AZURE_OPENAI_ENDPOINT || undefined;
-    const key = process.env.AZURE_OPENAI_EMBEDDING_KEY || process.env.AZURE_OPENAI_KEY || undefined;
+    const endpoint = process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT || undefined;
+    const key = process.env.AZURE_OPENAI_EMBEDDING_KEY || undefined;
+    const version = process.env.AZURE_OPENAI_EMBEDDING_API_VERSION || undefined;
+    const deployment = process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT || undefined;
+
     if (!endpoint) {
-      throw new Error('AZURE_OPENAI_EMBEDDING_ENDPOINT or AZURE_OPENAI_ENDPOINT is not defined');
+      throw new Error('AZURE_OPENAI_EMBEDDING_ENDPOINT is not defined');
     }
     if (!key) {
-      throw new Error('AZURE_OPENAI_EMBEDDING_KEY or AZURE_OPENAI_KEY is not defined');
+      throw new Error('AZURE_OPENAI_EMBEDDING_KEY is not defined');
     }
-    if (!process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT) {
+    if (!version) {
+      throw new Error('AZURE_OPENAI_EMBEDDING_API_VERSION is not defined');
+    }
+    if (!deployment) {
       throw new Error('AZURE_OPENAI_EMBEDDING_DEPLOYMENT is not defined');
     }
-    super(endpoint, key);
-    this._deployment = process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT;
+    super(endpoint, key, version, deployment);
+    this._deployment = deployment;
   }
 
-  async getEmbedding(text: string) {
-    return this.client.getEmbeddings(this._deployment, [text]);
+  async getEmbedding(input: string) {
+    return this.client.embeddings.create({ input, model: '' });
   }
 
   get deployment() {
