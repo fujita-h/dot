@@ -1,48 +1,37 @@
 import { AzureOpenAIClient } from '../client';
-
+import OpenAI from 'openai';
 export class AzureOpenAICompletionClient extends AzureOpenAIClient {
   constructor() {
-    const endpoint = process.env.AZURE_OPENAI_COMPLETION_ENDPOINT || process.env.AZURE_OPENAI_ENDPOINT || undefined;
-    const key = process.env.AZURE_OPENAI_COMPLETION_KEY || process.env.AZURE_OPENAI_KEY || undefined;
+    const endpoint = process.env.AZURE_OPENAI_COMPLETION_ENDPOINT || undefined;
+    const key = process.env.AZURE_OPENAI_COMPLETION_KEY || undefined;
+    const version = process.env.AZURE_OPENAI_COMPLETION_API_VERSION || undefined;
+    const deployment = process.env.AZURE_OPENAI_COMPLETION_DEPLOYMENT || undefined;
+
     if (!endpoint) {
-      throw new Error('AZURE_OPENAI_COMPLETION_ENDPOINT or AZURE_OPENAI_ENDPOINT is not defined');
+      throw new Error('AZURE_OPENAI_COMPLETION_ENDPOINT is not defined');
     }
     if (!key) {
-      throw new Error('AZURE_OPENAI_COMPLETION_KEY or AZURE_OPENAI_KEY is not defined');
+      throw new Error('AZURE_OPENAI_COMPLETION_KEY is not defined');
     }
-    super(endpoint, key);
-  }
-
-  async getTextCompletion(prompt: string, text: string, maxTokens = 100, temperature = 0.5, stop = ['。']) {
-    if (process.env.AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT) {
-      return this.getChatCompletion(prompt, text, maxTokens, temperature, stop).then((res) => {
-        return (
-          res.choices[0].message?.content?.replace('\n', '') + (res.choices[0].finishReason === 'stop' ? '。' : '')
-        );
-      });
+    if (!version) {
+      throw new Error('AZURE_OPENAI_COMPLETION_API_VERSION is not defined');
     }
-    return this.getCompletion(prompt + text, maxTokens, temperature, stop).then((res) => {
-      return res.choices[0].text?.replace('\n', '') + (res.choices[0].finishReason === 'stop' ? '。' : '');
-    });
-  }
-
-  private async getChatCompletion(prompt: string, text: string, maxTokens = 100, temperature = 0.5, stop = ['。']) {
-    const deployment = process.env.AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT;
-    if (!deployment) {
-      throw new Error('AZURE_OPENAI_CHAT_COMPLETION_DEPLOYMENT is not defined');
-    }
-    const messages = [
-      { role: 'system', content: prompt },
-      { role: 'user', content: text },
-    ];
-    return this.client.getChatCompletions(deployment, messages, { maxTokens, temperature, stop });
-  }
-
-  private async getCompletion(text: string, maxTokens = 100, temperature = 0.5, stop = ['。']) {
-    const deployment = process.env.AZURE_OPENAI_COMPLETION_DEPLOYMENT;
     if (!deployment) {
       throw new Error('AZURE_OPENAI_COMPLETION_DEPLOYMENT is not defined');
     }
-    return this.client.getCompletions(deployment, [text], { maxTokens, temperature, stop });
+    super(endpoint, key, version, deployment);
+  }
+
+  async getTextCompletion(prompt: string, text: string, maxTokens = 100, temperature = 0.5, stop = ['。']) {
+    return this.getChatCompletion(prompt, text, maxTokens, temperature, stop).then((res) => {
+      return res.choices[0].message?.content?.replace('\n', '') + (res.choices[0].finish_reason === 'stop' ? '。' : '');
+    });
+  }
+
+  private async getChatCompletion(prompt: string, text: string, max_tokens = 100, temperature = 0.5, stop = ['。']) {
+    const systemMessage: OpenAI.Chat.ChatCompletionSystemMessageParam = { role: 'system', content: prompt };
+    const userMessage: OpenAI.Chat.ChatCompletionUserMessageParam = { role: 'user', content: text };
+    const messages = [systemMessage, userMessage];
+    return this.client.chat.completions.create({ messages: messages, model: '', temperature, max_tokens, stop });
   }
 }

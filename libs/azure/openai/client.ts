@@ -1,9 +1,8 @@
-import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
-
+import { AzureOpenAI } from 'openai';
 export class AzureOpenAIClient {
-  protected client: OpenAIClient;
+  protected client: AzureOpenAI;
 
-  constructor(endpoint: string, key: string) {
-    this.client = new OpenAIClient(endpoint, new AzureKeyCredential(key));
+  constructor(endpoint: string, apiKey: string, apiVersion: string, deployment: string) {
+    this.client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
   }
 }
