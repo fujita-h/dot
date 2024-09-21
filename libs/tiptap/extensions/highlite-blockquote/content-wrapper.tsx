@@ -1,18 +1,8 @@
-import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
+import { NodeViewContent, NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 
-export function EditorWrapper({
-  node: {
-    attrs: { type: defaultType },
-  },
-  updateAttributes,
-  extension,
-}: {
-  node: {
-    attrs: { type: string };
-  };
-  updateAttributes: (attributes: { type: string }) => void;
-  extension: any;
-}) {
+export function EditorWrapper(props: NodeViewProps) {
+  const { node, updateAttributes, extension } = props;
+  const defaultType = node.attrs.type;
   return (
     <NodeViewWrapper className="highlight-blockquote relative">
       <select
@@ -36,15 +26,8 @@ export function EditorWrapper({
   );
 }
 
-export function ViewerWrapper({
-  node: {
-    attrs: { type: defaultType },
-  },
-}: {
-  node: {
-    attrs: { type: string };
-  };
-}) {
+export function ViewerWrapper(props: NodeViewProps) {
+  const defaultType = props.node.attrs.type;
   return (
     <NodeViewWrapper className="highlight-blockquote relative">
       <blockquote className={`type-${defaultType}`}>
