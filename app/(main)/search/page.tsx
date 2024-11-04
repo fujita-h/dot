@@ -6,11 +6,8 @@ import { getReadableGroups } from '@/libs/prisma/group';
 import { Suspense } from 'react';
 import { SearchForm } from './form';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

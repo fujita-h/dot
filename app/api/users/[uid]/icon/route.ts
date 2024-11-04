@@ -3,7 +3,8 @@ import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createDefaultUserIconSvg } from '@/libs/image/icon';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
-export async function GET(request: Request, { params }: { params: { uid: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ uid: string }> }) {
+  const params = await props.params;
   if (!params.uid) {
     return new Response(null, { status: 404 });
   }

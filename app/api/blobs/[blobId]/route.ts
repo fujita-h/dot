@@ -2,7 +2,8 @@ import { getSessionUser } from '@/libs/auth/utils';
 import blob from '@/libs/azure/storeage-blob/instance';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
-export async function GET(request: Request, { params }: { params: { blobId: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ blobId: string }> }) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) {
     return new Response(null, { status: 401 });

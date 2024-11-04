@@ -5,7 +5,8 @@ import { Preview } from './preview';
 
 import './style.css';
 
-export default async function Page({ searchParams }: { searchParams: { id?: string; page?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ id?: string; page?: string }> }) {
+  const searchParams = await props.searchParams;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

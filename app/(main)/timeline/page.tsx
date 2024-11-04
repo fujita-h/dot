@@ -20,11 +20,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `タイムライン - ${SITE_NAME}` };
 }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

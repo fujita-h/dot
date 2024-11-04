@@ -6,7 +6,8 @@ import { createDraft } from '@/libs/prisma/draft';
 import { getNoteWithUserGroupTopics } from '@/libs/prisma/note';
 import { redirect } from 'next/navigation';
 
-export default async function Page({ params }: { params: { noteId: string } }) {
+export default async function Page(props: { params: Promise<{ noteId: string }> }) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

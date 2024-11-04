@@ -3,7 +3,8 @@ import blobClient from '@/libs/azure/storeage-blob/instance';
 import { createDefaultTopicIconSvg } from '@/libs/image/icon';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
-export async function GET(request: Request, { params }: { params: { topicId: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ topicId: string }> }) {
+  const params = await props.params;
   if (!params.topicId) {
     return new Response(null, { status: 404 });
   }

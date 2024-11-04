@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
  * @param url - The URL to redirect to.
  * @param method - The method to use for redirection. Defaults to `replace`.
  */
-export async function ClientRedirect({ url, method = 'replace' }: { url: string; method?: 'replace' | 'push' }) {
+export function ClientRedirect({ url, method = 'replace' }: { url: string; method?: 'replace' | 'push' }) {
   const router = useRouter();
   useEffect(() => {
     if (!router || !url) return;

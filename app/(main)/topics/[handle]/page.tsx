@@ -9,11 +9,12 @@ import { Metadata } from 'next';
 import { FollowToggleButton, OtherMenuButton } from './form';
 
 type Props = {
-  params: { handle: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ handle: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${topic.name} - ${SITE_NAME}` };
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

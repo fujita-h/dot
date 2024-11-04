@@ -7,11 +7,12 @@ import { Form } from './form';
 const USER_ROLE_FOR_TOPIC_CREATION = process.env.USER_ROLE_FOR_TOPIC_CREATION || '';
 
 type Props = {
-  params: { topicId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ topicId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
   const roles = user.roles || [];

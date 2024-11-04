@@ -8,11 +8,12 @@ import { GroupType } from '@prisma/client';
 import { Form } from './form';
 
 type Props = {
-  params: { groupId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ groupId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
   const userId = user.id;

@@ -4,7 +4,8 @@ import { createDefaultGroupIconSvg } from '@/libs/image/icon';
 import { getGroup } from '@/libs/prisma/group';
 import { nodeToWebStream } from '@/libs/utils/node-to-web-stream';
 
-export async function GET(request: Request, { params }: { params: { groupId: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ groupId: string }> }) {
+  const params = await props.params;
   if (!params.groupId) {
     return new Response(null, { status: 404 });
   }

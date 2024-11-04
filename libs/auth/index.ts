@@ -1,11 +1,10 @@
 import prisma from '@/libs/prisma/instance';
 import { AdapterUser } from '@auth/core/adapters';
+import MicrosoftEntraID from '@auth/core/providers/microsoft-entra-id';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { init as initCuid } from '@paralleldrive/cuid2';
 import crypto from 'crypto';
 import NextAuth, { Session } from 'next-auth';
-import AzureAD from 'next-auth/providers/azure-ad';
-import { NextResponse } from 'next/server';
 
 const cuid = initCuid({ length: 24 });
 
@@ -18,10 +17,11 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    AzureAD({
+    MicrosoftEntraID({
+      id: 'azure-ad', // override provider id to avoid conflict with old azure-ad provider
       clientId: process.env.AZURE_AD_CLIENT_ID || '',
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
-      tenantId: process.env.AZURE_AD_TENANT_ID,
+      issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0`,
       authorization: {
         params: {
           scope: 'openid profile email offline_access User.Read',
