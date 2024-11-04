@@ -4,11 +4,8 @@ import { getSessionUser } from '@/libs/auth/utils';
 import { createDraft } from '@/libs/prisma/draft';
 import { RedirectType, redirect } from 'next/navigation';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

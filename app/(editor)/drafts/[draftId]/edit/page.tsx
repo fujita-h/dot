@@ -7,7 +7,8 @@ import { getTopics } from '@/libs/prisma/topic';
 import { getUserSetting } from '@/libs/prisma/user-setting';
 import { Form } from './form';
 
-export default async function Page({ params }: { params: { draftId: string } }) {
+export default async function Page(props: { params: Promise<{ draftId: string }> }) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
   if (!params.draftId) return <Error404 />;

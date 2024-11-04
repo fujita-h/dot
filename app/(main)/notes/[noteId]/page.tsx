@@ -34,7 +34,8 @@ const ELASTICSEARCH_EMBEDDING_FIELD = () => {
   }
 };
 
-export async function generateMetadata({ params }: { params: { noteId: string } }) {
+export async function generateMetadata(props: { params: Promise<{ noteId: string }> }) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return { title: `Sign In - ${SITE_NAME}` };
 
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: { params: { noteId: string } 
   return { title: `${note.title} - ${SITE_NAME}` };
 }
 
-export default async function Page({ params }: { params: { noteId: string } }) {
+export default async function Page(props: { params: Promise<{ noteId: string }> }) {
+  const params = await props.params;
   const user = await getSessionUser();
   if (!user || !user.id) return <SignInForm />;
 

@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    instrumentationHook : true,
     serverActions: {
       bodySizeLimit: '10mb',
     },
-    serverComponentsExternalPackages: ['@azure/storage-blob', '@dqbd/tiktoken'],
   },
+  serverExternalPackages: ['@azure/storage-blob', '@dqbd/tiktoken'],
   poweredByHeader: false,
   headers: async () => {
     return [
