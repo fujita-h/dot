@@ -1,7 +1,7 @@
 'server-only';
 
 import { Client } from '@elastic/elasticsearch';
-import { DeleteByQueryRequest, SearchRequest } from '@elastic/elasticsearch/lib/api/types';
+import { estypes } from '@elastic/elasticsearch';
 import { promises as fs } from 'fs';
 
 export class EsClient {
@@ -60,7 +60,7 @@ export class EsClient {
     return this.esClient.exists({ index, id });
   }
 
-  search(index: string, body: SearchRequest) {
+  search(index: string, body: estypes.SearchRequest) {
     return this.esClient.search({ index, body });
   }
 
@@ -68,7 +68,7 @@ export class EsClient {
     return this.esClient.delete({ index, id }, { ignore });
   }
 
-  deleteByQuery(request: DeleteByQueryRequest) {
+  deleteByQuery(request: estypes.DeleteByQueryRequest) {
     return this.esClient.deleteByQuery(request);
   }
 }
