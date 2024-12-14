@@ -4,7 +4,6 @@ import { NOTE_HEADERS_CLASS_NAME } from '@/libs/constants';
 import clsx from 'clsx/lite';
 import throttle from 'lodash/throttle';
 import { useEffect, useState } from 'react';
-import { Link as Scroll } from 'react-scroll';
 
 export default function ScrollToc({ children: jsonString }: { children: string }) {
   const json = JSON.parse(jsonString);
@@ -45,7 +44,7 @@ export default function ScrollToc({ children: jsonString }: { children: string }
         const content = heading.content && Array.isArray(heading.content) ? heading.content[0].text : '(空白のヘッダ)';
         const to = heading.attrs['unique-id'] || content;
         return (
-          <Scroll key={index} to={to} smooth={true} duration={400} offset={0}>
+          <div key={index} onClick={() => document.getElementById(to)?.scrollIntoView({ behavior: 'smooth' })}>
             <div
               className={clsx(
                 'text-sm',
@@ -56,7 +55,7 @@ export default function ScrollToc({ children: jsonString }: { children: string }
             >
               {content}
             </div>
-          </Scroll>
+          </div>
         );
       })}
     </div>
